@@ -1,15 +1,14 @@
 package com.scoreit.scoreit.controller;
 
-import com.scoreit.scoreit.dto.AuthenticationRequest;
-import com.scoreit.scoreit.dto.AuthenticationResponse;
-import com.scoreit.scoreit.dto.MemberRegister;
+import com.scoreit.scoreit.dto.security.AuthenticationRequest;
+import com.scoreit.scoreit.dto.security.AuthenticationResponse;
+import com.scoreit.scoreit.dto.member.MemberRegister;
 import com.scoreit.scoreit.entity.Member;
 import com.scoreit.scoreit.service.MemberService;
 import com.scoreit.scoreit.service.TokenService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;

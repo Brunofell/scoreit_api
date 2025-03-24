@@ -86,6 +86,15 @@
 			<artifactId>java-jwt</artifactId>
 			<version>4.2.1</version>
 		</dependency>
+
+		<!-- DEPENDÊNCIAS PARA USAR A API DO TMDB e LASTFM-->
+
+		<!-- Dependência para trabalhar com JSON (já está incluída no starter web, mas pode ser interessante ter explicitamente) -->
+		<dependency>
+			<groupId>com.fasterxml.jackson.core</groupId>
+			<artifactId>jackson-databind</artifactId>
+		</dependency>
+
 	</dependencies>
 
 	<build>

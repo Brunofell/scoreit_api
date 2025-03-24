@@ -1,13 +1,9 @@
 package com.scoreit.scoreit.service;
 
-import com.scoreit.scoreit.dto.AuthenticationRequest;
-import com.scoreit.scoreit.dto.AuthenticationResponse;
 import com.scoreit.scoreit.entity.Member;
 import com.scoreit.scoreit.repository.MemberRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 

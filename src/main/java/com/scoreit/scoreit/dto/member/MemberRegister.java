@@ -1,4 +1,4 @@
-package com.scoreit.scoreit.dto;
+package com.scoreit.scoreit.dto.member;
 
 import com.scoreit.scoreit.entity.Member;
 
