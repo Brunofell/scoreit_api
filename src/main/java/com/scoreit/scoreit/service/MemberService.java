@@ -1,8 +1,13 @@
 package com.scoreit.scoreit.service;
 
+import com.scoreit.scoreit.dto.AuthenticationRequest;
+import com.scoreit.scoreit.dto.AuthenticationResponse;
 import com.scoreit.scoreit.entity.Member;
 import com.scoreit.scoreit.repository.MemberRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -15,6 +20,10 @@ public class MemberService {
     private MemberRepository repository;
     @Autowired
     private PasswordEncoder encoder;
+    @Autowired
+    private TokenService tokenService;
+    @Autowired
+    private AuthenticationManager authenticationManager;
 
     public List<Member> getAllMembers(){ // add pageable
         return repository.findAll();
@@ -28,12 +37,22 @@ public class MemberService {
         String encodedPassword = encoder.encode(member.getPassword());
         member.setPassword(encodedPassword);
 
-        member.setEnabled(false);
+        member.setEnabled(true);
 
         return repository.save(member);
     }
 
-    // login
+//    public AuthenticationResponse login(AuthenticationRequest login){
+//        UsernamePasswordAuthenticationToken usernamePassword = new UsernamePasswordAuthenticationToken(
+//                login.email(), login.password()
+//        );
+//
+//        var auth = authenticationManager.authenticate(usernamePassword);
+//        var token = tokenService.generateToken( (Member) auth.getPrincipal());
+//        return new AuthenticationResponse(token);
+//    }
+
+
 
 
 
