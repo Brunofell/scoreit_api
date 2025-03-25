@@ -1,5 +1,6 @@
 package com.scoreit.scoreit.entity;
 
+import com.scoreit.scoreit.dto.member.MemberUpdate;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -23,6 +24,8 @@ public class Member implements UserDetails {
     private String password;
     private LocalDateTime createdAt;
     private boolean enabled;
+    private String profileImage;
+    private String bio;
 
     public Member(Long id, String name, String email, String password, LocalDateTime createdAt, Boolean enabled) {
         this.id = id;
@@ -37,9 +40,29 @@ public class Member implements UserDetails {
         this.name = name;
         this.email = email;
         this.password = password;
+        this.enabled = true;
     }
 
     public Member(){}
+
+    public void updateMember(MemberUpdate memberUpdate){
+        if(memberUpdate.name() != null){
+            this.name = memberUpdate.name();
+        }
+        if(memberUpdate.email() != null){
+            this.email = memberUpdate.email();
+        }
+        if(memberUpdate.password() != null){
+            this.password = memberUpdate.password();
+        }
+        if(memberUpdate.bio() != null){
+            this.bio = memberUpdate.bio();
+        }
+    }
+
+    public void deleteMember(){
+        this.enabled = false;
+    }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

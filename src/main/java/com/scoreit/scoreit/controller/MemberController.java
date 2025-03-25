@@ -1,5 +1,6 @@
 package com.scoreit.scoreit.controller;
 
+import com.scoreit.scoreit.dto.member.MemberUpdate;
 import com.scoreit.scoreit.dto.security.AuthenticationRequest;
 import com.scoreit.scoreit.dto.security.AuthenticationResponse;
 import com.scoreit.scoreit.dto.member.MemberRegister;
@@ -49,9 +50,15 @@ public class MemberController {
         return ResponseEntity.ok(new AuthenticationResponse(token));
     }
 
-//    @PostMapping("/login")
-//    public ResponseEntity login(AuthenticationRequest login){
-//        return ResponseEntity.ok(service.login(login));
-//    }
+    @PutMapping("/update")
+    public ResponseEntity updateMember(@RequestBody @Valid MemberUpdate data){
+        return ResponseEntity.ok().body(service.updateMember(data));
+    }
+
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<String> deleteUser(@PathVariable Long id){
+        return service.deleteUser(id);
+    }
+
 
 }
