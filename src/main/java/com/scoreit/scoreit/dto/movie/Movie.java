@@ -6,5 +6,11 @@ public record Movie(
         int id,
         String title,
         String overview,
-        @JsonProperty("poster_path") String posterPath
-) {}
+        String poster_path ,
+        double vote_average,
+        String release_date
+) {
+    public String getPosterUrl() {
+        return "https://image.tmdb.org/t/p/w500" + poster_path;
+    }
+}

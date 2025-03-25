@@ -1,12 +1,10 @@
 package com.scoreit.scoreit.controller;
 
+import com.scoreit.scoreit.dto.movie.Movie;
 import com.scoreit.scoreit.dto.movie.MovieResponse;
 import com.scoreit.scoreit.service.MovieService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/movie")
@@ -15,10 +13,16 @@ public class MovieController {
     @Autowired
     private MovieService service;
 
-    @GetMapping("/get")
-    public MovieResponse getMovies(@RequestParam(defaultValue = "1") int page){
+    @GetMapping("/get/page/{page}")
+    public MovieResponse getMovies(@RequestParam(defaultValue = "1") @PathVariable int page){
         return service.getMovies(page);
     }
+
+    @GetMapping("/get/{id}")
+    public Movie getMovieById(@PathVariable int id) {
+        return service.getMovieById(id);
+    }
+
 
 
 }

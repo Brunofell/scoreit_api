@@ -6,8 +6,9 @@ import java.util.List;
 
 public record MovieResponse (
         int page,
-        @JsonProperty("total_results") int totalResults,
-        @JsonProperty("total_pages") int totalPages,
+        int total_results,
+        @JsonProperty("total_pages") int totalPages, // caso o nome do atributo for diferente do que vem no json
         List<Movie> results
 ){
+
 }
