@@ -26,4 +26,10 @@ public class MovieService {
         return restTemplate.getForObject(url, Movie.class);
     }
 
+    public MovieResponse getMoviesNowPlaying(int page) {
+        String url = String.format("%s/movie/now_playing?api_key=%s&language=pt-BR&page=%d", baseUrl, apiKey, page);
+        return restTemplate.getForObject(url, MovieResponse.class);
+    }
+
+    // https://api.themoviedb.org/3/movie/now_playing?api_key=%s&language=pt-BR&page=%d
 }

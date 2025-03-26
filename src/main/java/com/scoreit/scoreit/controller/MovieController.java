@@ -18,11 +18,14 @@ public class MovieController {
         return service.getMovies(page);
     }
 
-    @GetMapping("/get/{id}")
+    @GetMapping("/id/{id}")
     public Movie getMovieById(@PathVariable int id) {
         return service.getMovieById(id);
     }
 
-
+    @GetMapping("/now/{page}")
+    public MovieResponse getMoviesNowPlaying(@PathVariable int page) {
+        return service.getMoviesNowPlaying(page);
+    }
 
 }

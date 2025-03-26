@@ -1,10 +1,8 @@
-package com.scoreit.scoreit.dto.movie;
+package com.scoreit.scoreit.dto.series;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-
-public record Movie(
+public record Series(
         int id,
-        String title,
+        String name,
         String overview,
         String poster_path ,
         String backdrop_path,
