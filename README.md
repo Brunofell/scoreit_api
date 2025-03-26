@@ -23,7 +23,7 @@
 - Vocês vão precisar do token para fazer as outras requisições que não são do cadastro, isso serve para ter mais segurança
 - Dai toda vez que vocês forem fazer uma requisição para resgatar filmes e tal, vão ter que colocar o token retornado na opção bearer token, dai vão conseguir fazer a requisição com sucesso
 
-# METODOS HTTP:
+# MÉTODOS HTTP:
 
 - Usuário(tem que passar o token nesses, menos no cadastro e login - o login retorna o token) :
   - http://localhost:8080/member/post
