@@ -16,7 +16,7 @@ public class SeriesController {
     private SeriesService service;
 
     @GetMapping("/get/page/{page}")
-    public SeriesResponse getMovies(@RequestParam(defaultValue = "1") @PathVariable int page){
+    public SeriesResponse getMovies(@PathVariable int page){
         return service.getSeries(page);
     }
 

@@ -14,7 +14,7 @@ public class MovieController {
     private MovieService service;
 
     @GetMapping("/get/page/{page}")
-    public MovieResponse getMovies(@RequestParam(defaultValue = "1") @PathVariable int page){
+    public MovieResponse getMovies(@PathVariable int page){
         return service.getMovies(page);
     }
 
