@@ -39,7 +39,7 @@ public class SecurityConfig {
     // Define o CORS para ser usado no Spring Security
     @Bean
     public UrlBasedCorsConfigurationSource corsConfigurationSource() {
-        CorsConfiguration config = new CorsConfiguration();
+        CorsConfiguration  config = new CorsConfiguration();
         config.setAllowedOrigins(List.of("http://localhost:3000")); // Permite o frontend
         config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS")); // Permite os métodos
         config.setAllowedHeaders(List.of("Authorization", "Content-Type")); // Permite headers
