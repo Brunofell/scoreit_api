@@ -22,4 +22,6 @@ public class MusicController {
         ArtistResponse response = musicService.getArtist(name);
         return response.artist();
     }
+
+
 }
