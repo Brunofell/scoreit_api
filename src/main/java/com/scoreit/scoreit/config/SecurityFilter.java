@@ -1,13 +1,11 @@
 package com.scoreit.scoreit.config;
 
-
 import com.scoreit.scoreit.repository.MemberRepository;
 import com.scoreit.scoreit.service.TokenService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -18,33 +16,38 @@ import java.io.IOException;
 
 @Component
 public class SecurityFilter extends OncePerRequestFilter {
-    @Autowired
-    private TokenService tokenService;
-    @Autowired
-    private MemberRepository repository;
+
+    private final TokenService tokenService;
+    private final MemberRepository repository;
+
+    public SecurityFilter(TokenService tokenService, MemberRepository repository) {
+        this.tokenService = tokenService;
+        this.repository = repository;
+    }
 
     @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
+            throws ServletException, IOException {
 
-        var token = this.recoverToken(request);
-        if(token != null){
-            var subject = tokenService.validateToken(token);
+        String token = recoverToken(request);
+        if (token != null) {
+            String subject = tokenService.validateToken(token);
             UserDetails member = repository.findByEmail(subject);
 
-            var authentication = new UsernamePasswordAuthenticationToken(member, null, member.getAuthorities());
-
-            SecurityContextHolder.getContext().setAuthentication(authentication);
+            if (member != null) { // Evita NullPointerException caso o usuário não seja encontrado
+                var authentication = new UsernamePasswordAuthenticationToken(member, null, member.getAuthorities());
+                SecurityContextHolder.getContext().setAuthentication(authentication);
+            }
         }
 
         filterChain.doFilter(request, response);
-
     }
 
     private String recoverToken(HttpServletRequest request) {
-        var authHeader = request.getHeader("Authorization");
-        if(authHeader == null){
+        String authHeader = request.getHeader("Authorization");
+        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
             return null;
         }
-        return authHeader.replace("Bearer ", "");
+        return authHeader.substring(7); // Remove "Bearer " do início do token
     }
 }
