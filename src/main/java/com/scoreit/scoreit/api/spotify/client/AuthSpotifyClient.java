@@ -1,5 +1,7 @@
-package com.scoreit.scoreit.dto.spotify;
+package com.scoreit.scoreit.api.spotify.client;
 
+import com.scoreit.scoreit.api.spotify.dto.oauth.LoginRequest;
+import com.scoreit.scoreit.api.spotify.dto.oauth.LoginResponse;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.PostMapping;

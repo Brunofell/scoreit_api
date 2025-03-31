@@ -1,4 +1,4 @@
-package com.scoreit.scoreit.dto.series;
+package com.scoreit.scoreit.api.tmdb.series.dto;
 
 public record Series(
         int id,

@@ -1,7 +1,5 @@
-package com.scoreit.scoreit.service;
+package com.scoreit.scoreit.api.lastfm;
 
-import com.scoreit.scoreit.dto.music.Artist;
-import com.scoreit.scoreit.dto.music.ArtistResponse;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 

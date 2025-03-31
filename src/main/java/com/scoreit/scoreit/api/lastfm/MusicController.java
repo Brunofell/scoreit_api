@@ -1,8 +1,5 @@
-package com.scoreit.scoreit.controller;
+package com.scoreit.scoreit.api.lastfm;
 
-import com.scoreit.scoreit.dto.music.Artist;
-import com.scoreit.scoreit.dto.music.ArtistResponse;
-import com.scoreit.scoreit.service.MusicService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;

@@ -48,6 +48,6 @@ public class SecurityFilter extends OncePerRequestFilter {
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {
             return null;
         }
-        return authHeader.substring(7); // Remove "Bearer " do início do token
+        return authHeader.substring(7);
     }
 }

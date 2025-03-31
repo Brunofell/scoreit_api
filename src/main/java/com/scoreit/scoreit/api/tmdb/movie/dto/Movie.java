@@ -1,6 +1,4 @@
-package com.scoreit.scoreit.dto.movie;
-
-import com.fasterxml.jackson.annotation.JsonProperty;
+package com.scoreit.scoreit.api.tmdb.movie.dto;
 
 public record Movie(
         int id,

@@ -1,4 +1,4 @@
-package com.scoreit.scoreit.dto.spotify;
+package com.scoreit.scoreit.api.spotify.dto.oauth;
 
 
 public class LoginResponse {

@@ -1,9 +1,7 @@
-package com.scoreit.scoreit.service;
+package com.scoreit.scoreit.api.tmdb.series.service;
 
-import com.scoreit.scoreit.dto.movie.Movie;
-import com.scoreit.scoreit.dto.movie.MovieResponse;
-import com.scoreit.scoreit.dto.series.Series;
-import com.scoreit.scoreit.dto.series.SeriesResponse;
+import com.scoreit.scoreit.api.tmdb.series.dto.Series;
+import com.scoreit.scoreit.api.tmdb.series.dto.SeriesResponse;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
@@ -18,7 +16,7 @@ public class SeriesService {
         this.restTemplate = restTemplate;
     }
 
-    public SeriesResponse getSeries(int page){ /*Pega todas as séries, 20 a cada página*/
+    public SeriesResponse getPopularSeries(int page){ /*Pega todas as séries, 20 a cada página*/
         String url = String.format("%s/tv/popular?api_key=%s&language=pt-BR&page=%d", baseUrl, apiKey, page);
         return restTemplate.getForObject(url, SeriesResponse.class);
     }

@@ -1,14 +1,13 @@
-package com.scoreit.scoreit.dto.movie;
+package com.scoreit.scoreit.api.tmdb.series.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.util.List;
 
-public record MovieResponse (
+public record SeriesResponse(
         int page,
         int total_results,
         @JsonProperty("total_pages") int totalPages, // caso o nome do atributo for diferente do que vem no json
-        List<Movie> results
-){
-
+        List<Series> results
+) {
 }

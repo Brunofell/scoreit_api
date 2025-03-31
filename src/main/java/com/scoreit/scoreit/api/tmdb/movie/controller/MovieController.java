@@ -1,8 +1,8 @@
-package com.scoreit.scoreit.controller;
+package com.scoreit.scoreit.api.tmdb.movie.controller;
 
-import com.scoreit.scoreit.dto.movie.Movie;
-import com.scoreit.scoreit.dto.movie.MovieResponse;
-import com.scoreit.scoreit.service.MovieService;
+import com.scoreit.scoreit.api.tmdb.movie.dto.Movie;
+import com.scoreit.scoreit.api.tmdb.movie.dto.MovieResponse;
+import com.scoreit.scoreit.api.tmdb.movie.service.MovieService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -14,8 +14,8 @@ public class MovieController {
     private MovieService service;
 
     @GetMapping("/get/page/{page}")
-    public MovieResponse getMovies(@PathVariable int page){
-        return service.getMovies(page);
+    public MovieResponse getPopularMovies(@PathVariable int page){
+        return service.getPopularMovies(page);
     }
 
     @GetMapping("/id/{id}")
