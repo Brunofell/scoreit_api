@@ -36,6 +36,8 @@ public class SecurityConfig {
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers(HttpMethod.POST, "/member/post").permitAll()
                         .requestMatchers(HttpMethod.POST, "/member/login").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/api/forgot-password").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/api/reset-password").permitAll()
                         .requestMatchers("/spotify/api**").permitAll()
                         .anyRequest().authenticated()
                 )

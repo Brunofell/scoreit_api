@@ -60,5 +60,4 @@ public class MemberController {
         return service.deleteUser(id);
     }
 
-
 }
