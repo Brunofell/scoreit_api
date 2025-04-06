@@ -24,16 +24,17 @@ public class Member implements UserDetails {
     private String password;
     private LocalDateTime createdAt;
     private boolean enabled;
-    private String profileImage;
+    private String profileImageUrl;
     private String bio;
 
-    public Member(Long id, String name, String email, String password, LocalDateTime createdAt, Boolean enabled) {
+    public Member(Long id, String name, String email, String password, LocalDateTime createdAt, Boolean enabled, String profileImageUrl) {
         this.id = id;
         this.name = name;
         this.email = email;
         this.password = password;
         this.createdAt = createdAt;
         this.enabled = enabled;
+        this.profileImageUrl = profileImageUrl;
     }
 
     public Member(String name, String email, String password) {
@@ -44,6 +45,22 @@ public class Member implements UserDetails {
     }
 
     public Member(){}
+
+    public String getProfileImageUrl() {
+        return profileImageUrl;
+    }
+
+    public void setProfileImageUrl(String profileImageUrl) {
+        this.profileImageUrl = profileImageUrl;
+    }
+
+    public String getBio() {
+        return bio;
+    }
+
+    public void setBio(String bio) {
+        this.bio = bio;
+    }
 
     public void updateMember(MemberUpdate memberUpdate){
         if(memberUpdate.name() != null){
