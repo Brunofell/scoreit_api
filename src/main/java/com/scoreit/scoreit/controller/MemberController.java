@@ -16,6 +16,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 
 @RestController
@@ -31,6 +32,11 @@ public class MemberController {
     @GetMapping("/get")
     public List<Member> getMembers(){
         return service.getAllMembers();
+    }
+
+    @GetMapping("/get/{id}")
+    public Optional<Member> getMemberById(@PathVariable Long id){
+        return service.getMemberById(id);
     }
 
     @PostMapping("/post")
