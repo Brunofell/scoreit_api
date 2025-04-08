@@ -18,11 +18,16 @@ public class TokenService {
     private String secret;
 
     public String generateToken(Member member){
-        try{
+        try {
             Algorithm algorithm = Algorithm.HMAC256(secret);
-            String token = JWT.create().withIssuer("auth").withSubject(member.getEmail()).withExpiresAt(ExpirationDate()).sign(algorithm);
+            String token = JWT.create()
+                    .withIssuer("auth")
+                    .withSubject(member.getEmail())
+                    .withClaim("id", member.getId())
+                    .withExpiresAt(ExpirationDate())
+                    .sign(algorithm);
             return token;
-        }catch (JWTCreationException e){
+        } catch (JWTCreationException e) {
             throw new RuntimeException("ERROR: FAILED TO GENERATE TOKEN. ", e);
         }
     }
