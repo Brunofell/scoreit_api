@@ -1,4 +1,4 @@
-package com.scoreit.scoreit.api.lastfm;
+package com.scoreit.scoreit.api.lastfm.dto.artist;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
