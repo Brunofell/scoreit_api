@@ -1,5 +1,6 @@
 package com.scoreit.scoreit.entity;
 
+import com.scoreit.scoreit.dto.member.Gender;
 import com.scoreit.scoreit.dto.member.MemberUpdate;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -7,6 +8,7 @@ import lombok.Setter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.List;
@@ -22,29 +24,56 @@ public class Member implements UserDetails {
     private String name;
     private String email;
     private String password;
+    private LocalDate birthDate;
+    private Gender gender;
     private LocalDateTime createdAt;
     private boolean enabled;
     private String profileImageUrl;
     private String bio;
 
-    public Member(Long id, String name, String email, String password, LocalDateTime createdAt, Boolean enabled, String profileImageUrl) {
+    public Member(Long id, String name, String email, String password, LocalDate birthDate, Gender gender, LocalDateTime createdAt, Boolean enabled, String profileImageUrl) {
         this.id = id;
         this.name = name;
         this.email = email;
         this.password = password;
+        this.birthDate = birthDate;
+        this.gender = gender;
         this.createdAt = createdAt;
         this.enabled = enabled;
         this.profileImageUrl = profileImageUrl;
     }
 
-    public Member(String name, String email, String password) {
+    public Member(String name, String email, LocalDate birthDate, Gender gender, String password) {
         this.name = name;
         this.email = email;
         this.password = password;
+        this.birthDate = birthDate;
+        this.gender = gender;
         this.enabled = true;
     }
 
     public Member(){}
+
+    @PrePersist
+    protected void onCreate() {
+        this.createdAt = LocalDateTime.now();
+    }
+
+    public LocalDate getBirthDate() {
+        return birthDate;
+    }
+
+    public void setBirthDate(LocalDate birthDate) {
+        this.birthDate = birthDate;
+    }
+
+    public Gender getGender() {
+        return gender;
+    }
+
+    public void setGender(Gender gender) {
+        this.gender = gender;
+    }
 
     public String getProfileImageUrl() {
         return profileImageUrl;
@@ -66,8 +95,14 @@ public class Member implements UserDetails {
         if(memberUpdate.name() != null){
             this.name = memberUpdate.name();
         }
-        if(memberUpdate.email() != null){
-            this.email = memberUpdate.email();
+//        if(memberUpdate.email() != null){
+//            this.email = memberUpdate.email();
+//        }
+        if(memberUpdate.gender() != null){
+            this.gender = memberUpdate.gender();
+        }
+        if(memberUpdate.birthDate() != null){
+            this.birthDate = memberUpdate.birthDate();
         }
         if(memberUpdate.password() != null){
             this.password = memberUpdate.password();

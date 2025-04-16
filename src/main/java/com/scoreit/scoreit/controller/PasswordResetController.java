@@ -1,7 +1,6 @@
 package com.scoreit.scoreit.controller;
 
-import com.scoreit.scoreit.entity.PasswordResetToken;
-import com.scoreit.scoreit.service.EmailService;
+import com.scoreit.scoreit.service.PasswordResetEmailService;
 import com.scoreit.scoreit.service.PasswordResetService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -16,12 +15,12 @@ public class PasswordResetController {
     @Autowired
     private PasswordResetService passwordResetService;
     @Autowired
-    private EmailService emailService;
+    private PasswordResetEmailService passwordResetEmailService;
 
     @PostMapping("/forgot-password")
     public ResponseEntity<String> forgotPassword(@RequestParam String email){
         String token = passwordResetService.createPasswordResetToken(email);
-        emailService.sendPasswordResetEmail(email, token);
+        passwordResetEmailService.sendPasswordResetEmail(email, token);
         return ResponseEntity.ok("Password reset e-mail was sended.");
     }
 
