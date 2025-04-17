@@ -2,6 +2,7 @@ package com.scoreit.scoreit.api.tmdb.series.controller;
 
 import com.scoreit.scoreit.api.tmdb.series.dto.Series;
 import com.scoreit.scoreit.api.tmdb.series.dto.SeriesResponse;
+import com.scoreit.scoreit.api.tmdb.series.dto.SeriesSeason;
 import com.scoreit.scoreit.api.tmdb.series.service.SeriesService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -24,4 +25,19 @@ public class SeriesController {
 
     @GetMapping("/now/{page}")
     public SeriesResponse getSeriesOnAir(@PathVariable int page) {return service.getSeriesOnAir(page);}
+
+    @GetMapping("/{seriesId}/season/{seasonNumber}")
+    public SeriesSeason getSeasonDetails(@PathVariable int seriesId, @PathVariable int seasonNumber) {
+        return service.getSeriesSeason(seriesId, seasonNumber);
+    }
+
+    @GetMapping("/genre/{genreId}/page/{page}")
+    public SeriesResponse getPopularSeriesByGenre(@PathVariable int genreId, @PathVariable int page) {
+        return service.getPopularSeriesByGenre(genreId, page);
+    }
+
+    @GetMapping("/year/{year}/page/{page}")
+    public SeriesResponse getPopularSeriesByYear(@PathVariable int year, @PathVariable int page) {
+        return service.getPopularSeriesByYear(year, page);
+    }
 }

@@ -29,7 +29,7 @@ public class AlbumController {
         return ResponseEntity.ok(authSpotifyClient.login(request).getAccess_token());
     }
 
-    @GetMapping("/albums")
+    @GetMapping("/newAlbumReleases")
     public ResponseEntity<List<Album>> getAlbumReleases(
             @RequestParam(value = "country", defaultValue = "US") String country,
             @RequestParam(value = "limit", defaultValue = "10") int limit,

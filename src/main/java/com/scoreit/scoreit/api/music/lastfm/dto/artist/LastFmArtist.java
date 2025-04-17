@@ -5,8 +5,10 @@ import com.scoreit.scoreit.api.music.lastfm.dto.Image;
 
 public record LastFmArtist(
         String name,
-        @JsonProperty("url") String profileUrl,
-        @JsonProperty("image") Image[] images
+        @JsonProperty("image") Image[] images,
+        String playcount,
+        String listeners,
+        String mbid
 ) {}
 
 

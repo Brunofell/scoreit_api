@@ -41,4 +41,5 @@ public class ArtistSpotifyService {
 
         return ResponseEntity.ok().body(new ArtistImageResponse(artist.getName(), artist.getId(), imageUrl));
     }
+
 }

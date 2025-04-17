@@ -1,6 +1,7 @@
 package com.scoreit.scoreit.api.tmdb.movie.controller;
 
 import com.scoreit.scoreit.api.tmdb.movie.dto.Movie;
+import com.scoreit.scoreit.api.tmdb.movie.dto.MovieMediaResponse;
 import com.scoreit.scoreit.api.tmdb.movie.dto.MovieResponse;
 import com.scoreit.scoreit.api.tmdb.movie.service.MovieService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +27,16 @@ public class MovieController {
     @GetMapping("/now/{page}")
     public MovieResponse getMoviesNowPlaying(@PathVariable int page) {
         return service.getMoviesNowPlaying(page);
+    }
+
+    @GetMapping("/upcoming/{page}")
+    public MovieResponse getUpcomingMovies(@PathVariable int page) {
+        return service.getUpcomingMovies(page);
+    }
+
+    @GetMapping("/media/{movieId}")
+    public MovieMediaResponse getMovieMedia(@PathVariable String movieId) {
+        return service.getMovieMedia(movieId);
     }
 
 }

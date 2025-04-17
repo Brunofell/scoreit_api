@@ -1,6 +1,7 @@
 package com.scoreit.scoreit.api.tmdb.movie.service;
 
 import com.scoreit.scoreit.api.tmdb.movie.dto.Movie;
+import com.scoreit.scoreit.api.tmdb.movie.dto.MovieMediaResponse;
 import com.scoreit.scoreit.api.tmdb.movie.dto.MovieResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -28,5 +29,15 @@ public class MovieService {
     public MovieResponse getMoviesNowPlaying(int page) {
         String url = String.format("%s/movie/now_playing?api_key=%s&language=pt-BR&page=%d", baseUrl, apiKey, page);
         return restTemplate.getForObject(url, MovieResponse.class);
+    }
+
+    public MovieResponse getUpcomingMovies(int page) {
+        String url = String.format("%s/movie/upcoming?api_key=%s&language=pt-BR&page=%d", baseUrl, apiKey, page);
+        return restTemplate.getForObject(url, MovieResponse.class);
+    }
+
+    public MovieMediaResponse getMovieMedia(String movieId) {
+        String url = String.format("%s/movie/%s/videos?api_key=%s&language=pt-BR", baseUrl, movieId, apiKey);
+        return restTemplate.getForObject(url, MovieMediaResponse.class);
     }
 }
