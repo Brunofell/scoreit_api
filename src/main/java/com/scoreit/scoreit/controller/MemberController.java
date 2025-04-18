@@ -4,7 +4,10 @@ import com.scoreit.scoreit.dto.member.MemberUpdate;
 import com.scoreit.scoreit.dto.security.AuthenticationRequest;
 import com.scoreit.scoreit.dto.security.AuthenticationResponse;
 import com.scoreit.scoreit.dto.member.MemberRegister;
+import com.scoreit.scoreit.entity.FavoriteListContent;
 import com.scoreit.scoreit.entity.Member;
+import com.scoreit.scoreit.service.FavoriteListContentService;
+import com.scoreit.scoreit.service.FavoriteListService;
 import com.scoreit.scoreit.service.MemberService;
 import com.scoreit.scoreit.service.TokenService;
 import jakarta.validation.Valid;
@@ -28,6 +31,10 @@ public class MemberController {
     private TokenService tokenService;
     @Autowired
     private AuthenticationManager authenticationManager;
+    @Autowired
+    private FavoriteListContentService favoriteListContentService;
+    @Autowired
+    private FavoriteListService favoriteListService;
 
     @GetMapping("/get")
     public List<Member> getMembers(){
@@ -66,4 +73,33 @@ public class MemberController {
         return service.deleteUser(id);
     }
 
+    @PostMapping("/favorites/{memberId}/{mediaId}/{mediaType}")
+    public ResponseEntity<String> addContentToFavorites(@PathVariable Long memberId, @PathVariable String mediaId, @PathVariable String mediaType) {
+        try {
+            favoriteListContentService.addContentInFavorites(memberId, mediaId, mediaType);
+            return ResponseEntity.ok("Conteúdo adicionado aos favoritos!");
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        }
+    }
+
+    @GetMapping("favoritesList/{memberId}")
+    public ResponseEntity getListByMemberId(@PathVariable Long memberId){
+        return ResponseEntity.ok(favoriteListService.getListByMemberId(memberId));
+    }
+
+    @GetMapping("favoritesListContent/{memberId}")
+    public List<FavoriteListContent> getFavoriteListContent(@PathVariable Long memberId){
+        return favoriteListContentService.getFavoriteListContent(memberId);
+    }
+
+    @DeleteMapping("/favoritesDelete/{memberId}/{mediaId}/{mediaType}")
+    public ResponseEntity<String> removeContentFromFavorites(@PathVariable Long memberId, @PathVariable String mediaId, @PathVariable String mediaType) {
+        try {
+            favoriteListContentService.removeContent(memberId, mediaId, mediaType);
+            return ResponseEntity.ok("Conteúdo removido dos favoritos.");
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        }
+    }
 }

@@ -23,6 +23,8 @@ public class MemberService {
     private TokenService tokenService;
     @Autowired
     private AuthenticationManager authenticationManager;
+    @Autowired
+    private FavoriteListService favoriteListService;
 
     public List<Member> getAllMembers(){ // add pageable
         return repository.findAll();
@@ -36,7 +38,11 @@ public class MemberService {
         String encodedPassword = encoder.encode(member.getPassword());
         member.setPassword(encodedPassword);
 
-        return repository.save(member);
+        var savedMember =  repository.save(member);
+
+        favoriteListService.createFavoriteList(savedMember.getId(), "Favorites", "List of "+ savedMember.getName() +"'s favorite media!"); // criando lista de favs já
+
+        return savedMember;
     }
 
     public Member updateMember(MemberUpdate data){
@@ -67,7 +73,6 @@ public class MemberService {
     public Optional<Member> getMemberById(Long id){
         return repository.findById(id);
     }
-
 
 
 }
