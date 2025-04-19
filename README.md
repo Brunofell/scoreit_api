@@ -1,65 +1,120 @@
-# PASSO A PASSO PARA USAR A API
+# GUIA DE USO DA API SCOREIT
 
-## BANCO DE DADOS:
+## CONFIGURAÇÃO DO BANCO DE DADOS
 
-- Usei MySQL a pedido de uns ai
-- Abre o Mysql de vcs ai ou instala
-- Depois vocês vão usar esse comando sql `CREATE DATABASE scoreit`
-- Dai é só rodar a api que ela já cria as tabelas pelo Hibernate
+- A API utiliza MySQL conforme solicitado
+- Passos para configuração:
+    1. Instale ou abra o MySQL em seu ambiente
+    2. Execute o comando SQL: `CREATE DATABASE scoreit`
+    3. A API criará automaticamente as tabelas necessárias através do Hibernate quando executada
 
-## API SPRING BOOT:
+## CONFIGURAÇÃO DA API SPRING BOOT
 
-- Vocês vão dar clone do repositório e vão abrir no Intellij (ou no eclipse ou vscode, mas vscode não presta pra java não)
-- Dai vocês vão dar run nesse arquivo: `ScoreitApplication`
-- Daí pronto é pra rodar
+1. Clone o repositório
+2. Abra o projeto no IntelliJ IDEA (recomendado), Eclipse ou VS Code
+3. Execute o arquivo `ScoreitApplication.java`
+4. Aguarde a inicialização do servidor (porta padrão: 8080)
 
-## REQUISIÇÕES HTTP:
+## TESTANDO AS REQUISIÇÕES HTTP
 
-- Pra usar a API, vocês vão ter que usar uma plataforma para testar as requisições e ver como elas funcionam
-- Dai tem o API Dog, Insomnia, mas eu uso o Postman que é melhor
-- No Postman ou sla qual vcs vão usar, primeiramente vão ter que fazer a requisição do cadastro para criar um usuário para usar
-- Depois vão ter que fazer o login com uma requisição
-- Quando vcs fizerem login, ele vai retornar no corpo da resposta o token JWT
-- Vocês vão precisar do token para fazer as outras requisições que não são do cadastro, isso serve para ter mais segurança
-- Dai toda vez que vocês forem fazer uma requisição para resgatar filmes e tal, vão ter que colocar o token retornado na opção bearer token, dai vão conseguir fazer a requisição com sucesso
+Para testar a API, utilize uma ferramenta de requisições HTTP como:
+- Postman (recomendado)
+- Insomnia
+- API Dog
 
-# MÉTODOS HTTP:
+### Fluxo de autenticação:
+1. Cadastre um novo usuário
+2. Faça login para receber o token JWT
+3. Utilize o token nas demais requisições através do cabeçalho "Authorization" (Bearer Token)
 
-- Usuário(tem que passar o token nesses, menos no cadastro e login - o login retorna o token) :
-  - http://localhost:8080/member/post
-  `
-    {
+## ENDPOINTS DISPONÍVEIS
+
+### Usuários
+
+| Método | Endpoint | Autenticação | Descrição |
+|--------|----------|--------------|-----------|
+| POST | `/member/post` | Não | Cadastrar novo usuário |
+| POST | `/member/login` | Não | Autenticar usuário e obter token JWT |
+| GET | `/member/get` | Sim | Obter dados do usuário logado |
+| PUT | `/member/update` | Sim | Atualizar dados do usuário |
+| POST | `/api/change-email?email={EMAIL_ATUAL}` | Sim | Solicitar alteração de email |
+| POST | `/api/reset-email?token={TOKEN}&newEmail={NOVO_EMAIL}` | Não | Confirmar alteração de email |
+| DELETE | `/member/delete/{id}` | Sim | Excluir conta de usuário |
+| POST | `/api/forgot-password?email={EMAIL}` | Não | Solicitar redefinição de senha |
+| POST | `/api/reset-password?token={TOKEN}&newPassword={NOVA_SENHA}` | Não | Confirmar nova senha |
+| POST | `/api/images/upload/{USER_ID}` | Sim | Enviar foto de perfil |
+| POST | `/member/favorites/{USER_ID}/{MEDIA_ID}/{MEDIA_TYPE}` | Sim | Adicionar item aos favoritos |
+| GET | `/member/favoritesList/{USER_ID}` | Sim | Obter lista de favoritos |
+| GET | `/member/favoritesListContent/{USER_ID}` | Sim | Obter conteúdo da lista de favoritos |
+| DELETE | `/member/favoritesDelete/{USER_ID}/{MEDIA_ID}/{MEDIA_TYPE}` | Sim | Remover item dos favoritos |
+
+### Filmes
+
+| Método | Endpoint | Autenticação | Descrição |
+|--------|----------|--------------|-----------|
+| GET | `/movie/get/page/{PAGE}` | Sim | Listar filmes por popularidade |
+| GET | `/movie/now/{PAGE}` | Sim | Filmes em cartaz atualmente |
+| GET | `/movie/upcoming/{PAGE}` | Sim | Próximos lançamentos |
+| GET | `/movie/media/{MOVIE_ID}` | Sim | Obter mídias de um filme específico |
+
+### Séries
+
+| Método | Endpoint | Autenticação | Descrição |
+|--------|----------|--------------|-----------|
+| GET | `/series/get/{SERIES_ID}` | Sim | Buscar série por ID |
+| GET | `/series/now/{PAGE}` | Sim | Séries em exibição atualmente |
+| GET | `/series/get/page/{PAGE}` | Sim | Listar séries por página |
+| GET | `/series/year/{ANO}/page/{PAGE}` | Sim | Séries populares por ano |
+| GET | `/series/genre/{GENRE_ID}/page/{PAGE}` | Sim | Séries por gênero |
+| GET | `/series/{SERIES_ID}/season/{SEASON_NUMBER}` | Sim | Detalhes de temporada específica |
+
+### Músicas
+
+| Método | Endpoint | Autenticação | Descrição |
+|--------|----------|--------------|-----------|
+| GET | `/spotify/api/newAlbumReleases` | Sim | Novos lançamentos (álbuns e EPs) |
+| GET | `/lastfm/top-artists?page={PAGE}&limit={LIMIT}` | Sim | Artistas mais populares globalmente |
+| GET | `/lastfm/album/{GENRE}?page={PAGE}&limit={LIMIT}` | Sim | Álbuns por gênero musical |
+
+## EXEMPLOS DE REQUISIÇÕES
+
+### Cadastro de usuário
+```json
+POST /member/post
+{
     "name": "Bruno Oliveira Faria Luz",
-    "email": "scoreit@gmail.com",
-    "password": "senhaforte"
-    }
-`
-  - http://localhost:8080/member/login
-  `
-  {
-    "email": "scoreit@gmail.com",
+    "birthDate": "2000-05-20",
+    "gender": "MASC",
+    "email": "exemplo@email.com",
     "password": "senhaforte"
 }
-`
-  - http://localhost:8080/member/get
-  - http://localhost:8080/member/update
-`
-    {
-    "id": 1,
+```
+
+### Login
+```json
+POST /member/login
+{
+    "email": "exemplo@email.com",
+    "password": "senhaforte"
+}
+```
+
+### Atualização de perfil
+```json
+PUT /member/update
+{
+    "id": 5,
     "name": "Bruno Oliveira Faria Luz",
-    "email": "scoreit@gmail.com",
+    "birthDate": "2004-06-24",
+    "gender": "FEM",
     "password": "senha123",
-    "bio": "Gosto de Rap | Rock | Pagode | Terror | Drama | Comédia"
-    }
-`
-  - http://localhost:8080/member/delete/{id} - coloca um número de id
+    "bio": "Gosto de Rap | Rock | Pagode | Ação | Drama | Comédia"
+}
+```
 
-- FILMES (tem que passar o token nesses):
-  - http://localhost:8080/movie/get/page/{page} - Retorna todos os filmes por popularidade, coloca um número ali no page, tipo 1
-  - http://localhost:8080/movie/now/1 - retorna o que está passando no momento
-  
-- SÉRIES (tem que passar o token nesses):
-  - http://localhost:8080/series/get/{id}  - coloca um número de id
-  - http://localhost:8080/series/now/{page} - retorna séries que estão no ar, coloca um número ali no page, tipo 1
+## OBSERVAÇÕES IMPORTANTES
 
-
+- O token JWT é necessário para todas as requisições exceto cadastro, login e redefinição de senha/email
+- Após login bem-sucedido, armazene o token retornado para utilizar nas demais requisições
+- A lista de favoritos é criada automaticamente durante o cadastro do usuário
+- Para uploads de imagem e operações com arquivos, utilize requisições multipart/form-data
