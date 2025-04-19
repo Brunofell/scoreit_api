@@ -1,15 +1,14 @@
 package com.scoreit.scoreit.api.music.spotify.controller;
 
 import com.scoreit.scoreit.api.music.spotify.dto.album.Album;
+import com.scoreit.scoreit.api.music.spotify.dto.album.AlbumResponse;
+import com.scoreit.scoreit.api.music.spotify.dto.album.AlbumResponseById;
 import com.scoreit.scoreit.api.music.spotify.dto.oauth.LoginRequest;
 import com.scoreit.scoreit.api.music.spotify.client.AlbumSpotifyClient;
 import com.scoreit.scoreit.api.music.spotify.client.AuthSpotifyClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -40,6 +39,7 @@ public class AlbumController {
                 "client_credentials",
                 "46f327a02d944095a28863edd7446a50",
                 "3debe93c67ed487a841689865e56ac18");
+
         var token = authSpotifyClient.login(request).getAccess_token();
 
         var response = albumSpotifyClient.getAlbumReleases("Bearer " + token, country, limit, offset);
@@ -56,6 +56,26 @@ public class AlbumController {
         return ResponseEntity.ok(albums);
 
     }
+
+    @GetMapping("/album/{id}")
+    public ResponseEntity<AlbumResponseById> getAlbum(
+            @PathVariable("id") String albumId,
+            @RequestParam(value = "country", defaultValue = "US") String country
+    ) {
+        var request = new LoginRequest(
+                "client_credentials",
+                "46f327a02d944095a28863edd7446a50",
+                "3debe93c67ed487a841689865e56ac18");
+
+        var token = authSpotifyClient.login(request).getAccess_token();
+        System.out.println("Token de autorização: " + token);  // Verifique se o token está correto
+
+        var response = albumSpotifyClient.getAlbum("Bearer " + token, albumId);
+
+        return ResponseEntity.ok().body(response);
+    }
+
+
 }
 
 

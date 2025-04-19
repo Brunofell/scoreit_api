@@ -1,5 +1,6 @@
 package com.scoreit.scoreit.api.music.lastfm;
 
+import com.scoreit.scoreit.api.music.UnifiedAlbum;
 import com.scoreit.scoreit.api.music.UnifiedArtistResponse;
 
 import com.scoreit.scoreit.api.music.lastfm.dto.artist.*;

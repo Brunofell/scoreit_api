@@ -1,11 +1,13 @@
 package com.scoreit.scoreit.api.music.lastfm;
 
+import com.scoreit.scoreit.api.music.UnifiedAlbum;
 import com.scoreit.scoreit.api.music.UnifiedArtistResponse;
 
 import com.scoreit.scoreit.api.music.lastfm.dto.album.Album;
 import com.scoreit.scoreit.api.music.lastfm.dto.album.AlbumResponse;
 import com.scoreit.scoreit.api.music.lastfm.dto.artist.UnifiedTopArtist;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;

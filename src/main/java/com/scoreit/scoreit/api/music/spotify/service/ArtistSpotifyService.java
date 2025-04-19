@@ -1,8 +1,11 @@
 package com.scoreit.scoreit.api.music.spotify.service;
 
 
+import com.scoreit.scoreit.api.music.UnifiedAlbum;
+import com.scoreit.scoreit.api.music.spotify.client.AlbumSpotifyClient;
 import com.scoreit.scoreit.api.music.spotify.client.ArtistSpotifyClient;
 import com.scoreit.scoreit.api.music.spotify.client.AuthSpotifyClient;
+import com.scoreit.scoreit.api.music.spotify.dto.album.AlbumSpotifyInfo;
 import com.scoreit.scoreit.api.music.spotify.dto.artist.Artist;
 import com.scoreit.scoreit.api.music.spotify.dto.artist.ArtistImageResponse;
 import com.scoreit.scoreit.api.music.spotify.dto.oauth.LoginRequest;
@@ -19,6 +22,8 @@ public class ArtistSpotifyService {
 
     @Autowired
     private ArtistSpotifyClient artistSpotifyClient;
+    @Autowired
+    private AlbumSpotifyClient albumSpotifyClient;
 
     @GetMapping("/artist-image")
     public ResponseEntity<?> getArtistImage(@RequestParam("name") String artistName) {

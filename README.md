@@ -50,11 +50,12 @@ Para testar a API, utilize uma ferramenta de requisições HTTP como:
 
 ### Filmes
 
-| Método | Endpoint | Autenticação | Descrição |
-|--------|----------|--------------|-----------|
-| GET | `/movie/get/page/{PAGE}` | Sim | Listar filmes por popularidade |
-| GET | `/movie/now/{PAGE}` | Sim | Filmes em cartaz atualmente |
-| GET | `/movie/upcoming/{PAGE}` | Sim | Próximos lançamentos |
+| Método | Endpoint                  | Autenticação | Descrição                           |
+|--------|---------------------------|--------------|-------------------------------------|
+| GET | `/movie/id/{id}`          | Sim | GET do filme pelo id dele           |
+| GET | `/movie/get/page/{PAGE}`  | Sim | Listar filmes por popularidade      |
+| GET | `/movie/now/{PAGE}`       | Sim | Filmes em cartaz atualmente         |
+| GET | `/movie/upcoming/{PAGE}`  | Sim | Próximos lançamentos                |
 | GET | `/movie/media/{MOVIE_ID}` | Sim | Obter mídias de um filme específico |
 
 ### Séries
@@ -70,11 +71,12 @@ Para testar a API, utilize uma ferramenta de requisições HTTP como:
 
 ### Músicas
 
-| Método | Endpoint | Autenticação | Descrição |
-|--------|----------|--------------|-----------|
-| GET | `/spotify/api/newAlbumReleases` | Sim | Novos lançamentos (álbuns e EPs) |
-| GET | `/lastfm/top-artists?page={PAGE}&limit={LIMIT}` | Sim | Artistas mais populares globalmente |
-| GET | `/lastfm/album/{GENRE}?page={PAGE}&limit={LIMIT}` | Sim | Álbuns por gênero musical |
+| Método | Endpoint                                                | Autenticação | Descrição                           |
+|--------|---------------------------------------------------------|--------------|-------------------------------------|
+| GET | `/spotify/api/newAlbumReleases`                         | Sim | Novos lançamentos (álbuns e EPs)    |
+| GET | `/lastfm/top-artists?page={PAGE}&limit={LIMIT}`         | Sim | Artistas mais populares globalmente |
+| GET | `/lastfm/album/{GENRE}?page={PAGE}&limit={LIMIT}`       | Sim | Álbuns por gênero musical           |
+| GET | `http://localhost:8080/spotify/api/album/{id do album}` | Sim | Retorna album por id                |
 
 ## EXEMPLOS DE REQUISIÇÕES
 
