@@ -71,12 +71,13 @@ Para testar a API, utilize uma ferramenta de requisições HTTP como:
 
 ### Músicas
 
-| Método | Endpoint                                                | Autenticação | Descrição                           |
-|--------|---------------------------------------------------------|--------------|-------------------------------------|
-| GET | `/spotify/api/newAlbumReleases`                         | Sim | Novos lançamentos (álbuns e EPs)    |
-| GET | `/lastfm/top-artists?page={PAGE}&limit={LIMIT}`         | Sim | Artistas mais populares globalmente |
-| GET | `/lastfm/album/{GENRE}?page={PAGE}&limit={LIMIT}`       | Sim | Álbuns por gênero musical           |
-| GET | `http://localhost:8080/spotify/api/album/{id do album}` | Sim | Retorna album por id                |
+| Método | Endpoint                                                | Autenticação | Descrição                                   |
+|--------|---------------------------------------------------------|--------------|---------------------------------------------|
+| GET | `/spotify/api/newAlbumReleases`                         | Sim | Novos lançamentos (álbuns e EPs)            |
+| GET | `/lastfm/top-artists?page={PAGE}&limit={LIMIT}`         | Sim | Artistas mais populares globalmente         |
+| GET | `/lastfm/album/{GENRE}?page={PAGE}&limit={LIMIT}`       | Sim | Álbuns por gênero musical                   |
+| GET | `/lastfm/albums-by-genre/rock` | Sim | RETORNA ALBUM POR GENERO MUSICAL (USA ESSE) |
+| GET | `/spotify/api/album/{id do album}` | Sim | Retorna album por id                        |
 
 ## EXEMPLOS DE REQUISIÇÕES
 

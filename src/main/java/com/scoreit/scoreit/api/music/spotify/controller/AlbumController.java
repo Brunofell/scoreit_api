@@ -45,7 +45,7 @@ public class AlbumController {
         var response = albumSpotifyClient.getAlbumReleases("Bearer " + token, country, limit, offset);
 
         // Ordenação local
-        List<Album> albums = response.getalbums().getItems();
+        List<Album> albums = response.getAlbums().getItems();
         if ("asc".equalsIgnoreCase(sortOrder)) {
             albums.sort((a1, a2) -> a1.getRelease_date().compareTo(a2.getRelease_date())); // Mais velho para mais novo
         } else {

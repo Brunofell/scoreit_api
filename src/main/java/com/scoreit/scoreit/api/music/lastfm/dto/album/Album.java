@@ -9,7 +9,6 @@ import java.util.List;
 public record Album(
         String name,
         Image[] image,
-        //LastFmArtist lastFmArtist,
         Artist artist
 ) {
 }

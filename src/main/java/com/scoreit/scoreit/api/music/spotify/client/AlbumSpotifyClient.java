@@ -24,5 +24,13 @@ public interface AlbumSpotifyClient {
             @RequestHeader("Authorization") String authorization,
             @PathVariable("id") String albumId
     );
+    @GetMapping("/v1/search")
+    AlbumResponse searchAlbum(
+            @RequestHeader("Authorization") String authorization,
+            @RequestParam("q") String query,
+            @RequestParam("type") String type,
+            @RequestParam("limit") Integer limit
+    );
+
 
 }

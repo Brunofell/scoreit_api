@@ -19,7 +19,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 public class ArtistSpotifyService {
     @Autowired
     private AuthSpotifyClient authSpotifyClient;
-
     @Autowired
     private ArtistSpotifyClient artistSpotifyClient;
     @Autowired
@@ -46,5 +45,24 @@ public class ArtistSpotifyService {
 
         return ResponseEntity.ok().body(new ArtistImageResponse(artist.getName(), artist.getId(), imageUrl));
     }
+
+    public ResponseEntity<?> getAlbumInfo(String albumName, String artistName) {
+        var loginRequest = new LoginRequest("client_credentials", "46f327a02d944095a28863edd7446a50", "3debe93c67ed487a841689865e56ac18");
+
+        var token = authSpotifyClient.login(loginRequest).getAccess_token();
+
+        String query = albumName + " " + artistName;
+        var response = albumSpotifyClient.searchAlbum("Bearer " + token, query, "album", 1);
+        var albums = response.getAlbums().getItems();
+
+        if (albums.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+
+        var album = albums.get(0);
+        String imageUrl = album.getImages().isEmpty() ? null : album.getImages().get(0).getUrl();
+        return ResponseEntity.ok(new UnifiedAlbum(album.getName(), album.getId(), imageUrl, artistName));
+    }
+
 
 }

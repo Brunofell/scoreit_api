@@ -10,7 +10,7 @@ public class AlbumResponse {
     public AlbumResponse() {
     }
 
-    public AlbumWrapper getalbums() {
+    public AlbumWrapper getAlbums() {
         return albums;
     }
 

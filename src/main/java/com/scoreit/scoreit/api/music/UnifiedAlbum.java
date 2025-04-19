@@ -2,7 +2,7 @@ package com.scoreit.scoreit.api.music;
 
 public record UnifiedAlbum(
         String name,
-        String artist,
+        String id,
         String imageUrl,
-        String spotifyId
+        String artistName
 ) {}
