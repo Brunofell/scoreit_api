@@ -10,7 +10,7 @@ import org.springframework.cloud.openfeign.EnableFeignClients;
 @EnableFeignClients
 //@EnableAutoConfiguration(exclude = {SecurityAutoConfiguration.class})
 public class ScoreitApplication {
-
+	
 	public static void main(String[] args) {
 		SpringApplication.run(ScoreitApplication.class, args);
 	}
