@@ -69,7 +69,7 @@ Para testar a API, utilize uma ferramenta de requisições HTTP como:
 | GET | `/series/genre/{GENRE_ID}/page/{PAGE}` | Sim | Séries por gênero |
 | GET | `/series/{SERIES_ID}/season/{SEASON_NUMBER}` | Sim | Detalhes de temporada específica |
 
-### Músicas
+### Músicas(Album)
 
 | Método | Endpoint                                                                                                | Autenticação | Descrição                                   |
 |--------|---------------------------------------------------------------------------------------------------------|--------------|---------------------------------------------|
