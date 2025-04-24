@@ -14,9 +14,9 @@ public class EmailResetEmailService {
     private String fromEmail;
 
     public void sendResetEmail(String to, String token){
-        String resetLink = "http://localhost:8080/api/reset-email?token=" + token;
+        String resetLinkEmail = "http://localhost:8080/api/reset-email?token=" + token;
 
-        // String resetLink = "http://localhost:3000/pt/nova_senha?token=" + token;
+        String resetLink = "http://localhost:3000/pt/novo_email?token=" + token;
 
         SimpleMailMessage message = new SimpleMailMessage();
 
