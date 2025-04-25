@@ -60,15 +60,15 @@ Para testar a API, utilize uma ferramenta de requisições HTTP como:
 | GET | `/movie/several?ids=id,id,id...` | Sim | Retorna mais de um filme por uma lista de ids |
 ### Séries
 
-| Método | Endpoint | Autenticação | Descrição |
-|--------|----------|--------------|-----------|
-| GET | `/series/get/{SERIES_ID}` | Sim | Buscar série por ID |
-| GET | `/series/now/{PAGE}` | Sim | Séries em exibição atualmente |
-| GET | `/series/get/page/{PAGE}` | Sim | Listar séries por página |
-| GET | `/series/year/{ANO}/page/{PAGE}` | Sim | Séries populares por ano |
-| GET | `/series/genre/{GENRE_ID}/page/{PAGE}` | Sim | Séries por gênero |
-| GET | `/series/{SERIES_ID}/season/{SEASON_NUMBER}` | Sim | Detalhes de temporada específica |
-| GET | `/series/several?ids=id,id,id...` | Sim | Retorna mais de um filme por uma lista de ids |
+| Método | Endpoint | Autenticação | Descrição                                      |
+|--------|----------|--------------|------------------------------------------------|
+| GET | `/series/get/{SERIES_ID}` | Sim | Buscar série por ID                            |
+| GET | `/series/now/{PAGE}` | Sim | Séries em exibição atualmente                  |
+| GET | `/series/get/page/{PAGE}` | Sim | Listar séries por página                       |
+| GET | `/series/year/{ANO}/page/{PAGE}` | Sim | Séries populares por ano                       |
+| GET | `/series/genre/{GENRE_ID}/page/{PAGE}` | Sim | Séries por gênero                              |
+| GET | `/series/{SERIES_ID}/season/{SEASON_NUMBER}` | Sim | Detalhes de temporada específica               |
+| GET | `/series/several?ids=id,id,id...` | Sim | Retorna mais de uma série por uma lista de ids |
 
 ### Músicas(Album)
 
