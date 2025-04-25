@@ -47,4 +47,10 @@ public class SeriesController {
     public List<Series> getSeveralSeriesByIds(@RequestParam List<Integer> ids) {
         return service.getSeveralSeriesByIds(ids);
     }
+
+    @GetMapping("/favorites/{memberId}")
+    public List<Series> getFavoriteSeriesByMemberId(@PathVariable Long memberId) {
+        return service.getFavoriteSeriesByMemberId(memberId);
+    }
+
 }

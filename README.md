@@ -50,25 +50,29 @@ Para testar a API, utilize uma ferramenta de requisições HTTP como:
 
 ### Filmes
 
-| Método | Endpoint                         | Autenticação | Descrição                                     |
-|--------|----------------------------------|--------------|-----------------------------------------------|
-| GET | `/movie/id/{id}`                 | Sim | GET do filme pelo id dele                     |
-| GET | `/movie/get/page/{PAGE}`         | Sim | Listar filmes por popularidade                |
-| GET | `/movie/now/{PAGE}`              | Sim | Filmes em cartaz atualmente                   |
-| GET | `/movie/upcoming/{PAGE}`         | Sim | Próximos lançamentos                          |
-| GET | `/movie/media/{MOVIE_ID}`        | Sim | Obter mídias de um filme específico           |
-| GET | `/movie/several?ids=id,id,id...` | Sim | Retorna mais de um filme por uma lista de ids |
+| Método | Endpoint                         | Autenticação | Descrição                                        |
+|--------|----------------------------------|--------------|--------------------------------------------------|
+| GET | `/movie/id/{id}`                 | Sim | GET do filme pelo id dele                        |
+| GET | `/movie/get/page/{PAGE}`         | Sim | Listar filmes por popularidade                   |
+| GET | `/movie/now/{PAGE}`              | Sim | Filmes em cartaz atualmente                      |
+| GET | `/movie/upcoming/{PAGE}`         | Sim | Próximos lançamentos                             |
+| GET | `/movie/media/{MOVIE_ID}`        | Sim | Obter mídias de um filme específico              |
+| GET | `/movie/several?ids=id,id,id...` | Sim | Retorna mais de um filme por uma lista de ids    |
+| GET | `/movie/favorites/{USER_ID}`     | Sim | Retorna os dados dos filmes favoritos do usuário |
+
 ### Séries
 
-| Método | Endpoint | Autenticação | Descrição                                      |
-|--------|----------|--------------|------------------------------------------------|
-| GET | `/series/get/{SERIES_ID}` | Sim | Buscar série por ID                            |
-| GET | `/series/now/{PAGE}` | Sim | Séries em exibição atualmente                  |
-| GET | `/series/get/page/{PAGE}` | Sim | Listar séries por página                       |
-| GET | `/series/year/{ANO}/page/{PAGE}` | Sim | Séries populares por ano                       |
-| GET | `/series/genre/{GENRE_ID}/page/{PAGE}` | Sim | Séries por gênero                              |
-| GET | `/series/{SERIES_ID}/season/{SEASON_NUMBER}` | Sim | Detalhes de temporada específica               |
-| GET | `/series/several?ids=id,id,id...` | Sim | Retorna mais de uma série por uma lista de ids |
+| Método | Endpoint | Autenticação | Descrição                                        |
+|--------|----------|--------------|--------------------------------------------------|
+| GET | `/series/get/{SERIES_ID}` | Sim | Buscar série por ID                              |
+| GET | `/series/now/{PAGE}` | Sim | Séries em exibição atualmente                    |
+| GET | `/series/get/page/{PAGE}` | Sim | Listar séries por página                         |
+| GET | `/series/year/{ANO}/page/{PAGE}` | Sim | Séries populares por ano                         |
+| GET | `/series/genre/{GENRE_ID}/page/{PAGE}` | Sim | Séries por gênero                                |
+| GET | `/series/{SERIES_ID}/season/{SEASON_NUMBER}` | Sim | Detalhes de temporada específica                 |
+| GET | `/series/several?ids=id,id,id...` | Sim | Retorna mais de uma série por uma lista de ids   |
+| GET | `/series/favorites/{USER_ID}`| Sim | Retorna os dados das series favoritas do usuário |
+
 
 ### Músicas(Album)
 
@@ -79,7 +83,9 @@ Para testar a API, utilize uma ferramenta de requisições HTTP como:
 | GET | `/lastfm/albums-by-genre/pop?page={PAGE}&limit={LIMIT}`                                                 | Sim | RETORNA ALBUM POR GENERO MUSICAL (USA ESSE)                   |
 | GET | `/spotify/api/album/{id do album}`                                                                      | Sim | Retorna album por id                                          |
 | GET | `/spotify/api/albums?ids=<ID_DA_OBRA>,<ID_DA_OBRA>,<ID_DA_OBRA>,<ID_DA_OBRA>`                           | Sim | Retorna mais de um album por requisição, separe por vírgula   |
-| GET | `/spotify/api/artists?ids=<ID_DO_ARTISTA>,<ID_DO_ARTISTA>,<ID_DO_ARTISTA>`                                             | Sim | Retorna mais de um Artista por requisição, separe por vírgula |
+| GET | `/spotify/api/artists?ids=<ID_DO_ARTISTA>,<ID_DO_ARTISTA>,<ID_DO_ARTISTA>`                              | Sim | Retorna mais de um Artista por requisição, separe por vírgula |
+| GET | `/spotify/api/favorites/{USER_ID}`                                                                      | Sim | Retorna os dados dos albums favoritos do usuário              |
+
 ## EXEMPLOS DE REQUISIÇÕES
 
 ### Cadastro de usuário
