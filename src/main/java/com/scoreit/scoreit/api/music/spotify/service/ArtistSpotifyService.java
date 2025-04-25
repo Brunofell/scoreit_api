@@ -5,11 +5,14 @@ import com.scoreit.scoreit.api.music.UnifiedAlbum;
 import com.scoreit.scoreit.api.music.spotify.client.AlbumSpotifyClient;
 import com.scoreit.scoreit.api.music.spotify.client.ArtistSpotifyClient;
 import com.scoreit.scoreit.api.music.spotify.client.AuthSpotifyClient;
+import com.scoreit.scoreit.api.music.spotify.dto.album.AlbumResponseById;
 import com.scoreit.scoreit.api.music.spotify.dto.album.AlbumSpotifyInfo;
 import com.scoreit.scoreit.api.music.spotify.dto.artist.Artist;
 import com.scoreit.scoreit.api.music.spotify.dto.artist.ArtistImageResponse;
 import com.scoreit.scoreit.api.music.spotify.dto.artist.SeveralArtistsResponse;
 import com.scoreit.scoreit.api.music.spotify.dto.oauth.LoginRequest;
+import com.scoreit.scoreit.entity.FavoriteListContent;
+import com.scoreit.scoreit.service.FavoriteListContentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -26,6 +29,8 @@ public class ArtistSpotifyService {
     private ArtistSpotifyClient artistSpotifyClient;
     @Autowired
     private AlbumSpotifyClient albumSpotifyClient;
+    @Autowired
+    private FavoriteListContentService favoriteListContentService;
 
     @GetMapping("/artist-image")
     public ResponseEntity<?> getArtistImage(@RequestParam("name") String artistName) {
@@ -82,6 +87,26 @@ public class ArtistSpotifyService {
         return ResponseEntity.ok(response.artists());
     }
 
+    public List<AlbumResponseById> getFavoriteAlbumsByMemberId(Long memberId) {
+        var loginRequest = new LoginRequest(
+                "client_credentials",
+                "46f327a02d944095a28863edd7446a50",
+                "3debe93c67ed487a841689865e56ac18"
+        );
+        String token = "Bearer " + authSpotifyClient.login(loginRequest).getAccess_token();
 
+        List<FavoriteListContent> favorites = favoriteListContentService.getFavoriteListContent(memberId);
 
+        List<String> albumIds = favorites.stream()
+                .filter(content -> "album".equalsIgnoreCase(content.getMediaType()))
+                .map(FavoriteListContent::getMediaId)
+                .toList();
+
+        if (albumIds.isEmpty()) {
+            return List.of();
+        }
+
+        String idsParam = String.join(",", albumIds);
+        return albumSpotifyClient.getSeveralAlbums(token, idsParam).albums();
+    }
 }

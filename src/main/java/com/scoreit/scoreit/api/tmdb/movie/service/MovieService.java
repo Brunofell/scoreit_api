@@ -3,6 +3,9 @@ package com.scoreit.scoreit.api.tmdb.movie.service;
 import com.scoreit.scoreit.api.tmdb.movie.dto.Movie;
 import com.scoreit.scoreit.api.tmdb.movie.dto.MovieMediaResponse;
 import com.scoreit.scoreit.api.tmdb.movie.dto.MovieResponse;
+import com.scoreit.scoreit.entity.FavoriteListContent;
+import com.scoreit.scoreit.service.FavoriteListContentService;
+import com.scoreit.scoreit.service.FavoriteListService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -17,6 +20,9 @@ public class MovieService {
 
     @Autowired
     private RestTemplate restTemplate;
+
+    @Autowired
+    private FavoriteListContentService favoriteListContentService;
 
     public MovieResponse getPopularMovies(int page){
         String url = String.format("%s/movie/popular?api_key=%s&language=pt-BR&page=%d", baseUrl, apiKey, page);
@@ -47,6 +53,24 @@ public class MovieService {
         return ids.stream()
                 .map(this::getMovieById)
                 .toList();
+    }
+
+    public List<Movie> getFavoriteMoviesByMemberId(Long memberId) {
+        List<FavoriteListContent> favoriteContents = favoriteListContentService.getFavoriteListContent(memberId);
+
+        List<Integer> movieIds = favoriteContents.stream()
+                .filter(content -> "movie".equalsIgnoreCase(content.getMediaType()))
+                .map(content -> {
+                    try {
+                        return Integer.parseInt(content.getMediaId());
+                    } catch (NumberFormatException e) {
+                        return null;
+                    }
+                })
+                .filter(id -> id != null)
+                .toList();
+
+        return getSeveralMoviesByIds(movieIds);
     }
 
 

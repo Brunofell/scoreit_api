@@ -6,6 +6,9 @@ import com.scoreit.scoreit.api.music.spotify.dto.album.AlbumResponseById;
 import com.scoreit.scoreit.api.music.spotify.dto.oauth.LoginRequest;
 import com.scoreit.scoreit.api.music.spotify.client.AlbumSpotifyClient;
 import com.scoreit.scoreit.api.music.spotify.client.AuthSpotifyClient;
+import com.scoreit.scoreit.api.music.spotify.service.ArtistSpotifyService;
+import com.scoreit.scoreit.entity.FavoriteListContent;
+import com.scoreit.scoreit.service.FavoriteListContentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -20,6 +23,10 @@ public class AlbumController {
     private AuthSpotifyClient authSpotifyClient;
     @Autowired
     private AlbumSpotifyClient albumSpotifyClient;
+    @Autowired
+    private FavoriteListContentService favoriteListContentService;
+    @Autowired
+    private ArtistSpotifyService artistSpotifyService;
 
 
     @GetMapping("/oauth")
@@ -93,7 +100,10 @@ public class AlbumController {
         return ResponseEntity.ok(response.albums());
     }
 
-
+    @GetMapping("/favorites/{memberId}")
+    public ResponseEntity<List<AlbumResponseById>> getFavoriteAlbumsByMemberId(@PathVariable Long memberId) {
+        return ResponseEntity.ok(artistSpotifyService.getFavoriteAlbumsByMemberId(memberId));
+    }
 }
 
 

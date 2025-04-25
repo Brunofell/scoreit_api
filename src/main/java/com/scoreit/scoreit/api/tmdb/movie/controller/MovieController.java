@@ -46,5 +46,8 @@ public class MovieController {
         return service.getSeveralMoviesByIds(ids);
     }
 
-
+    @GetMapping("/favorites/{memberId}")
+    public List<Movie> getFavoriteMoviesByMemberId(@PathVariable Long memberId) {
+        return service.getFavoriteMoviesByMemberId(memberId);
+    }
 }
