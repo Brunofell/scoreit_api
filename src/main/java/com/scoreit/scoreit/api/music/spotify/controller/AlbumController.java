@@ -75,6 +75,24 @@ public class AlbumController {
         return ResponseEntity.ok().body(response);
     }
 
+    @GetMapping("/albums")
+    public ResponseEntity<List<AlbumResponseById>> getSeveralAlbums(
+            @RequestParam("ids") List<String> albumIds
+    ) {
+        var request = new LoginRequest(
+                "client_credentials",
+                "46f327a02d944095a28863edd7446a50",
+                "3debe93c67ed487a841689865e56ac18"
+        );
+
+        var token = authSpotifyClient.login(request).getAccess_token();
+        String idsParam = String.join(",", albumIds); // Junta os IDs com vírgula
+
+        var response = albumSpotifyClient.getSeveralAlbums("Bearer " + token, idsParam);
+
+        return ResponseEntity.ok(response.albums());
+    }
+
 
 }
 

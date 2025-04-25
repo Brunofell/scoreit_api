@@ -7,6 +7,8 @@ import com.scoreit.scoreit.api.tmdb.movie.service.MovieService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/movie")
 public class MovieController {
@@ -38,5 +40,11 @@ public class MovieController {
     public MovieMediaResponse getMovieMedia(@PathVariable String movieId) {
         return service.getMovieMedia(movieId);
     }
+
+    @GetMapping("/several")
+    public List<Movie> getSeveralMoviesByIds(@RequestParam List<Integer> ids) {
+        return service.getSeveralMoviesByIds(ids);
+    }
+
 
 }

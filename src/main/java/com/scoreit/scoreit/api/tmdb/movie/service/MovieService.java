@@ -7,6 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import java.util.List;
+
 @Service
 public class MovieService {
 
@@ -40,4 +42,12 @@ public class MovieService {
         String url = String.format("%s/movie/%s/videos?api_key=%s&language=pt-BR", baseUrl, movieId, apiKey);
         return restTemplate.getForObject(url, MovieMediaResponse.class);
     }
+
+    public List<Movie> getSeveralMoviesByIds(List<Integer> ids) {
+        return ids.stream()
+                .map(this::getMovieById)
+                .toList();
+    }
+
+
 }

@@ -7,6 +7,8 @@ import com.scoreit.scoreit.api.tmdb.series.service.SeriesService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/series")
 public class SeriesController {
@@ -39,5 +41,10 @@ public class SeriesController {
     @GetMapping("/year/{year}/page/{page}")
     public SeriesResponse getPopularSeriesByYear(@PathVariable int year, @PathVariable int page) {
         return service.getPopularSeriesByYear(year, page);
+    }
+
+    @GetMapping("/several")
+    public List<Series> getSeveralSeriesByIds(@RequestParam List<Integer> ids) {
+        return service.getSeveralSeriesByIds(ids);
     }
 }

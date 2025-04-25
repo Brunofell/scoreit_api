@@ -5,6 +5,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/spotify/api")
 public class ArtistSpotifyController {
@@ -16,5 +18,13 @@ public class ArtistSpotifyController {
     public ResponseEntity<?> getArtistImage(@RequestParam("name") String artistName) {
         return artistSpotifyService.getArtistImage(artistName);
     }
+
+    @GetMapping("/artists")
+    public ResponseEntity<?> getSeveralArtists(@RequestParam("ids") List<String> ids) {
+        return artistSpotifyService.getSeveralArtistsByIds(ids);
+    }
+
+
+
 
 }

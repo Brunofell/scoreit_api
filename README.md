@@ -50,14 +50,14 @@ Para testar a API, utilize uma ferramenta de requisições HTTP como:
 
 ### Filmes
 
-| Método | Endpoint                  | Autenticação | Descrição                           |
-|--------|---------------------------|--------------|-------------------------------------|
-| GET | `/movie/id/{id}`          | Sim | GET do filme pelo id dele           |
-| GET | `/movie/get/page/{PAGE}`  | Sim | Listar filmes por popularidade      |
-| GET | `/movie/now/{PAGE}`       | Sim | Filmes em cartaz atualmente         |
-| GET | `/movie/upcoming/{PAGE}`  | Sim | Próximos lançamentos                |
-| GET | `/movie/media/{MOVIE_ID}` | Sim | Obter mídias de um filme específico |
-
+| Método | Endpoint                         | Autenticação | Descrição                                     |
+|--------|----------------------------------|--------------|-----------------------------------------------|
+| GET | `/movie/id/{id}`                 | Sim | GET do filme pelo id dele                     |
+| GET | `/movie/get/page/{PAGE}`         | Sim | Listar filmes por popularidade                |
+| GET | `/movie/now/{PAGE}`              | Sim | Filmes em cartaz atualmente                   |
+| GET | `/movie/upcoming/{PAGE}`         | Sim | Próximos lançamentos                          |
+| GET | `/movie/media/{MOVIE_ID}`        | Sim | Obter mídias de um filme específico           |
+| GET | `/movie/several?ids=id,id,id...` | Sim | Retorna mais de um filme por uma lista de ids |
 ### Séries
 
 | Método | Endpoint | Autenticação | Descrição |
@@ -68,17 +68,18 @@ Para testar a API, utilize uma ferramenta de requisições HTTP como:
 | GET | `/series/year/{ANO}/page/{PAGE}` | Sim | Séries populares por ano |
 | GET | `/series/genre/{GENRE_ID}/page/{PAGE}` | Sim | Séries por gênero |
 | GET | `/series/{SERIES_ID}/season/{SEASON_NUMBER}` | Sim | Detalhes de temporada específica |
+| GET | `/series/several?ids=id,id,id...` | Sim | Retorna mais de um filme por uma lista de ids |
 
 ### Músicas(Album)
 
-| Método | Endpoint                                                                                                | Autenticação | Descrição                                   |
-|--------|---------------------------------------------------------------------------------------------------------|--------------|---------------------------------------------|
-| GET | `/spotify/api/newAlbumReleases?country=US&limit=<quantos vem por requisição>&offset=<pagina>&sort=desc` | Sim | Novos lançamentos (álbuns e EPs)            |
-| GET | `/lastfm/top-artists?page={PAGE}&limit={LIMIT}`                                                         | Sim | Artistas mais populares globalmente         |
-| GET | `/lastfm/album/{GENRE}?page={PAGE}&limit={LIMIT}`                                                       | Sim | Álbuns por gênero musical                   |
-| GET | `/lastfm/albums-by-genre/pop?page={PAGE}&limit={LIMIT}`                                                 | Sim | RETORNA ALBUM POR GENERO MUSICAL (USA ESSE) |
-| GET | `/spotify/api/album/{id do album}`                                                                      | Sim | Retorna album por id                        |
-
+| Método | Endpoint                                                                                                | Autenticação | Descrição                                                     |
+|--------|---------------------------------------------------------------------------------------------------------|--------------|---------------------------------------------------------------|
+| GET | `/spotify/api/newAlbumReleases?country=US&limit=<quantos vem por requisição>&offset=<pagina>&sort=desc` | Sim | Novos lançamentos (álbuns e EPs)                              |
+| GET | `/lastfm/top-artists?page={PAGE}&limit={LIMIT}`                                                         | Sim | Artistas mais populares globalmente                           |
+| GET | `/lastfm/albums-by-genre/pop?page={PAGE}&limit={LIMIT}`                                                 | Sim | RETORNA ALBUM POR GENERO MUSICAL (USA ESSE)                   |
+| GET | `/spotify/api/album/{id do album}`                                                                      | Sim | Retorna album por id                                          |
+| GET | `/spotify/api/albums?ids=<ID_DA_OBRA>,<ID_DA_OBRA>,<ID_DA_OBRA>,<ID_DA_OBRA>`                           | Sim | Retorna mais de um album por requisição, separe por vírgula   |
+| GET | `/spotify/api/artists?ids=<ID_DO_ARTISTA>,<ID_DO_ARTISTA>,<ID_DO_ARTISTA>`                                             | Sim | Retorna mais de um Artista por requisição, separe por vírgula |
 ## EXEMPLOS DE REQUISIÇÕES
 
 ### Cadastro de usuário

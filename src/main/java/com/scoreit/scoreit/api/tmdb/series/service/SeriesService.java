@@ -6,6 +6,9 @@ import com.scoreit.scoreit.api.tmdb.series.dto.SeriesSeason;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Service
 public class SeriesService {
 
@@ -45,4 +48,12 @@ public class SeriesService {
         String url = String.format("%s/tv/%d/season/%d?api_key=%s&language=pt-BR", baseUrl, seriesId, seasonNumber, apiKey);
         return restTemplate.getForObject(url, SeriesSeason.class);
     }
+
+    public List<Series> getSeveralSeriesByIds(List<Integer> ids) {
+        return ids.stream()
+                .map(this::getSeriesById)
+                .collect(Collectors.toList());
+    }
+
+
 }

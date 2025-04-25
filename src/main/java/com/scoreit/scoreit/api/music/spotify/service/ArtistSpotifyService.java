@@ -8,12 +8,15 @@ import com.scoreit.scoreit.api.music.spotify.client.AuthSpotifyClient;
 import com.scoreit.scoreit.api.music.spotify.dto.album.AlbumSpotifyInfo;
 import com.scoreit.scoreit.api.music.spotify.dto.artist.Artist;
 import com.scoreit.scoreit.api.music.spotify.dto.artist.ArtistImageResponse;
+import com.scoreit.scoreit.api.music.spotify.dto.artist.SeveralArtistsResponse;
 import com.scoreit.scoreit.api.music.spotify.dto.oauth.LoginRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+
+import java.util.List;
 
 @Service
 public class ArtistSpotifyService {
@@ -63,6 +66,22 @@ public class ArtistSpotifyService {
         String imageUrl = album.getImages().isEmpty() ? null : album.getImages().get(0).getUrl();
         return ResponseEntity.ok(new UnifiedAlbum(album.getName(), album.getId(), imageUrl, artistName));
     }
+
+    public ResponseEntity<?> getSeveralArtistsByIds(List<String> artistIds) {
+        var request = new LoginRequest(
+                "client_credentials",
+                "46f327a02d944095a28863edd7446a50",
+                "3debe93c67ed487a841689865e56ac18"
+        );
+
+        String token = "Bearer " + authSpotifyClient.login(request).getAccess_token();
+        String idsParam = String.join(",", artistIds);
+
+        SeveralArtistsResponse response = artistSpotifyClient.getSeveralArtists(token, idsParam);
+
+        return ResponseEntity.ok(response.artists());
+    }
+
 
 
 }
