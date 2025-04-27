@@ -76,4 +76,15 @@ public class FavoriteListContentService {
         favoriteListContentRepository.delete(content.get());
     }
 
+    public boolean isContentFavorited(Long memberId, String mediaId) {
+        FavoriteList favoriteList = favoriteListRepository.findByMemberIdAndListName(memberId, "Favorites");
+
+        if (favoriteList == null) {
+            return false;
+        }
+
+        Optional<FavoriteListContent> content = favoriteListContentRepository.findByFavoriteListAndMediaId(favoriteList, mediaId);
+
+        return content.isPresent();
+    }
 }

@@ -10,5 +10,7 @@ import java.util.Optional;
 public interface FavoriteListContentRepository extends JpaRepository<FavoriteListContent, Long> {
     Optional<FavoriteListContent> findByFavoriteListAndMediaIdAndMediaType(FavoriteList favoriteList, String mediaId, String mediaType);
 
+    Optional<FavoriteListContent> findByFavoriteListAndMediaId(FavoriteList favoriteList, String mediaId);
+
     List<FavoriteListContent> findByFavoriteList(FavoriteList favoriteList);
 }
