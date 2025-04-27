@@ -19,6 +19,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 
@@ -101,5 +102,14 @@ public class MemberController {
         } catch (RuntimeException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
+    }
+
+    @GetMapping("/is-favorited")
+    public Map<String, Boolean> isFavorited(
+            @RequestParam Long memberId,
+            @RequestParam String mediaId
+    ) {
+        boolean favorited = favoriteListContentService.isContentFavorited(memberId, mediaId);
+        return Map.of("favorited", favorited);
     }
 }
