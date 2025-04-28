@@ -40,6 +40,19 @@ public class EmailResetService {
         return tokenOptional.isPresent() && tokenOptional.get().getExpireDate().isAfter(LocalDateTime.now());
     };
 
+//    public void updateEmail(String token, String newEmail){
+//        EmailResetToken resetToken = tokenRepository.findByToken(token)
+//                .orElseThrow(() -> new IllegalArgumentException("INVALID TOKEN."));
+//
+//        if(resetToken.getExpireDate().isBefore(LocalDateTime.now())){
+//            throw new IllegalArgumentException("EXPIRED TOKEN.");
+//        }
+//        Member member = resetToken.getMember();
+//        member.setEmail(newEmail);
+//        memberRepository.save(member);
+//        tokenRepository.delete(resetToken);
+//    };
+
     public void updateEmail(String token, String newEmail){
         EmailResetToken resetToken = tokenRepository.findByToken(token)
                 .orElseThrow(() -> new IllegalArgumentException("INVALID TOKEN."));
@@ -47,9 +60,20 @@ public class EmailResetService {
         if(resetToken.getExpireDate().isBefore(LocalDateTime.now())){
             throw new IllegalArgumentException("EXPIRED TOKEN.");
         }
+
+        // Verificar se o novo email já está em uso
+        if (isEmailInUse(newEmail)) {
+            throw new IllegalArgumentException("The new email address is already in use.");
+        }
+
         Member member = resetToken.getMember();
         member.setEmail(newEmail);
         memberRepository.save(member);
         tokenRepository.delete(resetToken);
-    };
+    }
+
+    // Método auxiliar para verificar se o e-mail já está em uso
+    private boolean isEmailInUse(String email) {
+        return memberRepository.findByEmail(email) != null; // Retorna true se o e-mail já estiver em uso
+    }
 }

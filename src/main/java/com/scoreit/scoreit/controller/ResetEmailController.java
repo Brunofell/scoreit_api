@@ -32,6 +32,6 @@ public class ResetEmailController {
             return ResponseEntity.badRequest().body("Invalid or Expired Token");
         }
         emailResetService.updateEmail(token, newEmail);
-        return ResponseEntity.ok("Password reset successfully");
+        return ResponseEntity.ok("Email reset successfully");
     }
 }
