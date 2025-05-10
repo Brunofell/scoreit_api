@@ -1,8 +1,6 @@
 package com.scoreit.scoreit.api.tmdb.series.controller;
 
-import com.scoreit.scoreit.api.tmdb.series.dto.Series;
-import com.scoreit.scoreit.api.tmdb.series.dto.SeriesResponse;
-import com.scoreit.scoreit.api.tmdb.series.dto.SeriesSeason;
+import com.scoreit.scoreit.api.tmdb.series.dto.*;
 import com.scoreit.scoreit.api.tmdb.series.service.SeriesService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -52,5 +50,16 @@ public class SeriesController {
     public List<Series> getFavoriteSeriesByMemberId(@PathVariable Long memberId) {
         return service.getFavoriteSeriesByMemberId(memberId);
     }
+
+    @GetMapping("/{seriesId}/all-seasons")
+    public List<SeriesSeason> getAllSeasons(@PathVariable int seriesId) {
+        return service.getAllSeasonsWithEpisodes(seriesId);
+    }
+
+    @GetMapping("/{seriesId}/details")
+    public SeriesDetail getSeriesDetail(@PathVariable int seriesId) {
+        return service.getSeriesDetail(seriesId);
+    }
+
 
 }

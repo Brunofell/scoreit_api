@@ -1,8 +1,7 @@
 package com.scoreit.scoreit.api.tmdb.series.service;
 
-import com.scoreit.scoreit.api.tmdb.series.dto.Series;
-import com.scoreit.scoreit.api.tmdb.series.dto.SeriesResponse;
-import com.scoreit.scoreit.api.tmdb.series.dto.SeriesSeason;
+import com.scoreit.scoreit.api.tmdb.movie.dto.CreditsResponse;
+import com.scoreit.scoreit.api.tmdb.series.dto.*;
 import com.scoreit.scoreit.entity.FavoriteListContent;
 import com.scoreit.scoreit.service.FavoriteListContentService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -78,6 +77,76 @@ public class SeriesService {
 
         return getSeveralSeriesByIds(seriesIds);
     }
+
+
+    public List<SeriesSeason> getAllSeasonsWithEpisodes(int seriesId) {
+        Series series = getSeriesById(seriesId);
+        return series.seasons().stream()
+                .map(season -> getSeriesSeason(seriesId, season.season_number()))
+                .collect(Collectors.toList());
+    }
+
+    public List<CastMember> getCast(int seriesId) {
+        String url = String.format("%s/tv/%d/credits?api_key=%s&language=pt-BR", baseUrl, seriesId, apiKey);
+        CreditsResponse credits = restTemplate.getForObject(url, CreditsResponse.class);
+        return credits.cast().stream()
+                .map(c -> new CastMember(c.name(), c.character(), c.profile_path()))
+                .collect(Collectors.toList());
+    }
+
+    public List<CrewMember> getDirectors(int seriesId) {
+        String url = String.format("%s/tv/%d/credits?api_key=%s&language=pt-BR", baseUrl, seriesId, apiKey);
+        CreditsResponse credits = restTemplate.getForObject(url, CreditsResponse.class);
+        return credits.crew().stream()
+                .filter(c -> "Director".equals(c.job()))
+                .map(c -> new CrewMember(c.name(), c.job()))
+                .collect(Collectors.toList());
+    }
+
+    public List<String> getGenres(Series series) {
+        return series.genres() != null
+                ? series.genres().stream().map(Genre::name).collect(Collectors.toList())
+                : List.of();
+    }
+
+    public String getContentRating(int seriesId) {
+        String url = String.format("%s/tv/%d/content_ratings?api_key=%s", baseUrl, seriesId, apiKey);
+        ContentRatingResponse ratingResponse = restTemplate.getForObject(url, ContentRatingResponse.class);
+        return ratingResponse != null && ratingResponse.results() != null
+                ? ratingResponse.results().stream()
+                .filter(r -> "BR".equalsIgnoreCase(r.iso_3166_1()))
+                .map(ContentRatingResult::rating)
+                .findFirst()
+                .orElse("N/A")
+                : "N/A";
+    }
+
+
+
+    public SeriesDetail getSeriesDetail(int seriesId) {
+        Series series = getSeriesById(seriesId);
+        List<SeriesSeason> seasons = getAllSeasonsWithEpisodes(seriesId);
+        List<CastMember> cast = getCast(seriesId);
+        List<CrewMember> directors = getDirectors(seriesId);
+        List<String> genres = getGenres(series); // <-- chamada aqui
+        String contentRating = getContentRating(seriesId); // <-- e aqui
+
+        return new SeriesDetail(
+                series.id(),
+                series.name(),
+                series.overview(),
+                "https://image.tmdb.org/t/p/w500" + series.poster_path(),
+                "https://image.tmdb.org/t/p/w500" + series.backdrop_path(),
+                series.vote_average(),
+                series.release_date(),
+                seasons,
+                cast,
+                directors,
+                genres,
+                contentRating
+        );
+    }
+
 
 
 }

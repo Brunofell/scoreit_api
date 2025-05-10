@@ -1,8 +1,6 @@
 package com.scoreit.scoreit.api.tmdb.movie.service;
 
-import com.scoreit.scoreit.api.tmdb.movie.dto.Movie;
-import com.scoreit.scoreit.api.tmdb.movie.dto.MovieMediaResponse;
-import com.scoreit.scoreit.api.tmdb.movie.dto.MovieResponse;
+import com.scoreit.scoreit.api.tmdb.movie.dto.*;
 import com.scoreit.scoreit.entity.FavoriteListContent;
 import com.scoreit.scoreit.service.FavoriteListContentService;
 import com.scoreit.scoreit.service.FavoriteListService;
@@ -72,6 +70,80 @@ public class MovieService {
 
         return getSeveralMoviesByIds(movieIds);
     }
+
+    public MovieDetail getMovieDetails(int id) {
+        MovieDetail baseMovie = fetchMovieBaseInfo(id);
+        List<MovieDetail.CastMember> cast = fetchCast(id);
+        List<MovieDetail.CrewMember> directors = fetchDirectors(id);
+        String certification = fetchCertification(id);
+        List<Movie> recommendations = fetchRecommendations(id);
+        List<Movie> similar = fetchSimilarMovies(id);
+
+        return new MovieDetail(
+                baseMovie.id(),
+                baseMovie.title(),
+                baseMovie.overview(),
+                "https://image.tmdb.org/t/p/w500" + baseMovie.poster_path(),
+                "https://image.tmdb.org/t/p/w500" + baseMovie.backdrop_path(),
+                baseMovie.vote_average(),
+                baseMovie.release_date(),
+                baseMovie.runtime(),
+                baseMovie.genres(),
+                baseMovie.original_language(),
+                certification,
+                baseMovie.status(),
+                baseMovie.budget(),
+                baseMovie.revenue(),
+                baseMovie.production_companies(),
+                baseMovie.production_countries(),
+                cast,
+                directors,
+                recommendations,
+                similar
+        );
+    }
+
+    private MovieDetail fetchMovieBaseInfo(int id) {
+        String url = String.format("https://api.themoviedb.org/3/movie/%d?api_key=%s&language=pt-BR", id, apiKey);
+        return restTemplate.getForObject(url, MovieDetail.class);
+    }
+
+    private List<MovieDetail.CastMember> fetchCast(int id) {
+        String url = String.format("https://api.themoviedb.org/3/movie/%d/credits?api_key=%s&language=pt-BR", id, apiKey);
+        CreditsResponse credits = restTemplate.getForObject(url, CreditsResponse.class);
+        return credits.cast().stream()
+                .limit(10)
+                .map(c -> new MovieDetail.CastMember(c.name(), c.character(), c.profile_path()))
+                .toList();
+    }
+
+    private List<MovieDetail.CrewMember> fetchDirectors(int id) {
+        String url = String.format("https://api.themoviedb.org/3/movie/%d/credits?api_key=%s&language=pt-BR", id, apiKey);
+        CreditsResponse credits = restTemplate.getForObject(url, CreditsResponse.class);
+        return credits.crew().stream()
+                .filter(c -> "Director".equals(c.job()))
+                .map(c -> new MovieDetail.CrewMember(c.name(), c.job()))
+                .toList();
+    }
+
+    private String fetchCertification(int id) {
+        String url = String.format("https://api.themoviedb.org/3/movie/%d/release_dates?api_key=%s", id, apiKey);
+        RatingsResponse ratings = restTemplate.getForObject(url, RatingsResponse.class);
+        return ratings.getCertification("BR"); // Método dentro do DTO RatingsResponse
+    }
+
+    private List<Movie> fetchRecommendations(int id) {
+        String url = String.format("https://api.themoviedb.org/3/movie/%d/recommendations?api_key=%s&language=pt-BR", id, apiKey);
+        MovieResponse response = restTemplate.getForObject(url, MovieResponse.class);
+        return response.results();
+    }
+
+    private List<Movie> fetchSimilarMovies(int id) {
+        String url = String.format("https://api.themoviedb.org/3/movie/%d/similar?api_key=%s&language=pt-BR", id, apiKey);
+        MovieResponse response = restTemplate.getForObject(url, MovieResponse.class);
+        return response.results();
+    }
+
 
 
 }

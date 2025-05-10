@@ -1,10 +1,12 @@
 package com.scoreit.scoreit.api.tmdb.movie.controller;
 
 import com.scoreit.scoreit.api.tmdb.movie.dto.Movie;
+import com.scoreit.scoreit.api.tmdb.movie.dto.MovieDetail;
 import com.scoreit.scoreit.api.tmdb.movie.dto.MovieMediaResponse;
 import com.scoreit.scoreit.api.tmdb.movie.dto.MovieResponse;
 import com.scoreit.scoreit.api.tmdb.movie.service.MovieService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -49,5 +51,11 @@ public class MovieController {
     @GetMapping("/favorites/{memberId}")
     public List<Movie> getFavoriteMoviesByMemberId(@PathVariable Long memberId) {
         return service.getFavoriteMoviesByMemberId(memberId);
+    }
+
+    @GetMapping("/{id}/details")
+    public ResponseEntity<MovieDetail> getMovieDetails(@PathVariable int id) {
+        MovieDetail movieDetail = service.getMovieDetails(id);
+        return ResponseEntity.ok(movieDetail);
     }
 }

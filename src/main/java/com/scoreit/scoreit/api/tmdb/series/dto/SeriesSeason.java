@@ -10,4 +10,5 @@ public record SeriesSeason(
         String poster_path,
         String air_date,
         List<Episode> episodes
-) {}
+) {
+}

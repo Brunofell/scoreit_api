@@ -60,20 +60,21 @@ Para testar a API, utilize uma ferramenta de requisições HTTP como:
 | GET | `/movie/media/{MOVIE_ID}`        | Sim | Obter mídias de um filme específico              |
 | GET | `/movie/several?ids=id,id,id...` | Sim | Retorna mais de um filme por uma lista de ids    |
 | GET | `/movie/favorites/{USER_ID}`     | Sim | Retorna os dados dos filmes favoritos do usuário |
+| GET | `/movie/{id}/details`            | Sim | Retorna vários dados sobre o filme pelo id       |
 
 ### Séries
 
-| Método | Endpoint | Autenticação | Descrição                                        |
-|--------|----------|--------------|--------------------------------------------------|
-| GET | `/series/get/{SERIES_ID}` | Sim | Buscar série por ID                              |
-| GET | `/series/now/{PAGE}` | Sim | Séries em exibição atualmente                    |
-| GET | `/series/get/page/{PAGE}` | Sim | Listar séries por página                         |
-| GET | `/series/year/{ANO}/page/{PAGE}` | Sim | Séries populares por ano                         |
-| GET | `/series/genre/{GENRE_ID}/page/{PAGE}` | Sim | Séries por gênero                                |
-| GET | `/series/{SERIES_ID}/season/{SEASON_NUMBER}` | Sim | Detalhes de temporada específica                 |
-| GET | `/series/several?ids=id,id,id...` | Sim | Retorna mais de uma série por uma lista de ids   |
-| GET | `/series/favorites/{USER_ID}`| Sim | Retorna os dados das series favoritas do usuário |
-
+| Método | Endpoint | Autenticação | Descrição                                                                                    |
+|--------|----------|--------------|----------------------------------------------------------------------------------------------|
+| GET | `/series/get/{SERIES_ID}` | Sim | Buscar série por ID                                                                          |
+| GET | `/series/now/{PAGE}` | Sim | Séries em exibição atualmente                                                                |
+| GET | `/series/get/page/{PAGE}` | Sim | Listar séries por página                                                                     |
+| GET | `/series/year/{ANO}/page/{PAGE}` | Sim | Séries populares por ano                                                                     |
+| GET | `/series/genre/{GENRE_ID}/page/{PAGE}` | Sim | Séries por gênero                                                                            |
+| GET | `/series/{SERIES_ID}/season/{SEASON_NUMBER}` | Sim | Detalhes de temporada específica                                                             |
+| GET | `/series/several?ids=id,id,id...` | Sim | Retorna mais de uma série por uma lista de ids                                               |
+| GET | `/series/favorites/{USER_ID}`| Sim | Retorna os dados das series favoritas do usuário                                             |
+| GET | `/series/100088/details`| Sim | Retorna várias coisas sobre as séries, temporada elenco e entre outros. passar o id da série |
 
 ### Músicas(Album)
 
