@@ -1,45 +1,61 @@
 package com.scoreit.scoreit.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.PrePersist;
-import jakarta.persistence.Table;
+import com.scoreit.scoreit.dto.review.ReviewRegister;
+import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
-
 @Entity
-@Table(name = "review")
+@Table(name = "reviews")
 public class Review {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String media_id;
-    private String media_type;
-    private String member_id;
+    @Column(name = "media_id")
+    private String mediaId;
+    @Column(name = "media_type")
+    private String mediaType;
+    @Column(name = "member_id")
+    private String memberId;
     private int score;
-    private String member_review;
+    @Column(name = "member_review")
+    private String memberReview;
     private boolean spoiler;
-    private LocalDateTime review_date;
+    @Column(name = "review_date")
+    private LocalDateTime reviewDate;
 
-    public Review(Long id, String media_id, String media_type, String member_id, int score, String member_review, boolean spoiler, LocalDateTime review_date) {
+    public Review(){}
+
+    public Review(Long id, String mediaId, String mediaType, String memberId, int score, String memberReview, boolean spoiler, LocalDateTime reviewDate) {
         this.id = id;
-        this.media_id = media_id;
-        this.media_type = media_type;
-        this.member_id = member_id;
+        this.mediaId = mediaId;
+        this.mediaType = mediaType;
+        this.memberId = memberId;
         this.score = score;
-        this.member_review = member_review;
+        this.memberReview = memberReview;
         this.spoiler = spoiler;
-        this.review_date = review_date;
+        this.reviewDate = reviewDate;
+    }
+
+    public Review(ReviewRegister data) {
+        this.mediaId = data.mediaId();
+        this.mediaType = data.mediaType();
+        this.memberId = data.memberId();
+        this.score = data.score();
+        this.memberReview = data.memberReview();
+        this.spoiler = data.spoiler();
     }
 
     @PrePersist
     protected void onCreate() {
-        this.review_date = LocalDateTime.now();
+        this.reviewDate = LocalDateTime.now();
     }
 
-    public LocalDateTime getReview_date() {
-        return review_date;
+    public LocalDateTime getReviewDate() {
+        return reviewDate;
     }
 
-    public void setReview_date(LocalDateTime review_date) {
-        this.review_date = review_date;
+    public void setReviewDate(LocalDateTime reviewDate) {
+        this.reviewDate = reviewDate;
     }
 
     public boolean isSpoiler() {
@@ -50,12 +66,12 @@ public class Review {
         this.spoiler = spoiler;
     }
 
-    public String getMember_review() {
-        return member_review;
+    public String getMemberReview() {
+        return memberReview;
     }
 
-    public void setMember_review(String member_review) {
-        this.member_review = member_review;
+    public void setMemberReview(String memberReview) {
+        this.memberReview = memberReview;
     }
 
     public int getScore() {
@@ -66,28 +82,28 @@ public class Review {
         this.score = score;
     }
 
-    public String getMember_id() {
-        return member_id;
+    public String getMemberId() {
+        return memberId;
     }
 
-    public void setMember_id(String member_id) {
-        this.member_id = member_id;
+    public void setMemberId(String memberId) {
+        this.memberId = memberId;
     }
 
-    public String getMedia_type() {
-        return media_type;
+    public String getMediaType() {
+        return mediaType;
     }
 
-    public void setMedia_type(String media_type) {
-        this.media_type = media_type;
+    public void setMediaType(String mediaType) {
+        this.mediaType = mediaType;
     }
 
-    public String getMedia_id() {
-        return media_id;
+    public String getMediaId() {
+        return mediaId;
     }
 
-    public void setMedia_id(String media_id) {
-        this.media_id = media_id;
+    public void setMediaId(String mediaId) {
+        this.mediaId = mediaId;
     }
 
     public Long getId() {
