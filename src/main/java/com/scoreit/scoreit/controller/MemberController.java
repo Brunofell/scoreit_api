@@ -112,4 +112,10 @@ public class MemberController {
         boolean favorited = favoriteListContentService.isContentFavorited(memberId, mediaId);
         return Map.of("favorited", favorited);
     }
+
+    @GetMapping("/search")
+    public ResponseEntity<List<Member>> searchMembers(@RequestParam String name) {
+        List<Member> members = service.searchMembersByName(name);
+        return ResponseEntity.ok(members);
+    }
 }
