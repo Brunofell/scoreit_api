@@ -74,5 +74,7 @@ public class MemberService {
         return repository.findById(id);
     }
 
-
+    public List<Member> searchMembersByName(String name) {
+        return repository.findByNameContainingIgnoreCase(name);
+    }
 }
