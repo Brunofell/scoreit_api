@@ -6,7 +6,6 @@ import com.scoreit.scoreit.api.music.spotify.client.AlbumSpotifyClient;
 import com.scoreit.scoreit.api.music.spotify.client.ArtistSpotifyClient;
 import com.scoreit.scoreit.api.music.spotify.client.AuthSpotifyClient;
 import com.scoreit.scoreit.api.music.spotify.dto.album.AlbumResponseById;
-import com.scoreit.scoreit.api.music.spotify.dto.album.AlbumSpotifyInfo;
 import com.scoreit.scoreit.api.music.spotify.dto.artist.Artist;
 import com.scoreit.scoreit.api.music.spotify.dto.artist.ArtistImageResponse;
 import com.scoreit.scoreit.api.music.spotify.dto.artist.SeveralArtistsResponse;
@@ -60,7 +59,7 @@ public class ArtistSpotifyService {
         var token = authSpotifyClient.login(loginRequest).getAccess_token();
 
         String query = albumName + " " + artistName;
-        var response = albumSpotifyClient.searchAlbum("Bearer " + token, query, "album", 1);
+        var response = albumSpotifyClient.search("Bearer " + token, query, "album", 1);
         var albums = response.getAlbums().getItems();
 
         if (albums.isEmpty()) {

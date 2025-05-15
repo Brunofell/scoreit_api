@@ -78,15 +78,18 @@ Para testar a API, utilize uma ferramenta de requisições HTTP como:
 
 ### Músicas(Album)
 
-| Método | Endpoint                                                                                                | Autenticação | Descrição                                                     |
-|--------|---------------------------------------------------------------------------------------------------------|--------------|---------------------------------------------------------------|
-| GET | `/spotify/api/newAlbumReleases?country=US&limit=<quantos vem por requisição>&offset=<pagina>&sort=desc` | Sim | Novos lançamentos (álbuns e EPs)                              |
-| GET | `/lastfm/top-artists?page={PAGE}&limit={LIMIT}`                                                         | Sim | Artistas mais populares globalmente                           |
-| GET | `/lastfm/albums-by-genre/pop?page={PAGE}&limit={LIMIT}`                                                 | Sim | RETORNA ALBUM POR GENERO MUSICAL (USA ESSE)                   |
-| GET | `/spotify/api/album/{id do album}`                                                                      | Sim | Retorna album por id                                          |
-| GET | `/spotify/api/albums?ids=<ID_DA_OBRA>,<ID_DA_OBRA>,<ID_DA_OBRA>,<ID_DA_OBRA>`                           | Sim | Retorna mais de um album por requisição, separe por vírgula   |
-| GET | `/spotify/api/artists?ids=<ID_DO_ARTISTA>,<ID_DO_ARTISTA>,<ID_DO_ARTISTA>`                              | Sim | Retorna mais de um Artista por requisição, separe por vírgula |
-| GET | `/spotify/api/favorites/{USER_ID}`                                                                      | Sim | Retorna os dados dos albums favoritos do usuário              |
+| Método | Endpoint                                                                                                | Autenticação | Descrição                                                             |
+|--------|---------------------------------------------------------------------------------------------------------|--------------|-----------------------------------------------------------------------|
+| GET | `/spotify/api/newAlbumReleases?country=US&limit=<quantos vem por requisição>&offset=<pagina>&sort=desc` | Sim | Novos lançamentos (álbuns e EPs)                                      |
+| GET | `/lastfm/top-artists?page={PAGE}&limit={LIMIT}`                                                         | Sim | Artistas mais populares globalmente                                   |
+| GET | `/lastfm/albums-by-genre/pop?page={PAGE}&limit={LIMIT}`                                                 | Sim | RETORNA ALBUM POR GENERO MUSICAL (USA ESSE)                           |
+| GET | `/spotify/api/album/{id do album}`                                                                      | Sim | Retorna album por id                                                  |
+| GET | `/spotify/api/albums?ids=<ID_DA_OBRA>,<ID_DA_OBRA>,<ID_DA_OBRA>,<ID_DA_OBRA>`                           | Sim | Retorna mais de um album por requisição, separe por vírgula           |
+| GET | `/spotify/api/artists?ids=<ID_DO_ARTISTA>,<ID_DO_ARTISTA>,<ID_DO_ARTISTA>`                              | Sim | Retorna mais de um Artista por requisição, separe por vírgula         |
+| GET | `/spotify/api/favorites/{USER_ID}`                                                                      | Sim | Retorna os dados dos albums favoritos do usuário                      |
+| GET | `/spotify/track/{id_track}`                                                                             | Sim | Retorna os dados de uma track pelo id dela                            |
+| GET | `/spotify/api/searchAlbum?query={Nome do album}&limit={Quantidade de itens retornados}`                 | Sim | Filtro de pesquisa para albuns (So retorna o que é considerado album) |
+| GET | `/spotify/track/search?query={Nome_track}&limit=5`                                                      | Sim | Filtro de pesquisa para track                                         |
 
 
 ### Review

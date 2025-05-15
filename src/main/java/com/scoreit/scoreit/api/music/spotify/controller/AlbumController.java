@@ -1,5 +1,6 @@
 package com.scoreit.scoreit.api.music.spotify.controller;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.scoreit.scoreit.api.music.spotify.dto.album.Album;
 import com.scoreit.scoreit.api.music.spotify.dto.album.AlbumResponse;
 import com.scoreit.scoreit.api.music.spotify.dto.album.AlbumResponseById;
@@ -51,7 +52,6 @@ public class AlbumController {
 
         var response = albumSpotifyClient.getAlbumReleases("Bearer " + token, country, limit, offset);
 
-        // Ordenação local
         List<Album> albums = response.getAlbums().getItems();
         if ("asc".equalsIgnoreCase(sortOrder)) {
             albums.sort((a1, a2) -> a1.getRelease_date().compareTo(a2.getRelease_date())); // Mais velho para mais novo
@@ -59,7 +59,6 @@ public class AlbumController {
             albums.sort((a1, a2) -> a2.getRelease_date().compareTo(a1.getRelease_date())); // Mais novo para mais velho
         }
 
-        // return ResponseEntity.ok(response.getalbums().getItems());
         return ResponseEntity.ok(albums);
 
     }
@@ -103,6 +102,32 @@ public class AlbumController {
     @GetMapping("/favorites/{memberId}")
     public ResponseEntity<List<AlbumResponseById>> getFavoriteAlbumsByMemberId(@PathVariable Long memberId) {
         return ResponseEntity.ok(artistSpotifyService.getFavoriteAlbumsByMemberId(memberId));
+    }
+
+    @GetMapping("/searchAlbum")
+    public ResponseEntity<JsonNode> searchAlbum(
+            @RequestParam("query") String query,
+            @RequestParam(value = "limit", defaultValue = "10") int limit
+    ) {
+        // Cria o request para obter o token
+        var request = new LoginRequest(
+                "client_credentials",
+                "46f327a02d944095a28863edd7446a50",
+                "3debe93c67ed487a841689865e56ac18"
+        );
+
+        // Obtém o token de acesso
+        var token = authSpotifyClient.login(request).getAccess_token();
+
+        // Chama a API do Spotify usando o tipo "album"
+        JsonNode response = albumSpotifyClient.searchAlbum(
+                "Bearer " + token,
+                query,
+                "album", // fixo aqui porque é busca por álbum
+                limit
+        );
+
+        return ResponseEntity.ok(response);
     }
 }
 
