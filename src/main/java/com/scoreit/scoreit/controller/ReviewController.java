@@ -1,6 +1,7 @@
 package com.scoreit.scoreit.controller;
 
 import com.scoreit.scoreit.dto.review.ReviewRegister;
+import com.scoreit.scoreit.dto.review.ReviewUpdate;
 import com.scoreit.scoreit.entity.Review;
 import com.scoreit.scoreit.repository.ReviewRepository;
 import com.scoreit.scoreit.service.ReviewService;
@@ -25,6 +26,12 @@ public class ReviewController {
         return ResponseEntity.ok().build();
     }
 
+    @PutMapping("/update")
+    private ResponseEntity<?> reviewUpdate(@RequestBody @Valid ReviewUpdate data){
+        reviewService.reviewUpdate(data);
+        return ResponseEntity.ok().build();
+    }
+
     @GetMapping("/getAllReviews")
     private List<Review> getAllReviews(){
         return reviewService.getAllReviews();
@@ -45,4 +52,6 @@ public class ReviewController {
         reviewService.deleteReview(id);
         return ResponseEntity.ok().build();
     }
+
+
 }

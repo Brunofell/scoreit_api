@@ -88,6 +88,20 @@ Para testar a API, utilize uma ferramenta de requisições HTTP como:
 | GET | `/spotify/api/artists?ids=<ID_DO_ARTISTA>,<ID_DO_ARTISTA>,<ID_DO_ARTISTA>`                              | Sim | Retorna mais de um Artista por requisição, separe por vírgula |
 | GET | `/spotify/api/favorites/{USER_ID}`                                                                      | Sim | Retorna os dados dos albums favoritos do usuário              |
 
+
+### Review
+
+| Método | Endpoint                                                                      | Autenticação | Descrição                                        |
+|--------|-------------------------------------------------------------------------------|--------------|--------------------------------------------------|
+| GET | `/review/register`                                                            | Sim | Cadastro de review                               |
+| GET | `/review/getAllReviews`                                                       | Sim | retorna todas as reviews                         |
+| GET | `/review/getReviewByMemberId/{id}`                                            | Sim | Retorna reviews pelo id do usuario               |
+| GET | `/review/getReviewByMediaId/{mídia id}`                                       | Sim | Retorna reviews pelo id da mídia                 |
+| GET | `/review/update` | Sim | Update da review (ver exemplo no postman)        |
+| GET | `/review/delete/1`    | Sim | Deleta a review                                  |
+
+
+
 ## EXEMPLOS DE REQUISIÇÕES
 
 ### Cadastro de usuário

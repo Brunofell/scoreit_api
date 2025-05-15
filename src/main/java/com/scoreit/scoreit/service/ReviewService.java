@@ -1,6 +1,7 @@
 package com.scoreit.scoreit.service;
 
 import com.scoreit.scoreit.dto.review.ReviewRegister;
+import com.scoreit.scoreit.dto.review.ReviewUpdate;
 import com.scoreit.scoreit.entity.Review;
 import com.scoreit.scoreit.repository.ReviewRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +20,12 @@ public class ReviewService {
         reviewRepository.save(review);
     }
 
+    public void reviewUpdate(ReviewUpdate data){
+        var review = reviewRepository.getReferenceById(data.id());
+        review.updateInfos(data);
+        reviewRepository.save(review);
+    }
+
     public List<Review> getAllReviews(){
         return reviewRepository.findAll();
     }
@@ -34,4 +41,6 @@ public class ReviewService {
     public void deleteReview(Long id){
         reviewRepository.deleteById(id);
     }
+
+
 }
