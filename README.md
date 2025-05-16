@@ -116,7 +116,7 @@ Para testar a API, utilize uma ferramenta de requisições HTTP como:
 | PUT    | `/review/update` | Sim | Update da review (ver exemplo no postman)        |
 | DELETE | `/review/delete/1`    | Sim | Deleta a review                                  |
 
-### Custom Lisy
+### Custom List
 
 | Método | Endpoint                                                                | Autenticação | Descrição                        |
 |--------|-------------------------------------------------------------------------|--------------|----------------------------------|
