@@ -1,9 +1,9 @@
 package com.scoreit.scoreit.api.tmdb.movie.service;
 
 import com.scoreit.scoreit.api.tmdb.movie.dto.*;
+import com.scoreit.scoreit.api.tmdb.movie.dto.person.PersonSearchResponse;
 import com.scoreit.scoreit.entity.FavoriteListContent;
 import com.scoreit.scoreit.service.FavoriteListContentService;
-import com.scoreit.scoreit.service.FavoriteListService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -144,6 +144,44 @@ public class MovieService {
         return response.results();
     }
 
+
+    // search
+    public String getGenres() {
+        String url = String.format("https://api.themoviedb.org/3/genre/movie/list?language=pt-BR&api_key=%s", apiKey);
+        return restTemplate.getForObject(url, String.class);
+    }
+
+    public MovieResponse searchMovieByTitle(String title, int page) {
+        String url = String.format(
+                "https://api.themoviedb.org/3/search/movie?query=%s&language=pt-BR&page=%d&api_key=%s",
+                title, page, apiKey
+        );
+        return restTemplate.getForObject(url, MovieResponse.class);
+    }
+
+    public PersonSearchResponse searchPersonByName(String name, int page) {
+        String url = String.format(
+                "https://api.themoviedb.org/3/search/person?query=%s&language=pt-BR&page=%d&api_key=%s",
+                name, page, apiKey
+        );
+        return restTemplate.getForObject(url, PersonSearchResponse.class);
+    }
+
+    public MovieResponse searchMovieByGenre(String genre, int page) {
+        String url = String.format(
+                "https://api.themoviedb.org/3/discover/movie?with_genres=%s&language=pt-BR&page=%d&api_key=%s",
+                genre, page, apiKey
+        );
+        return restTemplate.getForObject(url, MovieResponse.class);
+    }
+
+    public MovieResponse searchMovieByYear(String year, int page) {
+        String url = String.format(
+                "https://api.themoviedb.org/3/discover/movie?primary_release_year=%s&language=pt-BR&page=%d&api_key=%s",
+                year, page, apiKey
+        );
+        return restTemplate.getForObject(url, MovieResponse.class);
+    }
 
 
 }

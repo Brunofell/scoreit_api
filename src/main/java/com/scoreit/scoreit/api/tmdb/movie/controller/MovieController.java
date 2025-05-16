@@ -4,6 +4,7 @@ import com.scoreit.scoreit.api.tmdb.movie.dto.Movie;
 import com.scoreit.scoreit.api.tmdb.movie.dto.MovieDetail;
 import com.scoreit.scoreit.api.tmdb.movie.dto.MovieMediaResponse;
 import com.scoreit.scoreit.api.tmdb.movie.dto.MovieResponse;
+import com.scoreit.scoreit.api.tmdb.movie.dto.person.PersonSearchResponse;
 import com.scoreit.scoreit.api.tmdb.movie.service.MovieService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -57,5 +58,33 @@ public class MovieController {
     public ResponseEntity<MovieDetail> getMovieDetails(@PathVariable int id) {
         MovieDetail movieDetail = service.getMovieDetails(id);
         return ResponseEntity.ok(movieDetail);
+    }
+
+
+    // search
+
+    @GetMapping("/search/title/{title}")
+    public MovieResponse seachMovieByTitle(@PathVariable String title, @RequestParam(defaultValue = "1") int page) {
+        return service.searchMovieByTitle(title, page);
+    }
+
+    @GetMapping("/search/name/{name}")
+    public PersonSearchResponse searchMovieByName(@PathVariable String name, @RequestParam(defaultValue = "1") int page) {
+        return service.searchPersonByName(name, page);
+    }
+
+    @GetMapping("/search/genre/{genre}")
+    public MovieResponse searchMovieByGenre(@PathVariable String genre, @RequestParam(defaultValue = "1") int page) {
+        return service.searchMovieByGenre(genre, page);
+    }
+
+    @GetMapping("/search/year/{year}")
+    public MovieResponse searchMovieByYear(@PathVariable String year, @RequestParam(defaultValue = "1") int page) {
+        return service.searchMovieByYear(year, page);
+    }
+
+    @GetMapping("/search/genres") // retorna generos
+    public String getGenre(){
+        return service.getGenres();
     }
 }

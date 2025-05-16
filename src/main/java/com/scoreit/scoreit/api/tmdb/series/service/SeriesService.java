@@ -1,6 +1,8 @@
 package com.scoreit.scoreit.api.tmdb.series.service;
 
 import com.scoreit.scoreit.api.tmdb.movie.dto.CreditsResponse;
+import com.scoreit.scoreit.api.tmdb.movie.dto.MovieResponse;
+import com.scoreit.scoreit.api.tmdb.movie.dto.person.PersonSearchResponse;
 import com.scoreit.scoreit.api.tmdb.series.dto.*;
 import com.scoreit.scoreit.entity.FavoriteListContent;
 import com.scoreit.scoreit.service.FavoriteListContentService;
@@ -145,6 +147,37 @@ public class SeriesService {
                 genres,
                 contentRating
         );
+    }
+
+    //search
+
+    public String getGenres() {
+        String url = String.format("https://api.themoviedb.org/3/genre/tv/list?language=pt-BR&api_key=%s", apiKey);
+        return restTemplate.getForObject(url, String.class);
+    }
+
+    public SeriesResponse searchSeriesByTitle(String title, int page) {
+        String url = String.format(
+                "https://api.themoviedb.org/3/search/tv?query=%s&language=pt-BR&page=%d&api_key=%s",
+                title, page, apiKey
+        );
+        return restTemplate.getForObject(url, SeriesResponse.class);
+    }
+
+    public SeriesResponse searchSeriesByGenre(String genre, int page) {
+        String url = String.format(
+                "https://api.themoviedb.org/3/discover/tv?with_genres=%s&language=pt-BR&page=%d&api_key=%s",
+                genre, page, apiKey
+        );
+        return restTemplate.getForObject(url, SeriesResponse.class);
+    }
+
+    public SeriesResponse searchSeriesByYear(String year, int page) {
+        String url = String.format(
+                "https://api.themoviedb.org/3/discover/tv?first_air_date_year=%s&language=pt-BR&page=%d&api_key=%s",
+                year, page, apiKey
+        );
+        return restTemplate.getForObject(url, SeriesResponse.class);
     }
 
 

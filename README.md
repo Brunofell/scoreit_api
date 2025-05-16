@@ -61,6 +61,11 @@ Para testar a API, utilize uma ferramenta de requisições HTTP como:
 | GET | `/movie/several?ids=id,id,id...` | Sim | Retorna mais de um filme por uma lista de ids    |
 | GET | `/movie/favorites/{USER_ID}`     | Sim | Retorna os dados dos filmes favoritos do usuário |
 | GET | `/movie/{id}/details`            | Sim | Retorna vários dados sobre o filme pelo id       |
+| GET | `/search/title/{title}`            | Sim | Pesquisa filme por título       |
+| GET | `/search/name/{name}`            | Sim | Pesquisa filme pelo nome      |
+| GET | `/search/genre/{genre}`            | Sim | Pesquisa filme por genero tipo terror sla (tem que usar o endpoint abaixo pra ver o numero de cada genero no tmdb)      |
+| GET | `/search/genres`            | Sim | Retorna o número dos generos para usar nas consultas       |
+| GET | `/search/year/{year}`            | Sim | Pesquisa filmes por ano de lançamento       |
 
 ### Séries
 
@@ -75,6 +80,12 @@ Para testar a API, utilize uma ferramenta de requisições HTTP como:
 | GET | `/series/several?ids=id,id,id...` | Sim | Retorna mais de uma série por uma lista de ids                                               |
 | GET | `/series/favorites/{USER_ID}`| Sim | Retorna os dados das series favoritas do usuário                                             |
 | GET | `/series/100088/details`| Sim | Retorna várias coisas sobre as séries, temporada elenco e entre outros. passar o id da série |
+| GET | `/series/search/title/{title}`| Sim | Pesquisa séries pelo título  |
+| GET | `/series/search/genre/{genre}`| Sim | Pesquisa séries pelo genero ( tem que pesquisar o id de cada genero para serie dp tmdb, o metodo pra isso ta ai em baixo) |
+| GET | `/series/search/genres`| Sim | Retorna id do generos cadastrados no tmdb |
+| GET | `/series/search/year/{year}`| Sim | Pesquisa séries pelo ano de estreia |
+
+
 
 ### Músicas(Album)
 
@@ -90,18 +101,20 @@ Para testar a API, utilize uma ferramenta de requisições HTTP como:
 | GET | `/spotify/track/{id_track}`                                                                             | Sim | Retorna os dados de uma track pelo id dela                            |
 | GET | `/spotify/api/searchAlbum?query={Nome do album}&limit={Quantidade de itens retornados}`                 | Sim | Filtro de pesquisa para albuns (So retorna o que é considerado album) |
 | GET | `/spotify/track/search?query={Nome_track}&limit=5`                                                      | Sim | Filtro de pesquisa para track                                         |
+| GET | `/spotify/api/artist/search?query={Nome do artista}&limit=10`                                           | Sim | Pesquisa o artista pelo nome                                          |
+| GET | `/spotify/api/artist/{id_artista}`                                                                      | Sim | Retorna infos do artista pelo id                                      |
 
 
 ### Review
 
 | Método | Endpoint                                                                      | Autenticação | Descrição                                        |
 |--------|-------------------------------------------------------------------------------|--------------|--------------------------------------------------|
-| GET | `/review/register`                                                            | Sim | Cadastro de review                               |
-| GET | `/review/getAllReviews`                                                       | Sim | retorna todas as reviews                         |
-| GET | `/review/getReviewByMemberId/{id}`                                            | Sim | Retorna reviews pelo id do usuario               |
-| GET | `/review/getReviewByMediaId/{mídia id}`                                       | Sim | Retorna reviews pelo id da mídia                 |
-| GET | `/review/update` | Sim | Update da review (ver exemplo no postman)        |
-| GET | `/review/delete/1`    | Sim | Deleta a review                                  |
+| POST   | `/review/register`                                                            | Sim | Cadastro de review                               |
+| GET    | `/review/getAllReviews`                                                       | Sim | retorna todas as reviews                         |
+| GET    | `/review/getReviewByMemberId/{id}`                                            | Sim | Retorna reviews pelo id do usuario               |
+| GET    | `/review/getReviewByMediaId/{mídia id}`                                       | Sim | Retorna reviews pelo id da mídia                 |
+| PUT    | `/review/update` | Sim | Update da review (ver exemplo no postman)        |
+| DELETE | `/review/delete/1`    | Sim | Deleta a review                                  |
 
 
 
