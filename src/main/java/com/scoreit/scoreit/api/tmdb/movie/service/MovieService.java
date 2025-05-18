@@ -183,5 +183,38 @@ public class MovieService {
         return restTemplate.getForObject(url, MovieResponse.class);
     }
 
+    public MovieResponse searchMovieByYearAndGenre(String year, String genre, int page) {
+        String url = String.format(
+                "%s/discover/movie?primary_release_year=%s&with_genres=%s&language=pt-BR&page=%d&api_key=%s",
+                baseUrl, year, genre, page, apiKey
+        );
+        return restTemplate.getForObject(url, MovieResponse.class);
+    }
+
+    public MovieResponse searchMovies(String title, String year, String genre, int page) {
+        StringBuilder url = new StringBuilder(String.format(
+                "%s/discover/movie?language=pt-BR&page=%d&api_key=%s",
+                baseUrl, page, apiKey
+        ));
+
+        if (title != null && !title.isBlank()) {
+            url = new StringBuilder(String.format(
+                    "%s/search/movie?query=%s&language=pt-BR&page=%d&api_key=%s",
+                    baseUrl, title, page, apiKey
+            ));
+        }
+
+        if (year != null && !year.isBlank()) {
+            url.append("&primary_release_year=").append(year);
+        }
+
+        if (genre != null && !genre.isBlank()) {
+            url.append("&with_genres=").append(genre);
+        }
+
+        return restTemplate.getForObject(url.toString(), MovieResponse.class);
+    }
+
+
 
 }

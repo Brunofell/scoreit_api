@@ -87,4 +87,24 @@ public class MovieController {
     public String getGenre(){
         return service.getGenres();
     }
+
+    @GetMapping("/search/year/{year}/genre/{genre}")
+    public MovieResponse searchMovieByYearAndGenre(
+            @PathVariable String year,
+            @PathVariable String genre,
+            @RequestParam(defaultValue = "1") int page
+    ) {
+        return service.searchMovieByYearAndGenre(year, genre, page);
+    }
+
+    @GetMapping("/search")
+    public MovieResponse searchMovies(
+            @RequestParam(required = false) String title,
+            @RequestParam(required = false) String year,
+            @RequestParam(required = false) String genre,
+            @RequestParam(defaultValue = "1") int page
+    ) {
+        return service.searchMovies(title, year, genre, page);
+    }
+
 }
