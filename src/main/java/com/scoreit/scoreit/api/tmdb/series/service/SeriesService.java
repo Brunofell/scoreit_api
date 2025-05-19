@@ -180,6 +180,39 @@ public class SeriesService {
         return restTemplate.getForObject(url, SeriesResponse.class);
     }
 
+    public SeriesResponse searchSeriesByYearAndGenre(String year, String genre, int page) {
+        String url = String.format(
+                "%s/discover/tv?first_air_date_year=%s&with_genres=%s&language=pt-BR&page=%d&api_key=%s",
+                baseUrl, year, genre, page, apiKey
+        );
+        return restTemplate.getForObject(url, SeriesResponse.class);
+    }
+
+    public SeriesResponse searchSeries(String title, String year, String genre, int page) {
+        StringBuilder url = new StringBuilder(String.format(
+                "%s/discover/tv?language=pt-BR&page=%d&api_key=%s",
+                baseUrl, page, apiKey
+        ));
+
+        if (title != null && !title.isBlank()) {
+            url = new StringBuilder(String.format(
+                    "%s/search/tv?query=%s&language=pt-BR&page=%d&api_key=%s",
+                    baseUrl, title, page, apiKey
+            ));
+        }
+
+        if (year != null && !year.isBlank()) {
+            url.append("&first_air_date_year=").append(year);
+        }
+
+        if (genre != null && !genre.isBlank()) {
+            url.append("&with_genres=").append(genre);
+        }
+
+        return restTemplate.getForObject(url.toString(), SeriesResponse.class);
+    }
+
+
 
 
 }

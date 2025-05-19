@@ -1,7 +1,5 @@
 package com.scoreit.scoreit.api.tmdb.series.controller;
 
-import com.scoreit.scoreit.api.tmdb.movie.dto.MovieResponse;
-import com.scoreit.scoreit.api.tmdb.movie.dto.person.PersonSearchResponse;
 import com.scoreit.scoreit.api.tmdb.series.dto.*;
 import com.scoreit.scoreit.api.tmdb.series.service.SeriesService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -83,6 +81,25 @@ public class SeriesController {
     @GetMapping("/search/genres") // retorna generos
     public String getGenre(){
         return service.getGenres();
+    }
+
+    @GetMapping("/search/year/{year}/genre/{genre}")
+    public SeriesResponse searchSeriesByYearAndGenre(
+            @PathVariable String year,
+            @PathVariable String genre,
+            @RequestParam(defaultValue = "1") int page
+    ) {
+        return service.searchSeriesByYearAndGenre(year, genre, page);
+    }
+
+    @GetMapping("/search")
+    public SeriesResponse searchSeries(
+            @RequestParam(required = false) String title,
+            @RequestParam(required = false) String year,
+            @RequestParam(required = false) String genre,
+            @RequestParam(defaultValue = "1") int page
+    ) {
+        return service.searchSeries(title, year, genre, page);
     }
 
 }
