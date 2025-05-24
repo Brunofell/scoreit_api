@@ -127,6 +127,18 @@ Para testar a API, utilize uma ferramenta de requisições HTTP como:
 | DELETE | `/customList/deleteContent/{memberId}/{mediaId}/{mediaType}/{listName}` | Sim | DELETA conteudos da lista        |
 | DELETE | `/customList/delete/{id_list}`                                          | Sim | DELETA a LISTA                   |
 
+### Followers
+
+| Método | Endpoint                                               | Autenticação | Descrição                                                    |
+|--------|--------------------------------------------------------|--------------|--------------------------------------------------------------|
+| POST   | `/followers/follow?followerId={id1}&followedId={id2}` | Sim          | Faz o usuário com `followerId` seguir o usuário `followedId` |
+| POST   | `/followers/unfollow?followerId={id1}&followedId={id2}` | Sim        | Faz o usuário com `followerId` deixar de seguir `followedId` |
+| GET    | `/followers/{memberId}/followers`                      | Sim          | Retorna a lista de usuários que seguem o `memberId`          |
+| GET    | `/followers/{memberId}/following`                      | Sim          | Retorna a lista de usuários que o `memberId` está seguindo   |
+| GET    | `/followers/isFollowing?followerId={id1}&followedId={id2}` | Sim      | Retorna `true` se o `followerId` segue o `followedId`        |
+| GET    | `/followers/{memberId}/countFollowers`                 | Sim          | Retorna a quantidade de seguidores do `memberId`             |
+| GET    | `/followers/{memberId}/countFollowing`                 | Sim          | Retorna a quantidade de pessoas que o `memberId` segue       |
+
 
 ## EXEMPLOS DE REQUISIÇÕES
 

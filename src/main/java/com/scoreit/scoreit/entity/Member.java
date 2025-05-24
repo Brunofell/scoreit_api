@@ -30,8 +30,11 @@ public class Member implements UserDetails {
     private boolean enabled;
     private String profileImageUrl;
     private String bio;
+    private int followers;
+    private int following_num;
 
-    public Member(Long id, String name, String email, String password, LocalDate birthDate, Gender gender, LocalDateTime createdAt, Boolean enabled, String profileImageUrl) {
+
+    public Member(Long id, String name, String email, String password, LocalDate birthDate, Gender gender, LocalDateTime createdAt, Boolean enabled, String profileImageUrl, int followers, int following_num) {
         this.id = id;
         this.name = name;
         this.email = email;
@@ -41,6 +44,8 @@ public class Member implements UserDetails {
         this.createdAt = createdAt;
         this.enabled = enabled;
         this.profileImageUrl = profileImageUrl;
+        this.followers = followers;
+        this.following_num = following_num;
     }
 
     public Member(String name, String email, LocalDate birthDate, Gender gender, String password) {
@@ -50,6 +55,7 @@ public class Member implements UserDetails {
         this.birthDate = birthDate;
         this.gender = gender;
         this.enabled = true;
+
     }
 
     public Member(){}
@@ -57,6 +63,22 @@ public class Member implements UserDetails {
     @PrePersist
     protected void onCreate() {
         this.createdAt = LocalDateTime.now();
+    }
+
+    public int getFollowers() {
+        return followers;
+    }
+
+    public void setFollowers(int followers) {
+        this.followers = followers;
+    }
+
+    public int getFollowing_num() {
+        return following_num;
+    }
+
+    public void setFollowing_num(int following_num) {
+        this.following_num = following_num;
     }
 
     public LocalDate getBirthDate() {

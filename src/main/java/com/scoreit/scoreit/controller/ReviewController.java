@@ -53,5 +53,12 @@ public class ReviewController {
         return ResponseEntity.ok().build();
     }
 
+    @GetMapping("/followed/{memberId}")
+    public ResponseEntity<List<Review>> getReviewsFromFollowedMembers(@PathVariable Long memberId) {
+        List<Review> reviews = reviewService.getReviewsFromFollowedMembers(memberId);
+        return ResponseEntity.ok(reviews);
+    }
+
+
 
 }
