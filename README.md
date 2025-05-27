@@ -118,15 +118,15 @@ Para testar a API, utilize uma ferramenta de requisições HTTP como:
 
 ### Custom List
 
-| Método | Endpoint                                                                | Autenticação | Descrição                        |
-|--------|-------------------------------------------------------------------------|--------------|----------------------------------|
-| POST   | `/customList/register/{memberId}/{listName}/{description}`              | Sim | Cadastro de lista customizada    |
-| POST   | `/customList/addContent/{memberId}/{mediaId}/{mediaType}/{listName}`    | Sim | Adiciona itens na lista          |
-| GET    | `/customList/getList/{memberId}`                                        | Sim | GET da lista do membro           |
-| GET    | `/customList/getContent/{memberId}/{listName}`                          | Sim | GET dos conteúdos de certa lista |
-| DELETE | `/customList/deleteContent/{memberId}/{mediaId}/{mediaType}/{listName}` | Sim | DELETA conteudos da lista        |
-| DELETE | `/customList/delete/{id_list}`                                          | Sim | DELETA a LISTA                   |
-
+| Método | Endpoint                                                                | Autenticação | Descrição                           |
+|--------|-------------------------------------------------------------------------|--------------|-------------------------------------|
+| POST   | `/customList/register`              | Sim | Cadastro de lista customizada       |
+| POST   | `/customList/addContent`    | Sim | Adiciona itens na lista             |
+| GET    | `/customList/getList/{memberId}`                                        | Sim | GET da lista do membro              |
+| GET    | `/customList/getContent/{memberId}/{listName}`                          | Sim | GET dos conteúdos de certa lista    |
+| DELETE | `/customList/deleteContent` | Sim | DELETA conteudos da lista           |
+| DELETE | `/customList/delete/{id_list}`                                          | Sim | DELETA a LISTA                      |
+| PUT    | `/customList/update`                                          | Sim | Update do nome e descrição da lista |
 ### Followers
 
 | Método | Endpoint                                               | Autenticação | Descrição                                                    |
