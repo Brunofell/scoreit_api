@@ -1,5 +1,6 @@
 package com.scoreit.scoreit.service;
 
+import com.scoreit.scoreit.dto.customList.CustomListUpdateData;
 import com.scoreit.scoreit.entity.CustomList;
 import com.scoreit.scoreit.entity.CustomListContent;
 import com.scoreit.scoreit.entity.Member;
@@ -45,6 +46,12 @@ public class CustomListService {
 
         // Remove a lista em si
         customListRepository.delete(customList);
+    }
+
+    public CustomList updateListData(CustomListUpdateData data){
+        var listData = customListRepository.getReferenceById(data.id());
+        listData.updateList(data);
+        return customListRepository.save(listData);
     }
 
 

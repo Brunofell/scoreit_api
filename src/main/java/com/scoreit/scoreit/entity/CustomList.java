@@ -1,7 +1,7 @@
 package com.scoreit.scoreit.entity;
 
+import com.scoreit.scoreit.dto.customList.CustomListUpdateData;
 import jakarta.persistence.*;
-import lombok.Getter;
 
 @Entity
 @Table(name = "custom_list")
@@ -54,5 +54,13 @@ public class CustomList {
 
     public void setMember(Member member) {
         this.member = member;
+    }
+
+    public void updateList(CustomListUpdateData data) {
+        if(data.listName() != null){
+            this.listName = data.listName();
+        }
+        if(data.list_description() != null)
+            this.list_description = data.list_description();
     }
 }

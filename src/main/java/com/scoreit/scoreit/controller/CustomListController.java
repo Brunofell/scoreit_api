@@ -1,19 +1,18 @@
 package com.scoreit.scoreit.controller;
 
+import com.scoreit.scoreit.dto.customList.CustomListContentData;
+import com.scoreit.scoreit.dto.customList.CustomListRegisterData;
+import com.scoreit.scoreit.dto.customList.CustomListUpdateData;
 import com.scoreit.scoreit.entity.CustomListContent;
-import com.scoreit.scoreit.entity.FavoriteListContent;
-import com.scoreit.scoreit.entity.Member;
 import com.scoreit.scoreit.service.CustomListContentService;
 import com.scoreit.scoreit.service.CustomListService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Map;
 
 @RestController
 @RequestMapping("/customList")
@@ -24,24 +23,23 @@ public class CustomListController {
     @Autowired
     private CustomListContentService customListContentService;
 
-    @PostMapping("/register/{memberId}/{listName}/{description}")
-    public ResponseEntity<String> customListRegister(
-            @PathVariable Long memberId,
-            @PathVariable String listName,
-            @PathVariable String description) {
-        customListService.createCustomList(memberId, listName, description);
-        return ResponseEntity.ok(listName + " successfully created.");
+    @PostMapping("/register")
+    public ResponseEntity<String> customListRegister(@RequestBody @Valid CustomListRegisterData data) {
+        customListService.createCustomList(data.memberId(), data.listName(), data.description());
+        return ResponseEntity.ok(data.listName() + " successfully created.");
     }
 
-    @PostMapping("/addContent/{memberId}/{mediaId}/{mediaType}/{listName}")
-    public ResponseEntity<String> addContentToList(@PathVariable Long memberId, @PathVariable String mediaId, @PathVariable String mediaType, @PathVariable String listName) {
+
+    @PostMapping("/addContent")
+    public ResponseEntity<String> addContentToList(@RequestBody @Valid CustomListContentData data) {
         try {
-            customListContentService.addContentInCustom(memberId, mediaId, mediaType, listName);
-            return ResponseEntity.ok("Conteúdo adicionado a " + listName);
+            customListContentService.addContentInCustom(data.memberId(), data.mediaId(), data.mediaType(), data.listName());
+            return ResponseEntity.ok("Conteúdo adicionado a " + data.listName());
         } catch (RuntimeException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
     }
+
 
     @GetMapping("/getList/{memberId}")
     public ResponseEntity getListByMemberId(@PathVariable Long memberId){
@@ -63,14 +61,21 @@ public class CustomListController {
         }
     }
 
-    @DeleteMapping("/deleteContent/{memberId}/{mediaId}/{mediaType}/{listName}")
-    public ResponseEntity<String> removeContentFromList(@PathVariable Long memberId, @PathVariable String mediaId, @PathVariable String mediaType, @PathVariable String listName) {
+    @DeleteMapping("/deleteContent")
+    public ResponseEntity<String> removeContentFromList(@RequestBody @Valid CustomListContentData data) {
         try {
-            customListContentService.removeContent(memberId, mediaId, mediaType, listName);
-            return ResponseEntity.ok("Content removed from " + listName);
+            customListContentService.removeContent(data.memberId(), data.mediaId(), data.mediaType(), data.listName());
+            return ResponseEntity.ok("Content removed from " + data.listName());
         } catch (RuntimeException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
+    }
+
+
+    @PutMapping("/update")
+    public ResponseEntity<String> updateListData(@RequestBody @Valid CustomListUpdateData data){
+        customListService.updateListData(data);
+        return ResponseEntity.ok( data.listName() + " has been updated.");
     }
 
 }
