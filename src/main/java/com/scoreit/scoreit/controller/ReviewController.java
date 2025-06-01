@@ -1,6 +1,7 @@
 package com.scoreit.scoreit.controller;
 
 import com.scoreit.scoreit.dto.review.ReviewRegister;
+import com.scoreit.scoreit.dto.review.ReviewResponse;
 import com.scoreit.scoreit.dto.review.ReviewUpdate;
 import com.scoreit.scoreit.entity.Review;
 import com.scoreit.scoreit.repository.ReviewRepository;
@@ -30,30 +31,31 @@ public class ReviewController {
         return ResponseEntity.ok().build();
     }
 
-    @GetMapping("/getAllReviews")
-    public List<Review> getAllReviews(){
-        return reviewService.getAllReviews();
-    }
-
-    @GetMapping("/getReviewByMemberId/{memberId}")
-    public List<Review> getReviewMemberById(@PathVariable Long memberId){
-        return reviewService.getReviewMemberById(memberId);
-    }
-
-    @GetMapping("/getReviewByMediaId/{mediaId}")
-    public List<Review> getReviewMediaById(@PathVariable String mediaId){
-        return reviewService.getReviewMediaById(mediaId);
-    }
-
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<?> deleteReview(@PathVariable Long id){
         reviewService.deleteReview(id);
         return ResponseEntity.ok().build();
     }
 
-    @GetMapping("/followed/{memberId}")
-    public ResponseEntity<List<Review>> getReviewsFromFollowedMembers(@PathVariable Long memberId) {
-        List<Review> reviews = reviewService.getReviewsFromFollowedMembers(memberId);
-        return ResponseEntity.ok(reviews);
+    @GetMapping("/getAllReviews")
+    public ResponseEntity<List<ReviewResponse>> getAllReviews(){
+        return ResponseEntity.ok(reviewService.getAllReviews());
     }
+
+    @GetMapping("/getReviewByMemberId/{memberId}")
+    public ResponseEntity<List<ReviewResponse>> getReviewMemberById(@PathVariable Long memberId){
+        return ResponseEntity.ok(reviewService.getReviewMemberById(memberId));
+    }
+
+    @GetMapping("/getReviewByMediaId/{mediaId}")
+    public ResponseEntity<List<ReviewResponse>> getReviewMediaById(@PathVariable String mediaId){
+        return ResponseEntity.ok(reviewService.getReviewMediaById(mediaId));
+    }
+
+    @GetMapping("/followed/{memberId}")
+    public ResponseEntity<List<ReviewResponse>> getReviewsFromFollowedMembers(@PathVariable Long memberId) {
+        return ResponseEntity.ok(reviewService.getReviewsFromFollowedMembers(memberId));
+    }
+
+
 }

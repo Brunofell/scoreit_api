@@ -1,6 +1,7 @@
 package com.scoreit.scoreit.service;
 
 import com.scoreit.scoreit.dto.review.ReviewRegister;
+import com.scoreit.scoreit.dto.review.ReviewResponse;
 import com.scoreit.scoreit.dto.review.ReviewUpdate;
 import com.scoreit.scoreit.entity.Member;
 import com.scoreit.scoreit.entity.Review;
@@ -39,26 +40,42 @@ public class ReviewService {
         reviewRepository.save(review);
     }
 
-    public List<Review> getAllReviews(){
-        return reviewRepository.findAll();
-    }
-
-    // Agora busca pelo Member, então recebe Long memberId e faz busca usando member.id
-    public List<Review> getReviewMemberById(Long memberId){
-        return reviewRepository.findByMemberId(memberId);
-    }
-
-    public List<Review> getReviewMediaById(String mediaId){
-        return reviewRepository.findByMediaId(mediaId);
-    }
-
     public void deleteReview(Long id){
         reviewRepository.deleteById(id);
     }
 
-    public List<Review> getReviewsFromFollowedMembers(Long currentMemberId) {
-        List<Long> followedIds = memberFollowerRepository.findFollowedIdsByFollowerId(currentMemberId);
-
-        return reviewRepository.findByMemberIdIn(followedIds);
+    public List<ReviewResponse> getAllReviews(){
+        return reviewRepository.findAll().stream().map(this::toResponse).toList();
     }
+
+    public List<ReviewResponse> getReviewMemberById(Long memberId){
+        return reviewRepository.findByMemberId(memberId).stream().map(this::toResponse).toList();
+    }
+
+    public List<ReviewResponse> getReviewMediaById(String mediaId){
+        return reviewRepository.findByMediaId(mediaId).stream().map(this::toResponse).toList();
+    }
+
+    public List<ReviewResponse> getReviewsFromFollowedMembers(Long currentMemberId) {
+        List<Long> followedIds = memberFollowerRepository.findFollowedIdsByFollowerId(currentMemberId);
+        return reviewRepository.findByMemberIdIn(followedIds).stream().map(this::toResponse).toList();
+    }
+
+    // Conversor para DTO
+    private ReviewResponse toResponse(Review review) {
+        return new ReviewResponse(
+                review.getId(),
+                review.getMediaId(),
+                review.getMediaType(),
+                review.getMember().getId(),
+                review.getScore(),
+                review.getMemberReview(),
+                review.getWatchDate(),
+                review.isSpoiler(),
+                review.getReviewDate()
+        );
+    }
+
+
+
 }
