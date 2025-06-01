@@ -5,7 +5,7 @@ import java.time.LocalDateTime;
 public record ReviewRegister(
         String mediaId,
         String mediaType,
-        String memberId,
+        Long memberId,  // mudou aqui para Long
         int score,
         String memberReview,
         LocalDateTime watchDate,

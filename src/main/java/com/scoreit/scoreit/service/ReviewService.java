@@ -2,8 +2,10 @@ package com.scoreit.scoreit.service;
 
 import com.scoreit.scoreit.dto.review.ReviewRegister;
 import com.scoreit.scoreit.dto.review.ReviewUpdate;
+import com.scoreit.scoreit.entity.Member;
 import com.scoreit.scoreit.entity.Review;
 import com.scoreit.scoreit.repository.MemberFollowerRepository;
+import com.scoreit.scoreit.repository.MemberRepository;
 import com.scoreit.scoreit.repository.ReviewRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -15,11 +17,19 @@ import java.util.Optional;
 public class ReviewService {
     @Autowired
     private ReviewRepository reviewRepository;
+
+    @Autowired
+    private MemberRepository memberRepository;  // necessário para buscar Member
+
     @Autowired
     private MemberFollowerRepository memberFollowerRepository;
 
     public void reviewRegister(ReviewRegister dados){
-        Review review = new Review(dados);
+        // Buscar Member pelo ID, lançar erro se não encontrar
+        Member member = memberRepository.findById(dados.memberId())
+                .orElseThrow(() -> new IllegalArgumentException("Member not found with id: " + dados.memberId()));
+
+        Review review = new Review(dados, member);
         reviewRepository.save(review);
     }
 
@@ -33,7 +43,8 @@ public class ReviewService {
         return reviewRepository.findAll();
     }
 
-    public List<Review> getReviewMemberById(String memberId){
+    // Agora busca pelo Member, então recebe Long memberId e faz busca usando member.id
+    public List<Review> getReviewMemberById(Long memberId){
         return reviewRepository.findByMemberId(memberId);
     }
 
@@ -45,16 +56,9 @@ public class ReviewService {
         reviewRepository.deleteById(id);
     }
 
-
     public List<Review> getReviewsFromFollowedMembers(Long currentMemberId) {
         List<Long> followedIds = memberFollowerRepository.findFollowedIdsByFollowerId(currentMemberId);
 
-        // Converter para List<String> se os IDs nos Reviews forem String (como no seu caso)
-        List<String> followedIdsAsString = followedIds.stream()
-                .map(String::valueOf)
-                .toList();
-
-        return reviewRepository.findByMemberIdIn(followedIdsAsString);
+        return reviewRepository.findByMemberIdIn(followedIds);
     }
-
 }

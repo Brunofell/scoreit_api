@@ -5,34 +5,46 @@ import com.scoreit.scoreit.dto.review.ReviewUpdate;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
+
 @Entity
 @Table(name = "reviews")
 public class Review {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     @Column(name = "media_id")
     private String mediaId;
+
     @Column(name = "media_type")
     private String mediaType;
-    @Column(name = "member_id")
-    private String memberId;
+
+    // Trocar String memberId por relacionamento com Member
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "member_id", nullable = false)
+    private Member member;
+
     private int score;
+
     @Column(name = "member_review")
     private String memberReview;
+
     @Column(name = "watch_date")
     private LocalDateTime watchDate;
+
     private boolean spoiler;
+
     @Column(name = "review_date")
     private LocalDateTime reviewDate;
 
-    public Review(){}
+    public Review() {}
 
-    public Review(Long id, String mediaId, String mediaType, String memberId, int score, String memberReview, LocalDateTime watchDate ,boolean spoiler, LocalDateTime reviewDate) {
+    // Ajuste construtor para receber Member
+    public Review(Long id, String mediaId, String mediaType, Member member, int score, String memberReview, LocalDateTime watchDate ,boolean spoiler, LocalDateTime reviewDate) {
         this.id = id;
         this.mediaId = mediaId;
         this.mediaType = mediaType;
-        this.memberId = memberId;
+        this.member = member;
         this.score = score;
         this.memberReview = memberReview;
         this.watchDate = watchDate;
@@ -40,10 +52,11 @@ public class Review {
         this.reviewDate = reviewDate;
     }
 
-    public Review(ReviewRegister data) {
+    // Ajustar construtor que recebe ReviewRegister - agora precisa do Member no lugar do memberId String
+    public Review(ReviewRegister data, Member member) {
         this.mediaId = data.mediaId();
         this.mediaType = data.mediaType();
-        this.memberId = data.memberId();
+        this.member = member;
         this.score = data.score();
         this.watchDate = data.watchDate();
         this.memberReview = data.memberReview();
@@ -56,19 +69,18 @@ public class Review {
     }
 
     public void updateInfos(ReviewUpdate data) {
-       if(data.score() != null){
+        if(data.score() != null){
             this.score = data.score();
-       }
-       if(data.watchDate() != null){
-           this.watchDate = data.watchDate();
-       }
-       if(data.spoiler() != null){
-           this.spoiler = data.spoiler();
-       }
-       if(data.memberReview() != null){
-           this.memberReview = data.memberReview();
-       }
-
+        }
+        if(data.watchDate() != null){
+            this.watchDate = data.watchDate();
+        }
+        if(data.spoiler() != null){
+            this.spoiler = data.spoiler();
+        }
+        if(data.memberReview() != null){
+            this.memberReview = data.memberReview();
+        }
     }
 
     public LocalDateTime getWatchDate() {
@@ -111,12 +123,12 @@ public class Review {
         this.score = score;
     }
 
-    public String getMemberId() {
-        return memberId;
+    public Member getMember() {
+        return member;
     }
 
-    public void setMemberId(String memberId) {
-        this.memberId = memberId;
+    public void setMember(Member member) {
+        this.member = member;
     }
 
     public String getMediaType() {
