@@ -42,6 +42,13 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.POST, "/api/change-email").permitAll()
                         .requestMatchers(HttpMethod.POST, "/api/reset-email").permitAll()
                         .requestMatchers("/spotify/api**").permitAll()
+                        .requestMatchers(
+                                "/v3/api-docs/**",
+                                "/swagger-ui.html",
+                                "/swagger-ui/**",
+                                "/swagger-resources/**",
+                                "/webjars/**"
+                        ).permitAll()
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class)
