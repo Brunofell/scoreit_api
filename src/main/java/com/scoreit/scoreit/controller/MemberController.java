@@ -6,10 +6,9 @@ import com.scoreit.scoreit.dto.security.AuthenticationResponse;
 import com.scoreit.scoreit.dto.member.MemberRegister;
 import com.scoreit.scoreit.entity.FavoriteListContent;
 import com.scoreit.scoreit.entity.Member;
-import com.scoreit.scoreit.service.FavoriteListContentService;
-import com.scoreit.scoreit.service.FavoriteListService;
-import com.scoreit.scoreit.service.MemberService;
-import com.scoreit.scoreit.service.TokenService;
+import com.scoreit.scoreit.entity.VerificationToken;
+import com.scoreit.scoreit.repository.VerificationTokenRepository;
+import com.scoreit.scoreit.service.*;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -18,6 +17,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -36,6 +36,10 @@ public class MemberController {
     private FavoriteListContentService favoriteListContentService;
     @Autowired
     private FavoriteListService favoriteListService;
+    @Autowired
+    private VerificationTokenRepository verificationTokenRepository;
+    @Autowired
+    private EmailConfirmationService emailConfirmationService;
 
     @GetMapping("/get")
     public List<Member> getMembers(){
@@ -48,10 +52,25 @@ public class MemberController {
     }
 
     @PostMapping("/post")
-    public ResponseEntity<Member> memberRegister(@Valid @RequestBody MemberRegister memberRegister){
-        Member member = memberRegister.toModel();
-        return ResponseEntity.status(HttpStatus.CREATED).body(service.memberRegister(member));
+    public ResponseEntity<?> register(@RequestBody Member member) {
+        try {
+            Member saved = service.memberRegister(member);
+            return ResponseEntity.ok("Cadastro realizado. Verifique seu e-mail.");
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
+
+    @GetMapping("/confirm")
+    public ResponseEntity<String> confirm(@RequestParam String token) {
+        String result = service.confirmEmail(token);
+        if (result.equals("E-mail confirmado com sucesso!")) {
+            return ResponseEntity.ok(result);
+        } else {
+            return ResponseEntity.badRequest().body(result);
+        }
+    }
+
 
     @PostMapping("/login")
     public ResponseEntity login(@RequestBody AuthenticationRequest login){

@@ -31,22 +31,23 @@ Para testar a API, utilize uma ferramenta de requisições HTTP como:
 
 ### Usuários
 
-| Método | Endpoint                                                     | Autenticação | Descrição                                                           |
-|--------|--------------------------------------------------------------|--------------|---------------------------------------------------------------------|
-| POST   | `/member/post`                                               | Não | Cadastrar novo usuário                                              |
-| POST   | `/member/login`                                              | Não | Autenticar usuário e obter token JWT                                |
-| GET    | `/member/get`                                                | Sim | Obter dados do usuário logado                                       |
-| PUT    | `/member/update`                                             | Sim | Atualizar dados do usuário                                          |
-| POST   | `/api/change-email?email={EMAIL_ATUAL}`                      | Sim | Solicitar alteração de email                                        |
-| POST   | `/api/reset-email?token={TOKEN}&newEmail={NOVO_EMAIL}`       | Não | Confirmar alteração de email                                        |
-| DELETE | `/member/delete/{id}`                                        | Sim | Excluir conta de usuário                                            |
-| POST   | `/api/forgot-password?email={EMAIL}`                         | Não | Solicitar redefinição de senha                                      |
-| POST   | `/api/reset-password?token={TOKEN}&newPassword={NOVA_SENHA}` | Não | Confirmar nova senha                                                |
-| POST   | `/api/images/upload/{USER_ID}`                               | Sim | Enviar foto de perfil                                               |
-| POST   | `/member/favorites/{USER_ID}/{MEDIA_ID}/{MEDIA_TYPE}`        | Sim | Adicionar item aos favoritos                                        |
-| GET    | `/member/favoritesList/{USER_ID}`                            | Sim | Obter lista de favoritos                                            |
-| GET    | `/member/favoritesListContent/{USER_ID}`                     | Sim | Obter conteúdo da lista de favoritos                                |
-| DELETE | `/member/favoritesDelete/{USER_ID}/{MEDIA_ID}/{MEDIA_TYPE}`  | Sim | Remover item dos favoritos                                          |
+| Método | Endpoint                                                     | Autenticação | Descrição                                                          |
+|--------|--------------------------------------------------------------|--------------|--------------------------------------------------------------------|
+| POST   | `/member/post`                                               | Não | Cadastrar novo usuário e envia email de confirmação                |
+| GET    | `/member/confirm?token=<Token recebido por email>`           | Sim | ativa conta                                                        |
+| POST   | `/member/login`                                              | Não | Autenticar usuário e obter token JWT                               |
+| GET    | `/member/get`                                                | Sim | Obter dados do usuário logado                                      |
+| PUT    | `/member/update`                                             | Sim | Atualizar dados do usuário                                         |
+| POST   | `/api/change-email?email={EMAIL_ATUAL}`                      | Sim | Solicitar alteração de email                                       |
+| POST   | `/api/reset-email?token={TOKEN}&newEmail={NOVO_EMAIL}`       | Não | Confirmar alteração de email                                       |
+| DELETE | `/member/delete/{id}`                                        | Sim | Excluir conta de usuário                                           |
+| POST   | `/api/forgot-password?email={EMAIL}`                         | Não | Solicitar redefinição de senha                                     |
+| POST   | `/api/reset-password?token={TOKEN}&newPassword={NOVA_SENHA}` | Não | Confirmar nova senha                                               |
+| POST   | `/api/images/upload/{USER_ID}`                               | Sim | Enviar foto de perfil                                              |
+| POST   | `/member/favorites/{USER_ID}/{MEDIA_ID}/{MEDIA_TYPE}`        | Sim | Adicionar item aos favoritos                                       |
+| GET    | `/member/favoritesList/{USER_ID}`                            | Sim | Obter lista de favoritos                                           |
+| GET    | `/member/favoritesListContent/{USER_ID}`                     | Sim | Obter conteúdo da lista de favoritos                               |
+| DELETE | `/member/favoritesDelete/{USER_ID}/{MEDIA_ID}/{MEDIA_TYPE}`  | Sim | Remover item dos favoritos                                         |
 | GET    | `/member/is-favorited?memberId={USER_ID}&mediaId={MEDIA_ID}` | Sim | Verifica se uma obra específica está favoritada pelo usuário logado |
 
 ### Filmes

@@ -37,6 +37,7 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.GET, "/hello/").permitAll()
                         .requestMatchers(HttpMethod.POST, "/member/post").permitAll()
                         .requestMatchers(HttpMethod.POST, "/member/login").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/member/confirm").permitAll()
                         .requestMatchers(HttpMethod.POST, "/api/forgot-password").permitAll()
                         .requestMatchers(HttpMethod.POST, "/api/reset-password").permitAll()
                         .requestMatchers(HttpMethod.POST, "/api/change-email").permitAll()
