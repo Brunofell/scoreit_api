@@ -21,6 +21,7 @@ public class EmailConfirmationService {
         try {
             MimeMessage mimeMessage = mailSender.createMimeMessage();
             MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, "utf-8");
+            helper.setFrom("scoreit2025@gmail.com");
             helper.setTo(to);
             helper.setSubject(subject);
             helper.setText(message, true);
