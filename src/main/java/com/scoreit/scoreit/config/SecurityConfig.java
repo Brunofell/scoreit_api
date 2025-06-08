@@ -35,6 +35,7 @@ public class SecurityConfig {
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers(HttpMethod.GET, "/hello/").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/feed/").permitAll()
                         .requestMatchers(HttpMethod.POST, "/member/post").permitAll()
                         .requestMatchers(HttpMethod.POST, "/member/login").permitAll()
                         .requestMatchers(HttpMethod.GET, "/member/confirm").permitAll()

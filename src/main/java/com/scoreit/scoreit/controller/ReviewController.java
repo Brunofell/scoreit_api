@@ -56,6 +56,4 @@ public class ReviewController {
     public ResponseEntity<List<ReviewResponse>> getReviewsFromFollowedMembers(@PathVariable Long memberId) {
         return ResponseEntity.ok(reviewService.getReviewsFromFollowedMembers(memberId));
     }
-
-
 }
