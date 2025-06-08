@@ -115,7 +115,7 @@ public class FeedService {
         Member membro = membroOptional.get();
         MemberResponse memberResponse = new MemberResponse(
                 membro.getId(),
-                membro.getUsername(),
+                membro.getName(),
                 membro.getBirthDate(),
                 membro.getProfileImageUrl(),
                 membro.getGender(),
