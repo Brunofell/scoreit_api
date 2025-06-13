@@ -49,16 +49,27 @@ public class FavoriteListContentService {
         favoriteListContentRepository.save(content);
 
     }
+//
+//    public List<FavoriteListContent> getFavoriteListContent(Long memberId){
+//        FavoriteList favoriteList = favoriteListRepository.findByMemberIdAndListName(memberId, "Favorites");
+//
+//        if (favoriteList == null) {
+//            throw new RuntimeException("Lista de favoritos não encontrada.");
+//        }
+//
+//        return favoriteListContentRepository.findByFavoriteList(favoriteList);
+//    }
 
-    public List<FavoriteListContent> getFavoriteListContent(Long memberId){
+    public List<FavoriteListContent> getFavoriteListContent(Long memberId) {
         FavoriteList favoriteList = favoriteListRepository.findByMemberIdAndListName(memberId, "Favorites");
 
         if (favoriteList == null) {
-            throw new RuntimeException("Lista de favoritos não encontrada.");
+            return List.of(); // ou Collections.emptyList();
         }
 
         return favoriteListContentRepository.findByFavoriteList(favoriteList);
     }
+
 
     public void removeContent(Long memberId, String mediaId, String mediaType){
         FavoriteList favoriteList = favoriteListRepository.findByMemberIdAndListName(memberId, "Favorites");
