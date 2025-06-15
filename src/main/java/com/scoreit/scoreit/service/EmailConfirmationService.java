@@ -15,8 +15,9 @@ public class EmailConfirmationService {
     public void sendVerificationEmail(String to, String token) {
         String subject = "Confirmação de E-mail - ScoreIt";
         String confirmationUrl = "http://localhost:8080/member/confirm?token=" + token;
+        String resetLink = "http://localhost:3000/pt/confirma_conta?token=" + token;
         String message = "<p>Olá! Clique no link abaixo para confirmar seu e-mail:</p>"
-                + "<a href=\"" + confirmationUrl + "\">Confirmar E-mail</a>";
+                + "<a href=\"" + resetLink + "\">Confirmar E-mail</a>";
 
         try {
             MimeMessage mimeMessage = mailSender.createMimeMessage();
