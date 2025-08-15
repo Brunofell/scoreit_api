@@ -1,7 +1,6 @@
 package com.scoreit.scoreit.api.music.spotify.service;
 
 
-import com.scoreit.scoreit.api.music.UnifiedAlbum;
 import com.scoreit.scoreit.api.music.spotify.client.AlbumSpotifyClient;
 import com.scoreit.scoreit.api.music.spotify.client.ArtistSpotifyClient;
 import com.scoreit.scoreit.api.music.spotify.client.AuthSpotifyClient;
@@ -51,24 +50,6 @@ public class ArtistSpotifyService {
         String imageUrl = artist.getImages().isEmpty() ? null : artist.getImages().get(0).getUrl();
 
         return ResponseEntity.ok().body(new ArtistImageResponse(artist.getName(), artist.getId(), imageUrl));
-    }
-
-    public ResponseEntity<?> getAlbumInfo(String albumName, String artistName) {
-        var loginRequest = new LoginRequest("client_credentials", "46f327a02d944095a28863edd7446a50", "3debe93c67ed487a841689865e56ac18");
-
-        var token = authSpotifyClient.login(loginRequest).getAccess_token();
-
-        String query = albumName + " " + artistName;
-        var response = albumSpotifyClient.search("Bearer " + token, query, "album", 1);
-        var albums = response.getAlbums().getItems();
-
-        if (albums.isEmpty()) {
-            return ResponseEntity.notFound().build();
-        }
-
-        var album = albums.get(0);
-        String imageUrl = album.getImages().isEmpty() ? null : album.getImages().get(0).getUrl();
-        return ResponseEntity.ok(new UnifiedAlbum(album.getName(), album.getId(), imageUrl, artistName));
     }
 
     public ResponseEntity<?> getSeveralArtistsByIds(List<String> artistIds) {
