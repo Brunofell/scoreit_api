@@ -141,6 +141,12 @@ Para testar a API, utilize uma ferramenta de requisições HTTP como:
 | GET    | `/followers/{memberId}/countFollowing`                 | Sim          | Retorna a quantidade de pessoas que o `memberId` segue       |
 
 
+### Badges
+
+| Método | Endpoint                    | Autenticação | Descrição                                        |
+|--------|-----------------------------|--------------|--------------------------------------------------|
+| POST   | `/member/{memberId}/badges` | SIM          | Acessar as conquistas de um usuário pelo id dele |
+
 ## EXEMPLOS DE REQUISIÇÕES
 
 ### Cadastro de usuário
