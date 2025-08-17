@@ -3,8 +3,6 @@ package com.scoreit.scoreit.controller;
 import com.scoreit.scoreit.dto.review.ReviewRegister;
 import com.scoreit.scoreit.dto.review.ReviewResponse;
 import com.scoreit.scoreit.dto.review.ReviewUpdate;
-import com.scoreit.scoreit.entity.Review;
-import com.scoreit.scoreit.repository.ReviewRepository;
 import com.scoreit.scoreit.service.ReviewService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;

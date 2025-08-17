@@ -1,12 +1,16 @@
 package com.scoreit.scoreit.controller;
 
+import com.scoreit.scoreit.dto.badge.BadgeResponse;
 import com.scoreit.scoreit.dto.member.MemberUpdate;
 import com.scoreit.scoreit.dto.security.AuthenticationRequest;
 import com.scoreit.scoreit.dto.security.AuthenticationResponse;
 import com.scoreit.scoreit.dto.member.MemberRegister;
+import com.scoreit.scoreit.entity.Badge;
 import com.scoreit.scoreit.entity.FavoriteListContent;
 import com.scoreit.scoreit.entity.Member;
 import com.scoreit.scoreit.entity.VerificationToken;
+import com.scoreit.scoreit.repository.MemberBadgeRepository;
+import com.scoreit.scoreit.repository.MemberRepository;
 import com.scoreit.scoreit.repository.VerificationTokenRepository;
 import com.scoreit.scoreit.service.*;
 import jakarta.validation.Valid;
@@ -28,6 +32,8 @@ import java.util.Optional;
 public class MemberController {
     @Autowired
     private MemberService service;
+    @Autowired
+    private BadgeService badgeService;
     @Autowired
     private TokenService tokenService;
     @Autowired
@@ -137,4 +143,12 @@ public class MemberController {
         List<Member> members = service.searchMembersByName(name);
         return ResponseEntity.ok(members);
     }
+
+    // badges
+
+    @GetMapping("/{id}/badges")
+    public List<BadgeResponse> getMemberBadges(@PathVariable Long id) {
+        return badgeService.getBadgesByMemberId(id);
+    }
+
 }

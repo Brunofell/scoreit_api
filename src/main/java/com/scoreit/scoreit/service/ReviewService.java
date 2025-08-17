@@ -12,7 +12,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class ReviewService {
@@ -25,13 +24,21 @@ public class ReviewService {
     @Autowired
     private MemberFollowerRepository memberFollowerRepository;
 
+    @Autowired
+    private AchievementService achievementService;
+
     public void reviewRegister(ReviewRegister dados){
-        // Buscar Member pelo ID, lançar erro se não encontrar
         Member member = memberRepository.findById(dados.memberId())
                 .orElseThrow(() -> new IllegalArgumentException("Member not found with id: " + dados.memberId()));
 
         Review review = new Review(dados, member);
         reviewRepository.save(review);
+
+        // contar quantas reviews o usuário já fez
+        long totalReviews = reviewRepository.countByMemberId(member.getId());
+
+        // verificar conquistas
+        achievementService.checkReviewAchievements(member, totalReviews);
     }
 
     public void reviewUpdate(ReviewUpdate data){
@@ -75,7 +82,4 @@ public class ReviewService {
                 review.getReviewDate()
         );
     }
-
-
-
 }
