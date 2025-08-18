@@ -15,6 +15,8 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 @Configuration
@@ -28,29 +30,39 @@ public class SecurityConfig {
     }
 
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
-        return httpSecurity
-                .cors(cors -> cors.configurationSource(corsConfigurationSource()))
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+        return http
+                .cors(c -> c.configurationSource(corsConfigurationSource()))
                 .csrf(csrf -> csrf.disable())
-                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers(HttpMethod.GET, "/hello/").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/feed/").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/member/post").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/member/login").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/member/confirm").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/api/forgot-password").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/api/reset-password").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/api/change-email").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/api/reset-email").permitAll()
-                        .requestMatchers("/spotify/api**").permitAll()
-                        .requestMatchers(
+                .sessionManagement(s -> s.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .authorizeHttpRequests(auth -> auth
+                        .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+
+                        // Rotas públicas
+                        .requestMatchers(HttpMethod.GET,
+                                "/hello", "/hello/",
+                                "/feed", "/feed/",
+                                "/member/confirm", "/member/confirm/",
+                                "/auth/verifyToken", "/auth/verifyToken/",
+                                // swagger
                                 "/v3/api-docs/**",
                                 "/swagger-ui.html",
                                 "/swagger-ui/**",
                                 "/swagger-resources/**",
                                 "/webjars/**"
                         ).permitAll()
+
+                        .requestMatchers(HttpMethod.POST,
+                                "/member/post", "/member/post/",
+                                "/member/login", "/member/login/",
+                                "/api/forgot-password", "/api/forgot-password/",
+                                "/api/reset-password", "/api/reset-password/",
+                                "/api/change-email", "/api/change-email/",
+                                "/api/reset-email", "/api/reset-email/"
+                        ).permitAll()
+
+                        .requestMatchers("/spotify/api**").permitAll()
+
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class)
@@ -59,11 +71,26 @@ public class SecurityConfig {
 
     @Bean
     public UrlBasedCorsConfigurationSource corsConfigurationSource() {
+        String env = System.getenv("FRONTEND_ORIGINS");
+
+        List<String> origins = new ArrayList<>();
+        if (env != null && !env.isBlank()) {
+            Arrays.stream(env.split(","))
+                    .map(String::trim)
+                    .filter(s -> !s.isEmpty())
+                    .forEach(origins::add);
+        }
+        if (origins.isEmpty()) {
+            origins = List.of("https://scoreit.vercel.app", "http://localhost:3000");
+        }
+
         CorsConfiguration config = new CorsConfiguration();
-        config.setAllowedOrigins(List.of("http://localhost:3000"));
-        config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
-        config.setAllowedHeaders(List.of("Authorization", "Content-Type"));
+        config.setAllowedOrigins(origins);
+        config.setAllowedMethods(List.of("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
+        config.setAllowedHeaders(List.of("Authorization", "Content-Type", "Accept"));
+        config.setExposedHeaders(List.of("Authorization"));
         config.setAllowCredentials(true);
+        config.setMaxAge(3600L);
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", config);
@@ -71,8 +98,8 @@ public class SecurityConfig {
     }
 
     @Bean
-    public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
-        return authenticationConfiguration.getAuthenticationManager();
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration cfg) throws Exception {
+        return cfg.getAuthenticationManager();
     }
 
     @Bean

@@ -20,6 +20,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.security.core.AuthenticationException;
+import org.springframework.http.HttpStatus;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -60,12 +62,17 @@ public class MemberController {
     @PostMapping("/post")
     public ResponseEntity<?> register(@RequestBody Member member) {
         try {
+            System.out.println("[REGISTER] email=" + member.getEmail()); // DEBUG (não loga senha!)
             Member saved = service.memberRegister(member);
             return ResponseEntity.ok("Cadastro realizado. Verifique seu e-mail.");
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
+        } catch (RuntimeException e) {
+            // se der qualquer outra Runtime (ex.: integridade), retorna 400 com msg
+            return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
+
 
     @GetMapping("/confirm")
     public ResponseEntity<String> confirm(@RequestParam String token) {
@@ -79,14 +86,18 @@ public class MemberController {
 
 
     @PostMapping("/login")
-    public ResponseEntity login(@RequestBody AuthenticationRequest login){
-        UsernamePasswordAuthenticationToken usernamePassword = new UsernamePasswordAuthenticationToken(
-                login.email(), login.password()
-        );
+    public ResponseEntity<?> login(@RequestBody AuthenticationRequest login){
+        try {
+            UsernamePasswordAuthenticationToken usernamePassword =
+                    new UsernamePasswordAuthenticationToken(login.email(), login.password());
 
-        var auth = authenticationManager.authenticate(usernamePassword);
-        var token = tokenService.generateToken( (Member) auth.getPrincipal());
-        return ResponseEntity.ok(new AuthenticationResponse(token));
+            var auth = authenticationManager.authenticate(usernamePassword);
+            var token = tokenService.generateToken((Member) auth.getPrincipal());
+            return ResponseEntity.ok(new AuthenticationResponse(token));
+        } catch (AuthenticationException ex) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body("Credenciais inválidas ou conta não confirmada.");
+        }
     }
 
     @PutMapping("/update")
