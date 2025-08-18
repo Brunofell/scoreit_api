@@ -56,12 +56,17 @@ public class MemberController {
     @PostMapping("/post")
     public ResponseEntity<?> register(@RequestBody Member member) {
         try {
+            System.out.println("[REGISTER] email=" + member.getEmail()); // DEBUG (não loga senha!)
             Member saved = service.memberRegister(member);
             return ResponseEntity.ok("Cadastro realizado. Verifique seu e-mail.");
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
+        } catch (RuntimeException e) {
+            // se der qualquer outra Runtime (ex.: integridade), retorna 400 com msg
+            return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
+
 
     @GetMapping("/confirm")
     public ResponseEntity<String> confirm(@RequestParam String token) {

@@ -3,7 +3,6 @@ package com.scoreit.scoreit.config;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
-import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -31,48 +30,59 @@ public class SecurityConfig {
     }
 
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
-        return httpSecurity
-                .cors(cors -> cors.configurationSource(corsConfigurationSource()))
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+        return http
+                // CORS + CSRF desligado para API stateless
+                .cors(c -> c.configurationSource(corsConfigurationSource()))
                 .csrf(csrf -> csrf.disable())
-                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                // 🔻 MUITO IMPORTANTE: define 401 pra não autenticado (em vez de 403 fantasma)
-                .exceptionHandling(ex -> ex
-                        .authenticationEntryPoint((req, res, e) ->
-                                res.sendError(HttpStatus.UNAUTHORIZED.value(), "Unauthorized"))
-                        .accessDeniedHandler((req, res, e) ->
-                                res.sendError(HttpStatus.FORBIDDEN.value(), "Forbidden"))
-                )
-                .authorizeHttpRequests(authorize -> authorize
-                        // preflight CORS
+
+                // Stateless
+                .sessionManagement(s -> s.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+
+                // Autorização
+                .authorizeHttpRequests(auth -> auth
+                        // ✅ Preflight CORS
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
 
-                        .requestMatchers(HttpMethod.GET, "/hello/").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/feed/").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/member/post").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/member/login").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/member/confirm").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/api/forgot-password").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/api/reset-password").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/api/change-email").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/api/reset-email").permitAll()
-                        .requestMatchers("/spotify/api**").permitAll()
-                        .requestMatchers(
+                        // ✅ Rotas públicas (com e sem barra no final)
+                        .requestMatchers(HttpMethod.GET,
+                                "/hello", "/hello/",
+                                "/feed", "/feed/",
+                                "/member/confirm", "/member/confirm/",
+                                // swagger
                                 "/v3/api-docs/**",
                                 "/swagger-ui.html",
                                 "/swagger-ui/**",
                                 "/swagger-resources/**",
                                 "/webjars/**"
                         ).permitAll()
+
+                        .requestMatchers(HttpMethod.POST,
+                                "/member/post", "/member/post/",
+                                "/member/login", "/member/login/",
+                                "/api/forgot-password", "/api/forgot-password/",
+                                "/api/reset-password", "/api/reset-password/",
+                                "/api/change-email", "/api/change-email/",
+                                "/api/reset-email", "/api/reset-email/"
+                        ).permitAll()
+
+                        // spotify callback público (ajuste se preciso)
+                        .requestMatchers("/spotify/api**").permitAll()
+
+                        // ✅ todo o resto autenticado
                         .anyRequest().authenticated()
                 )
+
+                // Filtro JWT antes do UsernamePasswordAuthenticationFilter
                 .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class)
+
                 .build();
     }
 
     @Bean
     public UrlBasedCorsConfigurationSource corsConfigurationSource() {
-        // Railway → Variable FRONTEND_ORIGINS="https://scoreit.vercel.app,http://localhost:3000"
+        // Railway → Variables:
+        // FRONTEND_ORIGINS="https://scoreit.vercel.app,http://localhost:3000"
         String env = System.getenv("FRONTEND_ORIGINS");
 
         List<String> origins = new ArrayList<>();
@@ -82,6 +92,8 @@ public class SecurityConfig {
                     .filter(s -> !s.isEmpty())
                     .forEach(origins::add);
         }
+
+        // Fallback seguro
         if (origins.isEmpty()) {
             origins = List.of("https://scoreit.vercel.app", "http://localhost:3000");
         }
@@ -90,18 +102,24 @@ public class SecurityConfig {
         config.setAllowedOrigins(origins);
         config.setAllowedMethods(List.of("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
         config.setAllowedHeaders(List.of("Authorization", "Content-Type"));
+        // expõe só o necessário
         config.setExposedHeaders(List.of("Authorization"));
+        // se usar cookies/same-site em algum momento
         config.setAllowCredentials(true);
+        // cache do preflight
         config.setMaxAge(3600L);
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        // aplica para toda a API
         source.registerCorsConfiguration("/**", config);
         return source;
     }
 
     @Bean
-    public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
-        return authenticationConfiguration.getAuthenticationManager();
+    public AuthenticationManager authenticationManager(
+            AuthenticationConfiguration cfg
+    ) throws Exception {
+        return cfg.getAuthenticationManager();
     }
 
     @Bean
