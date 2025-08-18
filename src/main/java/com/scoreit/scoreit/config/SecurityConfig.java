@@ -16,6 +16,7 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 @Configuration
@@ -35,6 +36,9 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(authorize -> authorize
+                        // 🔓 preflight precisa ser liberado
+                        .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+
                         .requestMatchers(HttpMethod.GET, "/hello/").permitAll()
                         .requestMatchers(HttpMethod.GET, "/feed/").permitAll()
                         .requestMatchers(HttpMethod.POST, "/member/post").permitAll()
@@ -60,29 +64,41 @@ public class SecurityConfig {
 
     @Bean
     public UrlBasedCorsConfigurationSource corsConfigurationSource() {
-        // Lê o domínio do front em produção a partir da env (Railway → Variables)
-        String frontendOrigin = System.getenv("FRONTEND_ORIGIN");
-        if (frontendOrigin == null || frontendOrigin.isBlank()) {
-            // fallback seguro (troque se seu domínio for outro)
-            frontendOrigin = "https://scoreit.vercel.app";
+        // Railway → Variable FRONTEND_ORIGINS="https://scoreit.vercel.app,http://localhost:3000"
+        String env = System.getenv("FRONTEND_ORIGINS");
+
+        List<String> origins = new ArrayList<>();
+        if (env != null && !env.isBlank()) {
+            Arrays.stream(env.split(","))
+                    .map(String::trim)
+                    .filter(s -> !s.isEmpty())
+                    .forEach(origins::add);
+        }
+
+        // Fallback seguro se a env não estiver setada
+        if (origins.isEmpty()) {
+            origins = List.of("https://scoreit.vercel.app", "http://localhost:3000");
         }
 
         CorsConfiguration config = new CorsConfiguration();
-
-        // Origens permitidas: DEV + PROD
-        List<String> origins = new ArrayList<>();
-        origins.add("http://localhost:3000"); // front local
-        origins.add(frontendOrigin);          // front em produção (Railway env)
+        // 🔒 Whitelist explícita (sem wildcard)
         config.setAllowedOrigins(origins);
 
-        // Métodos permitidos (incluí PATCH e OPTIONS)
+        // Métodos realmente usados (inclui OPTIONS pro preflight)
         config.setAllowedMethods(List.of("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
 
-        // Headers permitidos
+        // Headers comuns do teu front; adicione se precisar de mais
         config.setAllowedHeaders(List.of("Authorization", "Content-Type"));
 
-        // Se precisar enviar cookies/credenciais
+        // Se você precisar ler o header Authorization no client (geralmente não precisa),
+        // deixe exposto. Não expomos nada além do necessário.
+        config.setExposedHeaders(List.of("Authorization"));
+
+        // Se um dia usar cookies/same-site, mantenha true; com Authorization header não é obrigatório, mas não atrapalha
         config.setAllowCredentials(true);
+
+        // Cache do preflight (em segundos)
+        config.setMaxAge(3600L);
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", config);
