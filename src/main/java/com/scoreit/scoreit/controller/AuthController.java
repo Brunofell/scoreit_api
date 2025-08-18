@@ -12,20 +12,21 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/auth")
 public class AuthController {
+
     @Autowired
     private TokenService tokenService;
 
     @GetMapping("/verifyToken")
-    public ResponseEntity<?> verifyToken(@RequestHeader("Authorization") String token){
-        if (token != null && token.startsWith("Bearer ")) {
-            try {
-                token = token.substring(7);
-                tokenService.validateToken(token);
-                return ResponseEntity.ok().build();
-            } catch (RuntimeException e) {
-                return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
-            }
+    public ResponseEntity<?> verifyToken(@RequestHeader(value = "Authorization", required = false) String authHeader) {
+        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Missing or invalid Authorization header");
         }
-        return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        final String token = authHeader.substring(7);
+        try {
+            tokenService.validateToken(token);
+            return ResponseEntity.ok().build();
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Invalid/expired token");
+        }
     }
 }
