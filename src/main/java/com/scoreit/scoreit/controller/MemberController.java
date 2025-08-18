@@ -16,6 +16,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.security.core.AuthenticationException;
+import org.springframework.http.HttpStatus;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -73,14 +75,18 @@ public class MemberController {
 
 
     @PostMapping("/login")
-    public ResponseEntity login(@RequestBody AuthenticationRequest login){
-        UsernamePasswordAuthenticationToken usernamePassword = new UsernamePasswordAuthenticationToken(
-                login.email(), login.password()
-        );
+    public ResponseEntity<?> login(@RequestBody AuthenticationRequest login){
+        try {
+            UsernamePasswordAuthenticationToken usernamePassword =
+                    new UsernamePasswordAuthenticationToken(login.email(), login.password());
 
-        var auth = authenticationManager.authenticate(usernamePassword);
-        var token = tokenService.generateToken( (Member) auth.getPrincipal());
-        return ResponseEntity.ok(new AuthenticationResponse(token));
+            var auth = authenticationManager.authenticate(usernamePassword);
+            var token = tokenService.generateToken((Member) auth.getPrincipal());
+            return ResponseEntity.ok(new AuthenticationResponse(token));
+        } catch (AuthenticationException ex) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body("Credenciais inválidas ou conta não confirmada.");
+        }
     }
 
     @PutMapping("/update")

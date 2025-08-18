@@ -3,6 +3,7 @@ package com.scoreit.scoreit.config;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -35,8 +36,15 @@ public class SecurityConfig {
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .csrf(csrf -> csrf.disable())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                // 🔻 MUITO IMPORTANTE: define 401 pra não autenticado (em vez de 403 fantasma)
+                .exceptionHandling(ex -> ex
+                        .authenticationEntryPoint((req, res, e) ->
+                                res.sendError(HttpStatus.UNAUTHORIZED.value(), "Unauthorized"))
+                        .accessDeniedHandler((req, res, e) ->
+                                res.sendError(HttpStatus.FORBIDDEN.value(), "Forbidden"))
+                )
                 .authorizeHttpRequests(authorize -> authorize
-                        // 🔓 preflight precisa ser liberado
+                        // preflight CORS
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
 
                         .requestMatchers(HttpMethod.GET, "/hello/").permitAll()
@@ -74,30 +82,16 @@ public class SecurityConfig {
                     .filter(s -> !s.isEmpty())
                     .forEach(origins::add);
         }
-
-        // Fallback seguro se a env não estiver setada
         if (origins.isEmpty()) {
             origins = List.of("https://scoreit.vercel.app", "http://localhost:3000");
         }
 
         CorsConfiguration config = new CorsConfiguration();
-        // 🔒 Whitelist explícita (sem wildcard)
         config.setAllowedOrigins(origins);
-
-        // Métodos realmente usados (inclui OPTIONS pro preflight)
         config.setAllowedMethods(List.of("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
-
-        // Headers comuns do teu front; adicione se precisar de mais
         config.setAllowedHeaders(List.of("Authorization", "Content-Type"));
-
-        // Se você precisar ler o header Authorization no client (geralmente não precisa),
-        // deixe exposto. Não expomos nada além do necessário.
         config.setExposedHeaders(List.of("Authorization"));
-
-        // Se um dia usar cookies/same-site, mantenha true; com Authorization header não é obrigatório, mas não atrapalha
         config.setAllowCredentials(true);
-
-        // Cache do preflight (em segundos)
         config.setMaxAge(3600L);
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
