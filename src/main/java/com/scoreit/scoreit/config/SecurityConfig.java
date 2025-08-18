@@ -15,6 +15,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Configuration
@@ -59,10 +60,28 @@ public class SecurityConfig {
 
     @Bean
     public UrlBasedCorsConfigurationSource corsConfigurationSource() {
+        // Lê o domínio do front em produção a partir da env (Railway → Variables)
+        String frontendOrigin = System.getenv("FRONTEND_ORIGIN");
+        if (frontendOrigin == null || frontendOrigin.isBlank()) {
+            // fallback seguro (troque se seu domínio for outro)
+            frontendOrigin = "https://scoreit.vercel.app";
+        }
+
         CorsConfiguration config = new CorsConfiguration();
-        config.setAllowedOrigins(List.of("http://localhost:3000"));
-        config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+
+        // Origens permitidas: DEV + PROD
+        List<String> origins = new ArrayList<>();
+        origins.add("http://localhost:3000"); // front local
+        origins.add(frontendOrigin);          // front em produção (Railway env)
+        config.setAllowedOrigins(origins);
+
+        // Métodos permitidos (incluí PATCH e OPTIONS)
+        config.setAllowedMethods(List.of("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
+
+        // Headers permitidos
         config.setAllowedHeaders(List.of("Authorization", "Content-Type"));
+
+        // Se precisar enviar cookies/credenciais
         config.setAllowCredentials(true);
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
