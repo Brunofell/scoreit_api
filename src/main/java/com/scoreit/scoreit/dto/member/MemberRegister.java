@@ -8,11 +8,12 @@ import java.time.LocalDateTime;
 public record MemberRegister(
         String name,
         String email,
+        String handle,
         LocalDate birthDate,
         Gender gender,
         String password
 ) {
     public Member toModel() {
-        return new Member(name, email, birthDate, gender, password);
+        return new Member(name, email, birthDate, gender, password, handle);
     }
 }

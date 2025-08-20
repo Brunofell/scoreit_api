@@ -5,6 +5,7 @@ import java.time.LocalDate;
 public record MemberResponse(Long id,
                              String name,
                              LocalDate birthDate,
+                             String handle,
                              String profileImageUrl,
                              Gender gender,
                              String bio

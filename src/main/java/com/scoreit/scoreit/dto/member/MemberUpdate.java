@@ -8,6 +8,7 @@ public record MemberUpdate(
         String name,
         // String email,
         LocalDate birthDate,
+        String handle,
         Gender gender,
         String password,
         String bio

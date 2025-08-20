@@ -118,6 +118,7 @@ public class FeedService {
                 membro.getName(),
                 membro.getBirthDate(),
                 membro.getProfileImageUrl(),
+                membro.getHandle(),
                 membro.getGender(),
                 membro.getBio()
         );
