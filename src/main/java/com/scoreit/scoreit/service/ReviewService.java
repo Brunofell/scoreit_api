@@ -85,4 +85,9 @@ public class ReviewService {
                 review.getReviewDate()
         );
     }
+
+    public Double findAverageScore(String mediaId){
+        Double avg = reviewRepository.findAverageScore(mediaId);
+        return avg != null ? avg : 0.0;
+    }
 }

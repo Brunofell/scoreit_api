@@ -54,4 +54,10 @@ public class ReviewController {
     public ResponseEntity<List<ReviewResponse>> getReviewsFromFollowedMembers(@PathVariable Long memberId) {
         return ResponseEntity.ok(reviewService.getReviewsFromFollowedMembers(memberId));
     }
+
+    @GetMapping("/average/{mediaId}")
+    public ResponseEntity<Double> findAvarage(@PathVariable String mediaId){
+        Double avg = reviewService.findAverageScore(mediaId);
+        return ResponseEntity.ok(avg);
+    }
 }
