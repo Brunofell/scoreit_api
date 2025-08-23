@@ -1,5 +1,6 @@
 package com.scoreit.scoreit.service;
 
+import com.scoreit.scoreit.dto.favoriteList.TopMediaProjection;
 import com.scoreit.scoreit.entity.FavoriteList;
 import com.scoreit.scoreit.entity.FavoriteListContent;
 import com.scoreit.scoreit.entity.Member;
@@ -49,16 +50,6 @@ public class FavoriteListContentService {
         favoriteListContentRepository.save(content);
 
     }
-//
-//    public List<FavoriteListContent> getFavoriteListContent(Long memberId){
-//        FavoriteList favoriteList = favoriteListRepository.findByMemberIdAndListName(memberId, "Favorites");
-//
-//        if (favoriteList == null) {
-//            throw new RuntimeException("Lista de favoritos não encontrada.");
-//        }
-//
-//        return favoriteListContentRepository.findByFavoriteList(favoriteList);
-//    }
 
     public List<FavoriteListContent> getFavoriteListContent(Long memberId) {
         FavoriteList favoriteList = favoriteListRepository.findByMemberIdAndListName(memberId, "Favorites");
@@ -97,5 +88,9 @@ public class FavoriteListContentService {
         Optional<FavoriteListContent> content = favoriteListContentRepository.findByFavoriteListAndMediaId(favoriteList, mediaId);
 
         return content.isPresent();
+    }
+
+    public List<TopMediaProjection> getTopFavoritedAlbums(int limit) {
+        return favoriteListContentRepository.findFavoriteMedia("album", limit);
     }
 }

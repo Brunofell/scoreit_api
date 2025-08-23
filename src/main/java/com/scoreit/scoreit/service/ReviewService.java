@@ -27,20 +27,23 @@ public class ReviewService {
     @Autowired
     private AchievementService achievementService;
 
-    public void reviewRegister(ReviewRegister dados){
+    public void reviewRegister(ReviewRegister dados) {
         Member member = memberRepository.findById(dados.memberId())
                 .orElseThrow(() -> new IllegalArgumentException("Member not found with id: " + dados.memberId()));
 
         Review review = new Review(dados, member);
         reviewRepository.save(review);
 
-        // contar quantas reviews o usuário já fez
-        long totalReviews = reviewRepository.countByMemberId(member.getId());
+        // conta quantas reviews desse tipo de mídia o usuário já fez
+        long totalReviews = reviewRepository.countByMemberIdAndMediaType(member.getId(), "MOVIE");
+        long totalReviewsSeries = reviewRepository.countByMemberIdAndMediaType(member.getId(), "SERIES");
+        long totalReviewsAlbums = reviewRepository.countByMemberIdAndMediaType(member.getId(), "ALBUM");
 
-        // verificar conquistas
-        achievementService.checkReviewAchievements(member, totalReviews);
+        // checa conquistas de filmes
+        achievementService.checkReviewAchievements(member, totalReviews, "MOVIE");
+        achievementService.checkReviewAchievements(member, totalReviewsSeries, "SERIES");
+        achievementService.checkReviewAchievements(member, totalReviewsAlbums, "ALBUM");
     }
-
     public void reviewUpdate(ReviewUpdate data){
         var review = reviewRepository.getReferenceById(data.id());
         review.updateInfos(data);
