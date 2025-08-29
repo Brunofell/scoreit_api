@@ -2,6 +2,7 @@ package com.scoreit.scoreit.repository;
 
 import com.scoreit.scoreit.entity.Review;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
 
@@ -13,5 +14,10 @@ public interface ReviewRepository extends JpaRepository<Review, Long> {
 
     List<Review> findByMemberIdIn(List<Long> memberIds);
 
-    long countByMemberId(Long id);
+    long countByMemberIdAndMediaType(Long memberId, String mediaType);
+
+    @Query("""
+            SELECT AVG(r.score) FROM Review r WHERE r.mediaId = :mediaId
+            """)
+    Double findAverageScore(String mediaId);
 }
