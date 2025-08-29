@@ -50,12 +50,12 @@ public class MemberController {
     private EmailConfirmationService emailConfirmationService;
 
     @GetMapping("/get")
-    public List<Member> getMembers(){
+    public List<Member> getMembers() {
         return service.getAllMembers();
     }
 
     @GetMapping("/get/{id}")
-    public Optional<Member> getMemberById(@PathVariable Long id){
+    public Optional<Member> getMemberById(@PathVariable Long id) {
         return service.getMemberById(id);
     }
 
@@ -86,7 +86,7 @@ public class MemberController {
 
 
     @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody AuthenticationRequest login){
+    public ResponseEntity<?> login(@RequestBody AuthenticationRequest login) {
         try {
             UsernamePasswordAuthenticationToken usernamePassword =
                     new UsernamePasswordAuthenticationToken(login.email(), login.password());
@@ -101,12 +101,12 @@ public class MemberController {
     }
 
     @PutMapping("/update")
-    public ResponseEntity updateMember(@RequestBody @Valid MemberUpdate data){
+    public ResponseEntity updateMember(@RequestBody @Valid MemberUpdate data) {
         return ResponseEntity.ok().body(service.updateMember(data));
     }
 
     @DeleteMapping("/delete/{id}")
-    public ResponseEntity<String> deleteUser(@PathVariable Long id){
+    public ResponseEntity<String> deleteUser(@PathVariable Long id) {
         return service.deleteUser(id);
     }
 
@@ -121,12 +121,12 @@ public class MemberController {
     }
 
     @GetMapping("favoritesList/{memberId}")
-    public ResponseEntity getListByMemberId(@PathVariable Long memberId){
+    public ResponseEntity getListByMemberId(@PathVariable Long memberId) {
         return ResponseEntity.ok(favoriteListService.getListByMemberId(memberId));
     }
 
     @GetMapping("favoritesListContent/{memberId}")
-    public List<FavoriteListContent> getFavoriteListContent(@PathVariable Long memberId){
+    public List<FavoriteListContent> getFavoriteListContent(@PathVariable Long memberId) {
         return favoriteListContentService.getFavoriteListContent(memberId);
     }
 
