@@ -6,11 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-/**
- * Fluxo de alteração de e-mail:
- *  - POST /api/change-email -> gera token e envia link para o novo e-mail
- *  - POST /api/reset-email  -> aplica a troca usando o token
- */
 @RestController
 @RequestMapping("/api")
 public class ResetEmailController {
@@ -23,7 +18,6 @@ public class ResetEmailController {
 
     @PostMapping("/change-email")
     public ResponseEntity<String> changeEmail(@RequestParam String email) {
-        // Gera o token e tenta enviar o e-mail
         String token = emailResetService.createEmailResetToken(email);
         try {
             notificationEmailService.sendEmailChangeOrThrow(email, token);

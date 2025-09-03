@@ -10,7 +10,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -35,13 +34,8 @@ public class MemberService {
         return repository.findAll();
     }
 
-    /**
-     * Registra o usuário e envia o e-mail de verificação (Resend).
-     * Se o envio falhar, a transação é revertida e o cadastro NÃO é concluído.
-     */
     @Transactional
     public Member memberRegister(Member member) {
-        // normaliza e valida e-mail
         String email = (member.getEmail() == null) ? null : member.getEmail().trim().toLowerCase();
         if (email == null || email.isBlank()) {
             throw new IllegalArgumentException("E-mail inválido.");
@@ -49,51 +43,35 @@ public class MemberService {
         if (repository.findByEmail(email) != null) {
             throw new IllegalArgumentException("Este e-mail já está sendo usado.");
         }
-
         member.setEmail(email);
         member.setPassword(encoder.encode(member.getPassword()));
         member.setEnabled(false);
-
         Member savedMember = repository.save(member);
-
-        // Gera token (24h conforme entidade) e persiste
         String token = UUID.randomUUID().toString();
         VerificationToken verificationToken = new VerificationToken(token, savedMember);
         verificationTokenRepository.save(verificationToken);
-
-        // Envia e-mail. Se der erro → aborta tudo (rollback)
         try {
             notificationEmailService.sendAccountVerificationOrThrow(email, token);
         } catch (RuntimeException ex) {
             throw new IllegalArgumentException("Não foi possível enviar o e-mail de confirmação. Tente novamente.");
         }
-
         return savedMember;
     }
 
-    /**
-     * Confirma o e-mail com o token recebido.
-     * Habilita o usuário e remove o token se tudo estiver ok.
-     */
     @Transactional
     public String confirmEmail(String token) {
         Optional<VerificationToken> optionalToken = verificationTokenRepository.findByToken(token);
         if (optionalToken.isEmpty()) {
             return "Token inválido.";
         }
-
         VerificationToken verificationToken = optionalToken.get();
-
         if (verificationToken.getExpiryDate().isBefore(LocalDateTime.now())) {
             return "Token expirado.";
         }
-
         Member member = verificationToken.getMember();
         member.setEnabled(true);
         repository.save(member);
-
         verificationTokenRepository.delete(verificationToken);
-
         return "E-mail confirmado com sucesso!";
     }
 
@@ -102,14 +80,11 @@ public class MemberService {
         if (data.password() != null) {
             encodedPassword = encoder.encode(data.password());
         }
-
         var member = repository.getReferenceById(data.id());
         member.updateMember(data);
-
         if (encodedPassword != null) {
             member.setPassword(encodedPassword);
         }
-
         return repository.save(member);
     }
 

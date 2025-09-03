@@ -37,21 +37,17 @@ public class SecurityConfig {
                 .sessionManagement(s -> s.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
-
-                        // rotas públicas (atenção: mantenha alinhado com SecurityFilter.PUBLIC_PREFIXES)
                         .requestMatchers(HttpMethod.GET,
                                 "/hello", "/hello/",
                                 "/feed", "/feed/",
                                 "/member/confirm", "/member/confirm/",
                                 "/auth/verifyToken", "/auth/verifyToken/",
-                                // swagger
                                 "/v3/api-docs/**",
                                 "/swagger-ui.html",
                                 "/swagger-ui/**",
                                 "/swagger-resources/**",
                                 "/webjars/**"
                         ).permitAll()
-
                         .requestMatchers(HttpMethod.POST,
                                 "/member/post", "/member/post/",
                                 "/member/login", "/member/login/",
@@ -60,9 +56,7 @@ public class SecurityConfig {
                                 "/api/change-email", "/api/change-email/",
                                 "/api/reset-email", "/api/reset-email/"
                         ).permitAll()
-
                         .requestMatchers("/spotify/api**").permitAll()
-
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class)
@@ -72,7 +66,6 @@ public class SecurityConfig {
     @Bean
     public UrlBasedCorsConfigurationSource corsConfigurationSource() {
         String env = System.getenv("FRONTEND_ORIGINS");
-
         List<String> origins = new ArrayList<>();
         if (env != null && !env.isBlank()) {
             Arrays.stream(env.split(","))
@@ -80,17 +73,13 @@ public class SecurityConfig {
                     .filter(s -> !s.isEmpty())
                     .forEach(origins::add);
         }
-
-        // fallback seguro para produção e dev
         if (origins.isEmpty()) {
             origins = List.of(
                     "https://www.scoreit.com.br",
                     "https://scoreit.vercel.app",
                     "http://localhost:3000"
-                    // inclua "https://scoreit.com.br" se o apex também servir o front
             );
         }
-
         CorsConfiguration config = new CorsConfiguration();
         config.setAllowedOrigins(origins);
         config.setAllowedMethods(List.of("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
@@ -98,7 +87,6 @@ public class SecurityConfig {
         config.setExposedHeaders(List.of("Authorization"));
         config.setAllowCredentials(true);
         config.setMaxAge(3600L);
-
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", config);
         return source;

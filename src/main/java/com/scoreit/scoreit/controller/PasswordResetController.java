@@ -6,11 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-/**
- * Fluxo de redefinição de senha:
- *  - POST /api/forgot-password -> gera token e envia link de redefinição
- *  - POST /api/reset-password  -> aplica a nova senha usando o token
- */
 @RestController
 @RequestMapping("/api")
 public class PasswordResetController {

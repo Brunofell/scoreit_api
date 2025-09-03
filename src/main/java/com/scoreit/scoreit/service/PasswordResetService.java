@@ -25,12 +25,10 @@ public class PasswordResetService {
     @Autowired
     private NotificationEmailService notificationEmailService;
 
-    /** Cria token e ENVIA o e-mail de redefinição via Resend. Rollback se envio falhar. */
     @Transactional
     public String createPasswordResetToken(String email) {
         Member member = memberRepository.findByEmail(email);
         if (member == null) {
-            // Por segurança, não revele se o e-mail existe; você pode optar por retornar OK silencioso.
             throw new IllegalArgumentException("Usuário não encontrado.");
         }
 

@@ -4,17 +4,9 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClient;
-
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 
-/**
- * Serviço centralizado para e-mails transacionais via Resend.
- * Exponho 3 métodos:
- *  - sendAccountVerificationOrThrow(to, token)
- *  - sendPasswordResetOrThrow(to, token)
- *  - sendEmailChangeOrThrow(to, token)
- */
 @Service
 public class NotificationEmailService {
 
@@ -26,13 +18,14 @@ public class NotificationEmailService {
     @Value("${app.frontend.default-locale:pt}")
     private String defaultLocale;
 
-    // paths opcionais (customizáveis por env/properties)
     @Value("${app.frontend.verification-path:#{null}}")
-    private String verificationPath; // ex: /pt/confirma_conta
+    private String verificationPath;
+
     @Value("${app.frontend.reset-password-path:#{null}}")
-    private String resetPasswordPath; // ex: /pt/nova_senha
+    private String resetPasswordPath;
+
     @Value("${app.frontend.reset-email-path:#{null}}")
-    private String resetEmailPath; // ex: /pt/novo_email
+    private String resetEmailPath;
 
     @Value("${mail.from}")
     private String mailFrom;
@@ -41,13 +34,11 @@ public class NotificationEmailService {
         this.resendClient = resendClient;
     }
 
-    /* ========= Confirmação de conta ========= */
     public void sendAccountVerificationOrThrow(String to, String token) {
-        final String subject = "Confirmação de E-mail - ScoreIt";
-        final String path = nonBlank(verificationPath) ? verificationPath : ("/" + defaultLocale + "/confirma_conta");
-        final String link = buildLink(path, token);
-
-        final String html = """
+        String subject = "Confirmação de E-mail - ScoreIt";
+        String path = nonBlank(verificationPath) ? verificationPath : ("/" + defaultLocale + "/confirma_conta");
+        String link = buildLink(path, token);
+        String html = """
                 <div style="font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;">
                   <p>Olá! Clique no botão abaixo para confirmar seu e-mail:</p>
                   <p>
@@ -58,17 +49,14 @@ public class NotificationEmailService {
                   <p>Se você não solicitou este cadastro, ignore esta mensagem.</p>
                 </div>
                 """.formatted(link);
-
         sendResendEmailOrThrow(to, subject, html);
     }
 
-    /* ========= Redefinição de senha ========= */
     public void sendPasswordResetOrThrow(String to, String token) {
-        final String subject = "Redefinição de Senha - ScoreIt";
-        final String path = nonBlank(resetPasswordPath) ? resetPasswordPath : ("/" + defaultLocale + "/nova_senha");
-        final String link = buildLink(path, token);
-
-        final String html = """
+        String subject = "Redefinição de Senha - ScoreIt";
+        String path = nonBlank(resetPasswordPath) ? resetPasswordPath : ("/" + defaultLocale + "/nova_senha");
+        String link = buildLink(path, token);
+        String html = """
                 <div style="font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;">
                   <p>Recebemos um pedido para redefinir sua senha no ScoreIt.</p>
                   <p>
@@ -79,17 +67,14 @@ public class NotificationEmailService {
                   <p>Se você não solicitou, ignore este e-mail.</p>
                 </div>
                 """.formatted(link);
-
         sendResendEmailOrThrow(to, subject, html);
     }
 
-    /* ========= Alteração de e-mail ========= */
     public void sendEmailChangeOrThrow(String to, String token) {
-        final String subject = "Confirmação de Alteração de E-mail - ScoreIt";
-        final String path = nonBlank(resetEmailPath) ? resetEmailPath : ("/" + defaultLocale + "/novo_email");
-        final String link = buildLink(path, token);
-
-        final String html = """
+        String subject = "Confirmação de Alteração de E-mail - ScoreIt";
+        String path = nonBlank(resetEmailPath) ? resetEmailPath : ("/" + defaultLocale + "/novo_email");
+        String link = buildLink(path, token);
+        String html = """
                 <div style="font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;">
                   <p>Para confirmar a alteração do seu e-mail no ScoreIt, clique abaixo:</p>
                   <p>
@@ -100,14 +85,12 @@ public class NotificationEmailService {
                   <p>Se você não solicitou, ignore esta mensagem.</p>
                 </div>
                 """.formatted(link);
-
         sendResendEmailOrThrow(to, subject, html);
     }
 
-    /* ========= Helpers ========= */
     private String buildLink(String path, String token) {
-        final String base = trimTrailingSlash(frontendBaseUrl);
-        final String encoded = URLEncoder.encode(token, StandardCharsets.UTF_8);
+        String base = trimTrailingSlash(frontendBaseUrl);
+        String encoded = URLEncoder.encode(token, StandardCharsets.UTF_8);
         return base + path + "?token=" + encoded;
     }
 
@@ -135,19 +118,28 @@ public class NotificationEmailService {
         if (url == null) return "";
         return url.endsWith("/") ? url.substring(0, url.length() - 1) : url;
     }
-    private static boolean nonBlank(String s) { return s != null && !s.isBlank(); }
 
-    /* ===== DTOs mínimos ===== */
+    private static boolean nonBlank(String s) {
+        return s != null && !s.isBlank();
+    }
+
     public static final class ResendEmailRequest {
         private String from;
         private String to;
         private String subject;
         private String html;
+
         public ResendEmailRequest() {}
+
         private ResendEmailRequest(String from, String to, String subject, String html) {
-            this.from = from; this.to = to; this.subject = subject; this.html = html;
+            this.from = from;
+            this.to = to;
+            this.subject = subject;
+            this.html = html;
         }
+
         public static Builder builder() { return new Builder(); }
+
         public static final class Builder {
             private String from, to, subject, html;
             public Builder from(String v){ this.from=v; return this; }
@@ -156,6 +148,7 @@ public class NotificationEmailService {
             public Builder html(String v){ this.html=v; return this; }
             public ResendEmailRequest build(){ return new ResendEmailRequest(from,to,subject,html); }
         }
+
         public String getFrom() { return from; }
         public String getTo() { return to; }
         public String getSubject() { return subject; }
