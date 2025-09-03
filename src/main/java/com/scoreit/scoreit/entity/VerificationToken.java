@@ -4,17 +4,21 @@ import jakarta.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
+@Table(name = "verification_tokens")
 public class VerificationToken {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(nullable = false, unique = true, length = 255)
     private String token;
+
+    @Column(nullable = false)
     private LocalDateTime expiryDate;
 
     @OneToOne
-    @JoinColumn(name = "member_id")
+    @JoinColumn(name = "member_id", nullable = false, unique = true)
     private Member member;
 
     public VerificationToken() {}
