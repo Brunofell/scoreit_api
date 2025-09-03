@@ -26,11 +26,12 @@ public class SecurityFilter extends OncePerRequestFilter {
         this.repository = repository;
     }
 
-    // Prefixos públicos (alinhar com SecurityConfig)
+    // prefixos públicos (alinhar com SecurityConfig)
     private static final Set<String> PUBLIC_PREFIXES = Set.of(
             "/member/login",
             "/member/post",
             "/member/confirm",
+            "/auth/verifyToken",   // adicionado por consistência
             "/api/forgot-password",
             "/api/reset-password",
             "/api/change-email",
@@ -46,14 +47,13 @@ public class SecurityFilter extends OncePerRequestFilter {
 
     @Override
     protected boolean shouldNotFilter(HttpServletRequest request) {
-        // Libera preflight CORS
+        // libera preflight CORS
         if ("OPTIONS".equalsIgnoreCase(request.getMethod())) return true;
 
         String path = request.getRequestURI();
         for (String p : PUBLIC_PREFIXES) {
             if (path.startsWith(p)) return true;
-            // também libera quando tem barra no fim
-            if (path.startsWith(p + "/")) return true;
+            if (path.startsWith(p + "/")) return true; // também libera com barra no fim
         }
         return false;
     }
@@ -81,8 +81,6 @@ public class SecurityFilter extends OncePerRequestFilter {
                     }
                 }
             } catch (RuntimeException ex) {
-                // Token inválido/expirado: não autentica e deixa fluxo seguir;
-                // se a rota exigir auth, o Spring bloqueará depois.
                 SecurityContextHolder.clearContext();
             }
         }

@@ -38,7 +38,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
 
-                        // Rotas públicas
+                        // rotas públicas (atenção: mantenha alinhado com SecurityFilter.PUBLIC_PREFIXES)
                         .requestMatchers(HttpMethod.GET,
                                 "/hello", "/hello/",
                                 "/feed", "/feed/",
@@ -80,8 +80,15 @@ public class SecurityConfig {
                     .filter(s -> !s.isEmpty())
                     .forEach(origins::add);
         }
+
+        // fallback seguro para produção e dev
         if (origins.isEmpty()) {
-            origins = List.of("https://scoreit.vercel.app", "http://localhost:3000");
+            origins = List.of(
+                    "https://www.scoreit.com.br",
+                    "https://scoreit.vercel.app",
+                    "http://localhost:3000"
+                    // inclua "https://scoreit.com.br" se o apex também servir o front
+            );
         }
 
         CorsConfiguration config = new CorsConfiguration();

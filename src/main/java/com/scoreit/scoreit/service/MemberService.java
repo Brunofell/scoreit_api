@@ -29,40 +29,42 @@ public class MemberService {
     private VerificationTokenRepository verificationTokenRepository;
 
     @Autowired
-    private EmailConfirmationService emailConfirmationService;
+    private NotificationEmailService notificationEmailService;
 
-    public List<Member> getAllMembers() { // TODO: adicionar Pageable quando necessário
+    public List<Member> getAllMembers() {
         return repository.findAll();
     }
 
     /**
-     * Registra o usuário e envia o e-mail de verificação via Resend.
-     * Se o envio de e-mail falhar, a transação é revertida e o cadastro NÃO é concluído.
+     * Registra o usuário e envia o e-mail de verificação (Resend).
+     * Se o envio falhar, a transação é revertida e o cadastro NÃO é concluído.
      */
     @Transactional
     public Member memberRegister(Member member) {
-        if (repository.findByEmail(member.getEmail()) != null) {
+        // normaliza e valida e-mail
+        String email = (member.getEmail() == null) ? null : member.getEmail().trim().toLowerCase();
+        if (email == null || email.isBlank()) {
+            throw new IllegalArgumentException("E-mail inválido.");
+        }
+        if (repository.findByEmail(email) != null) {
             throw new IllegalArgumentException("Este e-mail já está sendo usado.");
         }
 
-        // Criptografa a senha
+        member.setEmail(email);
         member.setPassword(encoder.encode(member.getPassword()));
-
-        // O usuário só será habilitado após confirmar o e-mail
         member.setEnabled(false);
+
         Member savedMember = repository.save(member);
 
-        // Gera e persiste o token de verificação
+        // Gera token (24h conforme entidade) e persiste
         String token = UUID.randomUUID().toString();
         VerificationToken verificationToken = new VerificationToken(token, savedMember);
         verificationTokenRepository.save(verificationToken);
 
-        // Envia o e-mail de verificação. Se der erro, aborta a transação.
+        // Envia e-mail. Se der erro → aborta tudo (rollback)
         try {
-            emailConfirmationService.sendVerificationEmailOrThrow(member.getEmail(), token);
+            notificationEmailService.sendAccountVerificationOrThrow(email, token);
         } catch (RuntimeException ex) {
-            // Qualquer falha no envio invalida o cadastro
-            // A @Transactional garante rollback do Member e do Token
             throw new IllegalArgumentException("Não foi possível enviar o e-mail de confirmação. Tente novamente.");
         }
 
@@ -76,7 +78,6 @@ public class MemberService {
     @Transactional
     public String confirmEmail(String token) {
         Optional<VerificationToken> optionalToken = verificationTokenRepository.findByToken(token);
-
         if (optionalToken.isEmpty()) {
             return "Token inválido.";
         }
@@ -101,8 +102,8 @@ public class MemberService {
         if (data.password() != null) {
             encodedPassword = encoder.encode(data.password());
         }
-        var member = repository.getReferenceById(data.id());
 
+        var member = repository.getReferenceById(data.id());
         member.updateMember(data);
 
         if (encodedPassword != null) {

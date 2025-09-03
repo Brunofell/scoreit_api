@@ -1,6 +1,5 @@
 package com.scoreit.scoreit.controller;
 
-import com.scoreit.scoreit.service.PasswordResetEmailService;
 import com.scoreit.scoreit.service.PasswordResetService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
