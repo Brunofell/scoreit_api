@@ -46,7 +46,6 @@ public class MemberController {
     @Autowired
     private FavoriteListService favoriteListService;
 
-    // Removidos: VerificationTokenRepository e EmailConfirmationService (não usados aqui)
 
     @GetMapping("/get")
     public List<Member> getMembers() {
