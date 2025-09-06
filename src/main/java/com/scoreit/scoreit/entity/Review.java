@@ -37,10 +37,13 @@ public class Review {
     @Column(name = "review_date")
     private LocalDateTime reviewDate;
 
+    @Column(name = "genres")
+    private String genres;
+
     public Review() {}
 
     // Ajuste construtor para receber Member
-    public Review(Long id, String mediaId, String mediaType, Member member, int score, String memberReview, LocalDateTime watchDate ,boolean spoiler, LocalDateTime reviewDate) {
+    public Review(Long id, String mediaId, String mediaType, Member member, int score, String memberReview, LocalDateTime watchDate ,boolean spoiler, LocalDateTime reviewDate, String genres) {
         this.id = id;
         this.mediaId = mediaId;
         this.mediaType = mediaType;
@@ -50,10 +53,11 @@ public class Review {
         this.watchDate = watchDate;
         this.spoiler = spoiler;
         this.reviewDate = reviewDate;
+        this.genres = genres;
     }
 
     // Ajustar construtor que recebe ReviewRegister - agora precisa do Member no lugar do memberId String
-    public Review(ReviewRegister data, Member member) {
+    public Review(ReviewRegister data, Member member, String genres) {
         this.mediaId = data.mediaId();
         this.mediaType = data.mediaType();
         this.member = member;
@@ -61,6 +65,7 @@ public class Review {
         this.watchDate = data.watchDate();
         this.memberReview = data.memberReview();
         this.spoiler = data.spoiler();
+        this.genres = genres;
     }
 
     @PrePersist
@@ -155,4 +160,11 @@ public class Review {
         this.id = id;
     }
 
+    public String getGenres() {
+        return genres;
+    }
+
+    public void setGenres(String genres) {
+        this.genres = genres;
+    }
 }

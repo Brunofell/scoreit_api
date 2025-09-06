@@ -12,5 +12,6 @@ public record ReviewResponse(
         String memberReview,
         LocalDateTime watchDate,
         boolean spoiler,
-        LocalDateTime reviewDate
+        LocalDateTime reviewDate,
+        String genres
 ) {}
