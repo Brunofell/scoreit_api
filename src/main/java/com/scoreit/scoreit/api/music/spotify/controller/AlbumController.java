@@ -126,7 +126,7 @@ public class AlbumController {
                 query,
                 "album", // fixo aqui porque é busca por álbum
                 limit
-        );
+
 
         return ResponseEntity.ok(response);
     }
