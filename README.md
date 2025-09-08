@@ -147,6 +147,18 @@ Para testar a API, utilize uma ferramenta de requisições HTTP como:
 |--------|-----------------------------|--------------|--------------------------------------------------|
 | POST   | `/member/{memberId}/badges` | SIM          | Acessar as conquistas de um usuário pelo id dele |
 
+
+
+### Comentários
+
+| Método | Endpoint                                                                                                                                                      | Autenticação | Descrição                                                              |
+|--------|---------------------------------------------------------------------------------------------------------------------------------------------------------------|--------------|------------------------------------------------------------------------|
+| POST   | `/comments/create?memberId={id do membro comentando}&reviewId={Id da review}&content=Gostei muito!`                                                           | Sim          | Criar um comentário                                                    |
+| POST   | `/comments/create?memberId={id do membro comentando}&reviewId={Id da review}&content=Gostei muito!&parentId={id do comentário que o membro está respondendo}` | Sim          | Responder uma review/comentário                                        |
+| GET    | `/comments/review/{reviewId}`                                                                                                                                 | Sim          | Listar todos os comentários de uma review em formato aninhado (árvore) |
+| DELETE | `/comments/{commentId}?memberId={id}`                                                                                                                         | Sim          | Deletar um comentário (soft delete), apenas o autor pode deletar       |
+
+
 ## EXEMPLOS DE REQUISIÇÕES
 
 ### Cadastro de usuário

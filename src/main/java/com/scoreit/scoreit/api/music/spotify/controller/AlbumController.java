@@ -8,6 +8,7 @@ import com.scoreit.scoreit.api.music.spotify.dto.oauth.LoginRequest;
 import com.scoreit.scoreit.api.music.spotify.client.AlbumSpotifyClient;
 import com.scoreit.scoreit.api.music.spotify.client.AuthSpotifyClient;
 import com.scoreit.scoreit.api.music.spotify.service.ArtistSpotifyService;
+import com.scoreit.scoreit.dto.favoriteList.TopMediaProjection;
 import com.scoreit.scoreit.entity.FavoriteListContent;
 import com.scoreit.scoreit.service.FavoriteListContentService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -128,6 +129,11 @@ public class AlbumController {
         );
 
         return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/top-albums")
+    public List<TopMediaProjection> getTopAlbums(@RequestParam(defaultValue = "10") int limit) {
+        return favoriteListContentService.getTopFavoritedAlbums(limit);
     }
 }
 
