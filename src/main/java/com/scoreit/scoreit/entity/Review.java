@@ -1,9 +1,11 @@
 package com.scoreit.scoreit.entity;
 
+import com.scoreit.scoreit.dto.review.MediaType;
 import com.scoreit.scoreit.dto.review.ReviewRegister;
 import com.scoreit.scoreit.dto.review.ReviewUpdate;
 import jakarta.persistence.*;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Entity
@@ -13,34 +15,36 @@ public class Review {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "media_id")
+    @Column(name = "media_id", nullable = false)
     private String mediaId;
 
-    @Column(name = "media_type")
-    private String mediaType;
+    @Enumerated(EnumType.STRING)
+    @Column(name = "media_type", nullable = false, length = 20)
+    private MediaType mediaType;
 
-    // Trocar String memberId por relacionamento com Member
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id", nullable = false)
     private Member member;
 
+    @Column(nullable = false)
     private int score;
 
-    @Column(name = "member_review")
+    @Column(name = "member_review", length = 260)
     private String memberReview;
 
-    @Column(name = "watch_date")
-    private LocalDateTime watchDate;
+    @Column(name = "watch_date", nullable = false)
+    private LocalDate watchDate;
 
+    @Column(nullable = false)
     private boolean spoiler;
 
-    @Column(name = "review_date")
+    @Column(name = "review_date", nullable = false)
     private LocalDateTime reviewDate;
 
     public Review() {}
 
-    // Ajuste construtor para receber Member
-    public Review(Long id, String mediaId, String mediaType, Member member, int score, String memberReview, LocalDateTime watchDate ,boolean spoiler, LocalDateTime reviewDate) {
+    public Review(Long id, String mediaId, MediaType mediaType, Member member, int score,
+                  String memberReview, LocalDate watchDate, boolean spoiler, LocalDateTime reviewDate) {
         this.id = id;
         this.mediaId = mediaId;
         this.mediaType = mediaType;
@@ -52,7 +56,6 @@ public class Review {
         this.reviewDate = reviewDate;
     }
 
-    // Ajustar construtor que recebe ReviewRegister - agora precisa do Member no lugar do memberId String
     public Review(ReviewRegister data, Member member) {
         this.mediaId = data.mediaId();
         this.mediaType = data.mediaType();
@@ -83,76 +86,30 @@ public class Review {
         }
     }
 
-    public LocalDateTime getWatchDate() {
-        return watchDate;
-    }
+    public LocalDate getWatchDate() { return watchDate; }
+    public void setWatchDate(LocalDate watchDate) { this.watchDate = watchDate; }
 
-    public void setWatchDate(LocalDateTime watchDate) {
-        this.watchDate = watchDate;
-    }
+    public LocalDateTime getReviewDate() { return reviewDate; }
+    public void setReviewDate(LocalDateTime reviewDate) { this.reviewDate = reviewDate; }
 
-    public LocalDateTime getReviewDate() {
-        return reviewDate;
-    }
+    public boolean isSpoiler() { return spoiler; }
+    public void setSpoiler(boolean spoiler) { this.spoiler = spoiler; }
 
-    public void setReviewDate(LocalDateTime reviewDate) {
-        this.reviewDate = reviewDate;
-    }
+    public String getMemberReview() { return memberReview; }
+    public void setMemberReview(String memberReview) { this.memberReview = memberReview; }
 
-    public boolean isSpoiler() {
-        return spoiler;
-    }
+    public int getScore() { return score; }
+    public void setScore(int score) { this.score = score; }
 
-    public void setSpoiler(boolean spoiler) {
-        this.spoiler = spoiler;
-    }
+    public Member getMember() { return member; }
+    public void setMember(Member member) { this.member = member; }
 
-    public String getMemberReview() {
-        return memberReview;
-    }
+    public MediaType getMediaType() { return mediaType; }
+    public void setMediaType(MediaType mediaType) { this.mediaType = mediaType; }
 
-    public void setMemberReview(String memberReview) {
-        this.memberReview = memberReview;
-    }
+    public String getMediaId() { return mediaId; }
+    public void setMediaId(String mediaId) { this.mediaId = mediaId; }
 
-    public int getScore() {
-        return score;
-    }
-
-    public void setScore(int score) {
-        this.score = score;
-    }
-
-    public Member getMember() {
-        return member;
-    }
-
-    public void setMember(Member member) {
-        this.member = member;
-    }
-
-    public String getMediaType() {
-        return mediaType;
-    }
-
-    public void setMediaType(String mediaType) {
-        this.mediaType = mediaType;
-    }
-
-    public String getMediaId() {
-        return mediaId;
-    }
-
-    public void setMediaId(String mediaId) {
-        this.mediaId = mediaId;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
+    public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
 }

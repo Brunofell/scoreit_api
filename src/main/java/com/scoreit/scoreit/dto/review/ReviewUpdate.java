@@ -1,12 +1,12 @@
 package com.scoreit.scoreit.dto.review;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 public record ReviewUpdate(
         Long id,
         Integer score,
         String memberReview,
-        LocalDateTime watchDate,
+        LocalDate watchDate,
         Boolean spoiler
 ) {
 }

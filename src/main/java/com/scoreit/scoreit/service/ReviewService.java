@@ -1,5 +1,6 @@
 package com.scoreit.scoreit.service;
 
+import com.scoreit.scoreit.dto.review.MediaType;
 import com.scoreit.scoreit.dto.review.ReviewRegister;
 import com.scoreit.scoreit.dto.review.ReviewResponse;
 import com.scoreit.scoreit.dto.review.ReviewUpdate;
@@ -19,7 +20,7 @@ public class ReviewService {
     private ReviewRepository reviewRepository;
 
     @Autowired
-    private MemberRepository memberRepository;  // necessário para buscar Member
+    private MemberRepository memberRepository;
 
     @Autowired
     private MemberFollowerRepository memberFollowerRepository;
@@ -28,22 +29,29 @@ public class ReviewService {
     private AchievementService achievementService;
 
     public void reviewRegister(ReviewRegister dados) {
+        // LOGS essenciais de depuração (não logar dados sensíveis)
+        System.out.println("[reviewRegister] mediaId=" + dados.mediaId()
+                + " mediaType=" + (dados.mediaType() != null ? dados.mediaType().name() : "null")
+                + " memberId=" + dados.memberId()
+                + " score=" + dados.score()
+                + " watchDate=" + dados.watchDate()
+                + " spoiler=" + dados.spoiler());
+
         Member member = memberRepository.findById(dados.memberId())
                 .orElseThrow(() -> new IllegalArgumentException("Member not found with id: " + dados.memberId()));
 
         Review review = new Review(dados, member);
         reviewRepository.save(review);
 
-        // conta quantas reviews desse tipo de mídia o usuário já fez
-        long totalReviews = reviewRepository.countByMemberIdAndMediaType(member.getId(), "MOVIE");
-        long totalReviewsSeries = reviewRepository.countByMemberIdAndMediaType(member.getId(), "SERIES");
-        long totalReviewsAlbums = reviewRepository.countByMemberIdAndMediaType(member.getId(), "ALBUM");
+        long totalReviewsMovies  = reviewRepository.countByMember_IdAndMediaType(member.getId(), MediaType.MOVIE);
+        long totalReviewsSeries  = reviewRepository.countByMember_IdAndMediaType(member.getId(), MediaType.SERIES);
+        long totalReviewsAlbums  = reviewRepository.countByMember_IdAndMediaType(member.getId(), MediaType.ALBUM);
 
-        // checa conquistas de filmes
-        achievementService.checkReviewAchievements(member, totalReviews, "MOVIE");
+        achievementService.checkReviewAchievements(member, totalReviewsMovies,  "MOVIE");
         achievementService.checkReviewAchievements(member, totalReviewsSeries, "SERIES");
         achievementService.checkReviewAchievements(member, totalReviewsAlbums, "ALBUM");
     }
+
     public void reviewUpdate(ReviewUpdate data){
         var review = reviewRepository.getReferenceById(data.id());
         review.updateInfos(data);
@@ -59,7 +67,7 @@ public class ReviewService {
     }
 
     public List<ReviewResponse> getReviewMemberById(Long memberId){
-        return reviewRepository.findByMemberId(memberId).stream().map(this::toResponse).toList();
+        return reviewRepository.findByMember_Id(memberId).stream().map(this::toResponse).toList();
     }
 
     public List<ReviewResponse> getReviewMediaById(String mediaId){
@@ -68,15 +76,15 @@ public class ReviewService {
 
     public List<ReviewResponse> getReviewsFromFollowedMembers(Long currentMemberId) {
         List<Long> followedIds = memberFollowerRepository.findFollowedIdsByFollowerId(currentMemberId);
-        return reviewRepository.findByMemberIdIn(followedIds).stream().map(this::toResponse).toList();
+        return reviewRepository.findByMember_IdIn(followedIds).stream().map(this::toResponse).toList();
     }
 
-    // Conversor para DTO
     private ReviewResponse toResponse(Review review) {
+        String mt = review.getMediaType() == null ? null : review.getMediaType().toFrontend();
         return new ReviewResponse(
                 review.getId(),
                 review.getMediaId(),
-                review.getMediaType(),
+                mt,
                 review.getMember().getId(),
                 review.getScore(),
                 review.getMemberReview(),

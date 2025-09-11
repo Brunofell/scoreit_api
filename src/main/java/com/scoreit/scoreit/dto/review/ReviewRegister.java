@@ -1,14 +1,14 @@
 package com.scoreit.scoreit.dto.review;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 public record ReviewRegister(
         String mediaId,
-        String mediaType,
-        Long memberId,  // mudou aqui para Long
+        MediaType mediaType,
+        Long memberId,
         int score,
         String memberReview,
-        LocalDateTime watchDate,
+        LocalDate watchDate,
         boolean spoiler
 ) {
 }
