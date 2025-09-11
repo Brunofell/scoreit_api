@@ -56,7 +56,7 @@ public class SecurityConfig {
                                 "/api/change-email", "/api/change-email/",
                                 "/api/reset-email", "/api/reset-email/"
                         ).permitAll()
-                        .requestMatchers("/spotify/api**").permitAll()
+                        .requestMatchers("/spotify/api/**").permitAll()
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class)
