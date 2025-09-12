@@ -1,12 +1,10 @@
 package com.scoreit.scoreit.controller;
 
-import com.scoreit.scoreit.dto.badge.BadgeResponse;
 import com.scoreit.scoreit.dto.member.MemberUpdate;
 import com.scoreit.scoreit.dto.security.AuthenticationRequest;
 import com.scoreit.scoreit.dto.security.AuthenticationResponse;
 import com.scoreit.scoreit.entity.FavoriteListContent;
 import com.scoreit.scoreit.entity.Member;
-import com.scoreit.scoreit.service.BadgeService;
 import com.scoreit.scoreit.service.FavoriteListContentService;
 import com.scoreit.scoreit.service.FavoriteListService;
 import com.scoreit.scoreit.service.MemberService;
@@ -32,9 +30,6 @@ public class MemberController {
     private MemberService service;
 
     @Autowired
-    private BadgeService badgeService;
-
-    @Autowired
     private TokenService tokenService;
 
     @Autowired
@@ -45,7 +40,6 @@ public class MemberController {
 
     @Autowired
     private FavoriteListService favoriteListService;
-
 
     @GetMapping("/get")
     public List<Member> getMembers() {
@@ -154,10 +148,4 @@ public class MemberController {
         return Map.of("favorited", favorited);
     }
 
-    // ===== Badges =====
-
-    @GetMapping("/{id}/badges")
-    public List<BadgeResponse> getMemberBadges(@PathVariable Long id) {
-        return badgeService.getBadgesByMemberId(id);
-    }
 }
