@@ -26,7 +26,8 @@ public class BadgeService {
                 .map(mb -> new BadgeResponse(
                         mb.getBadge().getId(),
                         mb.getBadge().getName(),
-                        mb.getBadge().getDescription()
+                        mb.getBadge().getDescription(),
+                        mb.getBadge().getCode()
                 ))
                 .toList();
     }

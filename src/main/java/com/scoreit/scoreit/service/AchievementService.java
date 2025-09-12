@@ -18,25 +18,27 @@ public class AchievementService {
     @Autowired
     private MemberBadgeRepository memberBadgeRepository;
 
-    /**
-     * Checa se o usuário atingiu alguma conquista de reviews de filmes
-     */
+
     public void checkReviewAchievements(Member member, long totalReviews, String mediaType) {
         for (AchievementRule rule : AchievementRule.values()) {
-            if (rule.getType().equals(mediaType) && rule.getThreshold() == totalReviews) {
+            if (rule.getType().equalsIgnoreCase(mediaType) && totalReviews >= rule.getThreshold()) {
                 grantBadge(member, rule.getCode());
             }
         }
     }
 
-    /**
-     * Concede a badge ao usuário, se ele ainda não tiver
-     */
     private void grantBadge(Member member, String code) {
         Badge badge = badgeRepository.findByCode(code);
         if (badge != null && !memberBadgeRepository.existsByMemberAndBadge(member, badge)) {
             memberBadgeRepository.save(new MemberBadge(member, badge));
-            System.out.println("🏆 Conquista desbloqueada: " + badge.getName());
+            System.out.println("🏆 Conquista desbloqueada: " + badge.getName() + " (" + code + ")");
         }
+    }
+
+
+    public void reconcileMemberAchievements(Member member, long totalMovies, long totalSeries, long totalAlbums) {
+        checkReviewAchievements(member, totalMovies, "MOVIE");
+        checkReviewAchievements(member, totalSeries, "SERIES");
+        checkReviewAchievements(member, totalAlbums, "ALBUM");
     }
 }

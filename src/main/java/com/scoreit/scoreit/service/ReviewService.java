@@ -11,11 +11,14 @@ import com.scoreit.scoreit.repository.MemberRepository;
 import com.scoreit.scoreit.repository.ReviewRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Collections;
 import java.util.List;
 
 @Service
 public class ReviewService {
+
     @Autowired
     private ReviewRepository reviewRepository;
 
@@ -28,6 +31,7 @@ public class ReviewService {
     @Autowired
     private AchievementService achievementService;
 
+    @Transactional
     public void reviewRegister(ReviewRegister dados) {
         // LOGS essenciais de depuração (não logar dados sensíveis)
         System.out.println("[reviewRegister] mediaId=" + dados.mediaId()
@@ -37,29 +41,37 @@ public class ReviewService {
                 + " watchDate=" + dados.watchDate()
                 + " spoiler=" + dados.spoiler());
 
+        // valida membro
         Member member = memberRepository.findById(dados.memberId())
                 .orElseThrow(() -> new IllegalArgumentException("Member not found with id: " + dados.memberId()));
 
+        // cria e salva review
         Review review = new Review(dados, member);
         reviewRepository.save(review);
 
+        // contabilização retroativa por tipo (após salvar já contempla esta review)
         long totalReviewsMovies  = reviewRepository.countByMember_IdAndMediaType(member.getId(), MediaType.MOVIE);
         long totalReviewsSeries  = reviewRepository.countByMember_IdAndMediaType(member.getId(), MediaType.SERIES);
         long totalReviewsAlbums  = reviewRepository.countByMember_IdAndMediaType(member.getId(), MediaType.ALBUM);
 
+        // concede conquistas conforme os totais atuais (>= limiar, implementado no AchievementService)
         achievementService.checkReviewAchievements(member, totalReviewsMovies,  "MOVIE");
         achievementService.checkReviewAchievements(member, totalReviewsSeries, "SERIES");
         achievementService.checkReviewAchievements(member, totalReviewsAlbums, "ALBUM");
     }
 
+    @Transactional
     public void reviewUpdate(ReviewUpdate data){
         var review = reviewRepository.getReferenceById(data.id());
         review.updateInfos(data);
         reviewRepository.save(review);
+        // não revoga/concede conquistas no update
     }
 
+    @Transactional
     public void deleteReview(Long id){
         reviewRepository.deleteById(id);
+        // decisão atual: não revogar conquistas ao deletar
     }
 
     public List<ReviewResponse> getAllReviews(){
@@ -76,6 +88,9 @@ public class ReviewService {
 
     public List<ReviewResponse> getReviewsFromFollowedMembers(Long currentMemberId) {
         List<Long> followedIds = memberFollowerRepository.findFollowedIdsByFollowerId(currentMemberId);
+        if (followedIds == null || followedIds.isEmpty()) {
+            return Collections.emptyList();
+        }
         return reviewRepository.findByMember_IdIn(followedIds).stream().map(this::toResponse).toList();
     }
 
