@@ -22,38 +22,38 @@ public class MovieService {
     @Autowired
     private FavoriteListContentService favoriteListContentService;
 
-    public MovieResponse getPopularMovies(int page){
-        String url = String.format("%s/movie/popular?api_key=%s&language=pt-BR&page=%d", baseUrl, apiKey, page);
+    public MovieResponse getPopularMovies(int page, String language){
+        String url = String.format("%s/movie/popular?api_key=%s&language=%s&page=%d", baseUrl, apiKey, language, page);
         return restTemplate.getForObject(url, MovieResponse.class);
     }
 
-    public Movie getMovieById(int id) {
-        String url = String.format("%s/movie/%d?api_key=%s&language=pt-BR", baseUrl, id, apiKey);
+    public Movie getMovieById(int id, String language) {
+        String url = String.format("%s/movie/%d?api_key=%s&language=%s", baseUrl, id, apiKey, language);
         return restTemplate.getForObject(url, Movie.class);
     }
 
-    public MovieResponse getMoviesNowPlaying(int page) {
-        String url = String.format("%s/movie/now_playing?api_key=%s&language=pt-BR&page=%d", baseUrl, apiKey, page);
+    public MovieResponse getMoviesNowPlaying(int page, String language) {
+        String url = String.format("%s/movie/now_playing?api_key=%s&language=%s&page=%d", baseUrl, apiKey, language, page);
         return restTemplate.getForObject(url, MovieResponse.class);
     }
 
-    public MovieResponse getUpcomingMovies(int page) {
-        String url = String.format("%s/movie/upcoming?api_key=%s&language=pt-BR&page=%d", baseUrl, apiKey, page);
+    public MovieResponse getUpcomingMovies(int page, String language) {
+        String url = String.format("%s/movie/upcoming?api_key=%s&language=%s&page=%d", baseUrl, apiKey, language, page);
         return restTemplate.getForObject(url, MovieResponse.class);
     }
 
-    public MovieMediaResponse getMovieMedia(String movieId) {
-        String url = String.format("%s/movie/%s/videos?api_key=%s&language=pt-BR", baseUrl, movieId, apiKey);
+    public MovieMediaResponse getMovieMedia(String movieId, String language) {
+        String url = String.format("%s/movie/%s/videos?api_key=%s&language=%s", baseUrl, movieId, apiKey, language);
         return restTemplate.getForObject(url, MovieMediaResponse.class);
     }
 
-    public List<Movie> getSeveralMoviesByIds(List<Integer> ids) {
+    public List<Movie> getSeveralMoviesByIds(List<Integer> ids, String language) {
         return ids.stream()
-                .map(this::getMovieById)
+                .map(id -> getMovieById(id, language))
                 .toList();
     }
 
-    public List<Movie> getFavoriteMoviesByMemberId(Long memberId) {
+    public List<Movie> getFavoriteMoviesByMemberId(Long memberId, String language) {
         List<FavoriteListContent> favoriteContents = favoriteListContentService.getFavoriteListContent(memberId);
 
         List<Integer> movieIds = favoriteContents.stream()
@@ -68,16 +68,16 @@ public class MovieService {
                 .filter(id -> id != null)
                 .toList();
 
-        return getSeveralMoviesByIds(movieIds);
+        return getSeveralMoviesByIds(movieIds, language);
     }
 
-    public MovieDetail getMovieDetails(int id) {
-        MovieDetail baseMovie = fetchMovieBaseInfo(id);
-        List<MovieDetail.CastMember> cast = fetchCast(id);
-        List<MovieDetail.CrewMember> directors = fetchDirectors(id);
+    public MovieDetail getMovieDetails(int id, String language) {
+        MovieDetail baseMovie = fetchMovieBaseInfo(id, language);
+        List<MovieDetail.CastMember> cast = fetchCast(id, language);
+        List<MovieDetail.CrewMember> directors = fetchDirectors(id, language);
         String certification = fetchCertification(id);
-        List<Movie> recommendations = fetchRecommendations(id);
-        List<Movie> similar = fetchSimilarMovies(id);
+        List<Movie> recommendations = fetchRecommendations(id, language);
+        List<Movie> similar = fetchSimilarMovies(id, language);
 
         return new MovieDetail(
                 baseMovie.id(),
@@ -103,13 +103,13 @@ public class MovieService {
         );
     }
 
-    private MovieDetail fetchMovieBaseInfo(int id) {
-        String url = String.format("https://api.themoviedb.org/3/movie/%d?api_key=%s&language=pt-BR", id, apiKey);
+    private MovieDetail fetchMovieBaseInfo(int id, String language) {
+        String url = String.format("https://api.themoviedb.org/3/movie/%d?api_key=%s&language=%s", id, apiKey, language);
         return restTemplate.getForObject(url, MovieDetail.class);
     }
 
-    private List<MovieDetail.CastMember> fetchCast(int id) {
-        String url = String.format("https://api.themoviedb.org/3/movie/%d/credits?api_key=%s&language=pt-BR", id, apiKey);
+    private List<MovieDetail.CastMember> fetchCast(int id, String language) {
+        String url = String.format("https://api.themoviedb.org/3/movie/%d/credits?api_key=%s&language=%s", id, apiKey, language);
         CreditsResponse credits = restTemplate.getForObject(url, CreditsResponse.class);
         return credits.cast().stream()
                 .limit(10)
@@ -117,8 +117,8 @@ public class MovieService {
                 .toList();
     }
 
-    private List<MovieDetail.CrewMember> fetchDirectors(int id) {
-        String url = String.format("https://api.themoviedb.org/3/movie/%d/credits?api_key=%s&language=pt-BR", id, apiKey);
+    private List<MovieDetail.CrewMember> fetchDirectors(int id, String language) {
+        String url = String.format("https://api.themoviedb.org/3/movie/%d/credits?api_key=%s&language=%s", id, apiKey, language);
         CreditsResponse credits = restTemplate.getForObject(url, CreditsResponse.class);
         return credits.crew().stream()
                 .filter(c -> "Director".equals(c.job()))
@@ -132,75 +132,75 @@ public class MovieService {
         return ratings.getCertification("BR"); // Método dentro do DTO RatingsResponse
     }
 
-    private List<Movie> fetchRecommendations(int id) {
-        String url = String.format("https://api.themoviedb.org/3/movie/%d/recommendations?api_key=%s&language=pt-BR", id, apiKey);
+    private List<Movie> fetchRecommendations(int id, String language) {
+        String url = String.format("https://api.themoviedb.org/3/movie/%d/recommendations?api_key=%s&language=%s", id, apiKey, language);
         MovieResponse response = restTemplate.getForObject(url, MovieResponse.class);
         return response.results();
     }
 
-    private List<Movie> fetchSimilarMovies(int id) {
-        String url = String.format("https://api.themoviedb.org/3/movie/%d/similar?api_key=%s&language=pt-BR", id, apiKey);
+    private List<Movie> fetchSimilarMovies(int id, String language) {
+        String url = String.format("https://api.themoviedb.org/3/movie/%d/similar?api_key=%s&language=%s", id, apiKey, language);
         MovieResponse response = restTemplate.getForObject(url, MovieResponse.class);
         return response.results();
     }
 
 
     // search
-    public String getGenres() {
-        String url = String.format("https://api.themoviedb.org/3/genre/movie/list?language=pt-BR&api_key=%s", apiKey);
+    public String getGenres(String language) {
+        String url = String.format("https://api.themoviedb.org/3/genre/movie/list?language=%s&api_key=%s", language, apiKey);
         return restTemplate.getForObject(url, String.class);
     }
 
-    public MovieResponse searchMovieByTitle(String title, int page) {
+    public MovieResponse searchMovieByTitle(String title, int page, String language) {
         String url = String.format(
-                "https://api.themoviedb.org/3/search/movie?query=%s&language=pt-BR&page=%d&api_key=%s",
-                title, page, apiKey
+                "https://api.themoviedb.org/3/search/movie?query=%s&language=%s&page=%d&api_key=%s",
+                title, language, page, apiKey
         );
         return restTemplate.getForObject(url, MovieResponse.class);
     }
 
-    public PersonSearchResponse searchPersonByName(String name, int page) {
+    public PersonSearchResponse searchPersonByName(String name, int page, String language) {
         String url = String.format(
-                "https://api.themoviedb.org/3/search/person?query=%s&language=pt-BR&page=%d&api_key=%s",
-                name, page, apiKey
+                "https://api.themoviedb.org/3/search/person?query=%s&language=%s&page=%d&api_key=%s",
+                name, language, page, apiKey
         );
         return restTemplate.getForObject(url, PersonSearchResponse.class);
     }
 
-    public MovieResponse searchMovieByGenre(String genre, int page) {
+    public MovieResponse searchMovieByGenre(String genre, int page, String language) {
         String url = String.format(
-                "https://api.themoviedb.org/3/discover/movie?with_genres=%s&language=pt-BR&page=%d&api_key=%s",
-                genre, page, apiKey
+                "https://api.themoviedb.org/3/discover/movie?with_genres=%s&language=%s&page=%d&api_key=%s",
+                genre, language, page, apiKey
         );
         return restTemplate.getForObject(url, MovieResponse.class);
     }
 
-    public MovieResponse searchMovieByYear(String year, int page) {
+    public MovieResponse searchMovieByYear(String year, int page, String language) {
         String url = String.format(
-                "https://api.themoviedb.org/3/discover/movie?primary_release_year=%s&language=pt-BR&page=%d&api_key=%s",
-                year, page, apiKey
+                "https://api.themoviedb.org/3/discover/movie?primary_release_year=%s&language=%s&page=%d&api_key=%s",
+                year, language, page, apiKey
         );
         return restTemplate.getForObject(url, MovieResponse.class);
     }
 
-    public MovieResponse searchMovieByYearAndGenre(String year, String genre, int page) {
+    public MovieResponse searchMovieByYearAndGenre(String year, String genre, int page, String language) {
         String url = String.format(
-                "%s/discover/movie?primary_release_year=%s&with_genres=%s&language=pt-BR&page=%d&api_key=%s",
-                baseUrl, year, genre, page, apiKey
+                "%s/discover/movie?primary_release_year=%s&with_genres=%s&language=%s&page=%d&api_key=%s",
+                baseUrl, year, genre, language, page, apiKey
         );
         return restTemplate.getForObject(url, MovieResponse.class);
     }
 
-    public MovieResponse searchMovies(String title, String year, String genre, int page) {
+    public MovieResponse searchMovies(String title, String year, String genre, int page, String language) {
         StringBuilder url = new StringBuilder(String.format(
-                "%s/discover/movie?language=pt-BR&page=%d&api_key=%s",
-                baseUrl, page, apiKey
+                "%s/discover/movie?language=%s&page=%d&api_key=%s",
+                baseUrl, language, page, apiKey
         ));
 
         if (title != null && !title.isBlank()) {
             url = new StringBuilder(String.format(
-                    "%s/search/movie?query=%s&language=pt-BR&page=%d&api_key=%s",
-                    baseUrl, title, page, apiKey
+                    "%s/search/movie?query=%s&language=%s&page=%d&api_key=%s",
+                    baseUrl, title, language, page, apiKey
             ));
         }
 
@@ -214,7 +214,5 @@ public class MovieService {
 
         return restTemplate.getForObject(url.toString(), MovieResponse.class);
     }
-
-
 
 }

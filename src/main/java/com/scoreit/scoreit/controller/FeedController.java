@@ -16,7 +16,10 @@ public class FeedController {
     private FeedService feedService;
 
     @GetMapping("/{id}")
-    public ResponseEntity<List<FeedResponse>> getFeedById(@PathVariable Long id){
-        return ResponseEntity.ok(feedService.montaFeed(id));
+    public ResponseEntity<List<FeedResponse>> getFeedById(
+            @PathVariable Long id,
+            @RequestParam(defaultValue = "pt-BR") String language) {
+        return ResponseEntity.ok(feedService.montaFeed(id, language));
     }
+
 }

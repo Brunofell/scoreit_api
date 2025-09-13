@@ -2,7 +2,6 @@ package com.scoreit.scoreit.service;
 
 import com.scoreit.scoreit.api.music.spotify.client.AlbumSpotifyClient;
 import com.scoreit.scoreit.api.music.spotify.client.AuthSpotifyClient;
-import com.scoreit.scoreit.api.music.spotify.dto.album.Album;
 import com.scoreit.scoreit.api.music.spotify.dto.album.AlbumResponseById;
 import com.scoreit.scoreit.api.music.spotify.dto.oauth.LoginRequest;
 import com.scoreit.scoreit.api.tmdb.movie.dto.Movie;
@@ -29,7 +28,12 @@ public class FeedService {
     private AlbumSpotifyClient albumSpotifyClient;
     private AuthSpotifyClient authSpotifyClient;
 
-    public FeedService(MemberService memberService, ReviewService reviewService, MovieService movieService, SeriesService seriesService, AlbumSpotifyClient albumSpotifyClient, AuthSpotifyClient authSpotifyClient){
+    public FeedService(MemberService memberService,
+                       ReviewService reviewService,
+                       MovieService movieService,
+                       SeriesService seriesService,
+                       AlbumSpotifyClient albumSpotifyClient,
+                       AuthSpotifyClient authSpotifyClient) {
         this.memberService = memberService;
         this.reviewService = reviewService;
         this.movieService = movieService;
@@ -38,17 +42,17 @@ public class FeedService {
         this.authSpotifyClient = authSpotifyClient;
     }
 
-    public List<FeedResponse> montaFeed(Long id){
+    public List<FeedResponse> montaFeed(Long id, String language) {
         List<FeedResponse> feed = new ArrayList<>();
         List<ReviewResponse> reviews = reviewService.getReviewsFromFollowedMembers(id);
-        for(ReviewResponse reviewResponse : reviews){
+        for (ReviewResponse reviewResponse : reviews) {
             FeedResponse feedItem = new FeedResponse();
 
             feedItem.setReview(reviewResponse);
 
             preencheMembro(reviewResponse, feedItem);
 
-            preencheMidia(reviewResponse, feedItem);
+            preencheMidia(reviewResponse, feedItem, language);
 
             feed.add(feedItem);
         }
@@ -56,23 +60,22 @@ public class FeedService {
         return feed;
     }
 
-    // Dentro da classe FeedService
-
-    private void preencheMidia(ReviewResponse reviewResponse, FeedResponse feedItem) {
+    private void preencheMidia(ReviewResponse reviewResponse, FeedResponse feedItem, String language) {
         try {
-            if ("movie".equals(reviewResponse.mediaType())) {
+            if ("movie".equalsIgnoreCase(reviewResponse.mediaType())) {
                 System.out.println("Buscando filme com ID: " + reviewResponse.mediaId());
-                Movie filme = movieService.getMovieById(Integer.parseInt(reviewResponse.mediaId()));
+                Movie filme = movieService.getMovieById(Integer.parseInt(reviewResponse.mediaId()), language);
                 feedItem.setMovie(filme);
                 System.out.println("Filme encontrado com sucesso.");
             }
-            if ("series".equals(reviewResponse.mediaType())) {
+            if ("series".equalsIgnoreCase(reviewResponse.mediaType())) {
                 System.out.println("Buscando série com ID: " + reviewResponse.mediaId());
-                Series series = seriesService.getSeriesById(Integer.parseInt(reviewResponse.mediaId()));
+                // <-- CORREÇÃO: passar o language para a chamada de series
+                Series series = seriesService.getSeriesById(Integer.parseInt(reviewResponse.mediaId()), language);
                 feedItem.setSerie(series);
                 System.out.println("Série encontrada com sucesso.");
             }
-            if ("album".equals(reviewResponse.mediaType())) {
+            if ("album".equalsIgnoreCase(reviewResponse.mediaType())) {
                 System.out.println("Buscando álbum com ID: " + reviewResponse.mediaId());
                 preencheAlbum(reviewResponse, feedItem);
                 System.out.println("Álbum encontrado com sucesso.");
@@ -84,14 +87,13 @@ public class FeedService {
             System.err.println("Mensagem da Exceção: " + e.getMessage());
 
             // Se você usa Feign, a linha abaixo é extremamente útil, pois mostra a resposta da API
-             if (e instanceof feign.FeignException) {
-                 System.err.println("Corpo da resposta de erro da API: " + ((feign.FeignException) e).contentUTF8());
-             }
+            if (e instanceof feign.FeignException) {
+                System.err.println("Corpo da resposta de erro da API: " + ((feign.FeignException) e).contentUTF8());
+            }
 
             System.err.println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
 
-            // Você pode decidir lançar a exceção de novo ou simplesmente pular este item do feed
-            // Por enquanto, vamos lançar para manter o comportamento de erro
+            // Por enquanto, re-lançamos para manter o comportamento de erro
             throw e;
         }
     }
@@ -112,7 +114,11 @@ public class FeedService {
 
     private void preencheMembro(ReviewResponse reviewResponse, FeedResponse feedItem) {
         Optional<Member> membroOptional = memberService.getMemberById(reviewResponse.memberId());
-        Member membro = membroOptional.get();
+
+        // Tratar Optional de forma segura
+        Member membro = membroOptional.orElseThrow(() ->
+                new RuntimeException("Membro não encontrado: " + reviewResponse.memberId()));
+
         MemberResponse memberResponse = new MemberResponse(
                 membro.getId(),
                 membro.getName(),
@@ -122,7 +128,7 @@ public class FeedService {
                 membro.getBio()
         );
 
-        feedItem.setMember(memberResponse); // Seta o DTO, não a entidade
+        // Seta o DTO (apenas uma vez)
         feedItem.setMember(memberResponse);
     }
 
