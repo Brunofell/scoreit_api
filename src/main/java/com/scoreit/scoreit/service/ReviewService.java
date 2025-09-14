@@ -109,8 +109,9 @@ public class ReviewService {
         );
     }
 
-    public Double findAverageScore(String mediaId){
-        Double avg = reviewRepository.findAverageScore(mediaId);
+    public Double findAverageScore(String mediaId, MediaType mediaType){
+        Double avg = reviewRepository.findAverageScore(mediaId, mediaType);
         return avg != null ? avg : 0.0;
     }
+
 }

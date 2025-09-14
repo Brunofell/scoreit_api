@@ -1,5 +1,6 @@
 package com.scoreit.scoreit.controller;
 
+import com.scoreit.scoreit.dto.review.MediaType;
 import com.scoreit.scoreit.dto.review.ReviewRegister;
 import com.scoreit.scoreit.dto.review.ReviewResponse;
 import com.scoreit.scoreit.dto.review.ReviewUpdate;
@@ -55,9 +56,12 @@ public class ReviewController {
         return ResponseEntity.ok(reviewService.getReviewsFromFollowedMembers(memberId));
     }
 
-    @GetMapping("/average/{mediaId}")
-    public ResponseEntity<Double> findAvarage(@PathVariable String mediaId){
-        Double avg = reviewService.findAverageScore(mediaId);
+    @GetMapping("/average/{mediaType}/{mediaId}")
+    public ResponseEntity<Double> findAverage(
+            @PathVariable String mediaType,
+            @PathVariable String mediaId) {
+        Double avg = reviewService.findAverageScore(mediaId, MediaType.valueOf(mediaType.toUpperCase()));
         return ResponseEntity.ok(avg);
     }
+
 }

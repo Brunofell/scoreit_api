@@ -19,8 +19,8 @@ public interface ReviewRepository extends JpaRepository<Review, Long> {
 
     long countByMember_IdAndMediaType(Long memberId, MediaType mediaType);
 
-    @Query("SELECT AVG(r.score) FROM Review r WHERE r.mediaId = :mediaId")
-    Double findAverageScore(@Param("mediaId") String mediaId);
+    @Query("SELECT AVG(r.score) FROM Review r WHERE r.mediaId = :mediaId AND r.mediaType = :mediaType")
+    Double findAverageScore(@Param("mediaId") String mediaId, @Param("mediaType") MediaType mediaType);
 
     @Query("SELECT r FROM Review r WHERE r.member.id = :memberId AND r.mediaType = :mediaType ORDER BY r.score DESC")
     List<Review> findTopByMemberAndMediaType(@Param("memberId") Long memberId,
