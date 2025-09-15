@@ -27,3 +27,4 @@ public interface FavoriteListContentRepository extends JpaRepository<FavoriteLis
     """, nativeQuery = true)
     List<TopMediaProjection> findFavoriteMedia(@Param("mediaType") String mediaType, @Param("limit") int limit);
 }
+ 
