@@ -54,7 +54,7 @@ public class MemberController {
     @PostMapping("/post")
     public ResponseEntity<?> register(@RequestBody Member member) {
         try {
-            System.out.println("[REGISTER] email=" + member.getEmail()); // DEBUG (não logar senha!)
+            System.out.println("[REGISTER] email=" + member.getEmail());
             service.memberRegister(member);
             return ResponseEntity.ok("Cadastro realizado. Verifique seu e-mail.");
         } catch (IllegalArgumentException e) {

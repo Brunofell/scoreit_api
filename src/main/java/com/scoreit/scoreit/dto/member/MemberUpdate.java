@@ -6,7 +6,7 @@ import java.time.LocalDate;
 public record MemberUpdate(
         Long id,
         String name,
-        // String email,
+        String handle,
         LocalDate birthDate,
         Gender gender,
         String password,

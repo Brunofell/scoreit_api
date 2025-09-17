@@ -10,9 +10,10 @@ public record MemberRegister(
         String email,
         LocalDate birthDate,
         Gender gender,
-        String password
+        String password,
+        String handle
 ) {
     public Member toModel() {
-        return new Member(name, email, birthDate, gender, password);
+        return new Member(name, email, birthDate, gender, password, handle);
     }
 }

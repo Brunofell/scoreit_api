@@ -32,9 +32,10 @@ public class Member implements UserDetails {
     private String bio;
     private int followers;
     private int following_num;
+    private String handle;
 
 
-    public Member(Long id, String name, String email, String password, LocalDate birthDate, Gender gender, LocalDateTime createdAt, Boolean enabled, String profileImageUrl, int followers, int following_num) {
+    public Member(Long id, String name, String email, String password, LocalDate birthDate, Gender gender, LocalDateTime createdAt, Boolean enabled, String profileImageUrl, int followers, int following_num, String handle) {
         this.id = id;
         this.name = name;
         this.email = email;
@@ -46,16 +47,17 @@ public class Member implements UserDetails {
         this.profileImageUrl = profileImageUrl;
         this.followers = followers;
         this.following_num = following_num;
+        this.handle = handle;
     }
 
-    public Member(String name, String email, LocalDate birthDate, Gender gender, String password) {
+    public Member(String name, String email, LocalDate birthDate, Gender gender, String password, String handle) {
         this.name = name;
         this.email = email;
         this.password = password;
         this.birthDate = birthDate;
         this.gender = gender;
         this.enabled = true;
-
+        this.handle = handle;
     }
 
     public Member(){}
@@ -117,9 +119,9 @@ public class Member implements UserDetails {
         if(memberUpdate.name() != null){
             this.name = memberUpdate.name();
         }
-//        if(memberUpdate.email() != null){
-//            this.email = memberUpdate.email();
-//        }
+        if(memberUpdate.handle() != null){
+            this.handle = memberUpdate.handle();
+        }
         if(memberUpdate.gender() != null){
             this.gender = memberUpdate.gender();
         }
@@ -210,5 +212,13 @@ public class Member implements UserDetails {
 
     public void setEnabled(boolean enabled) {
         this.enabled = enabled;
+    }
+
+    public String getHandle() {
+        return handle;
+    }
+
+    public void setHandle(String handle) {
+        this.handle = handle;
     }
 }
