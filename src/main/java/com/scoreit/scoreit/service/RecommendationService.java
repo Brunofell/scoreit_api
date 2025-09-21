@@ -19,12 +19,11 @@ public class RecommendationService {
     @Autowired
     private ReviewRepository reviewRepository;
 
-    // ideal: ler de application.properties (ex.: @Value("${tmdb.api.key}"))
-    private final String TMDB_API_KEY = "4b6d83522f71b2da2b7b52c4386131e00";
+    private final String TMDB_API_KEY = "4b6d83522f71b2da2b7b52c4386131e0";
 
     /**
      * Versão compatível com quem chama usando String.
-     * Aceita "movie" | "series" | "album" (qualquer case).
+     * Aceita "movie" | "series" |
      */
     public List<Map<String, Object>> getRecommendations(Long memberId, String mediaType) {
         MediaType mt = MediaType.fromJson(mediaType); // normaliza para enum (uppercase)
