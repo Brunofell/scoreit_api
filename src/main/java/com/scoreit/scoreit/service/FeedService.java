@@ -62,41 +62,39 @@ public class FeedService {
 
     private void preencheMidia(ReviewResponse reviewResponse, FeedResponse feedItem, String language) {
         try {
-            if ("movie".equalsIgnoreCase(reviewResponse.mediaType())) {
-                System.out.println("Buscando filme com ID: " + reviewResponse.mediaId());
-                Movie filme = movieService.getMovieById(Integer.parseInt(reviewResponse.mediaId()), language);
-                feedItem.setMovie(filme);
-                System.out.println("Filme encontrado com sucesso.");
-            }
-            if ("series".equalsIgnoreCase(reviewResponse.mediaType())) {
-                System.out.println("Buscando série com ID: " + reviewResponse.mediaId());
-                // <-- CORREÇÃO: passar o language para a chamada de series
-                Series series = seriesService.getSeriesById(Integer.parseInt(reviewResponse.mediaId()), language);
-                feedItem.setSerie(series);
-                System.out.println("Série encontrada com sucesso.");
-            }
-            if ("album".equalsIgnoreCase(reviewResponse.mediaType())) {
-                System.out.println("Buscando álbum com ID: " + reviewResponse.mediaId());
-                preencheAlbum(reviewResponse, feedItem);
-                System.out.println("Álbum encontrado com sucesso.");
+            switch (reviewResponse.mediaType().toLowerCase()) {
+                case "movie" -> {
+                    try {
+                        int movieId = Integer.parseInt(reviewResponse.mediaId());
+                        feedItem.setMovie(movieService.getMovieById(movieId, language));
+                    } catch (Exception e) {
+                        System.err.println("Erro ao buscar filme: " + e.getMessage());
+                        feedItem.setMovie(null);
+                    }
+                }
+                case "series" -> {
+                    try {
+                        int seriesId = Integer.parseInt(reviewResponse.mediaId());
+                        feedItem.setSerie(seriesService.getSeriesById(seriesId, language));
+                    } catch (Exception e) {
+                        System.err.println("Erro ao buscar série: " + e.getMessage());
+                        feedItem.setSerie(null);
+                    }
+                }
+                case "album" -> {
+                    try {
+                        preencheAlbum(reviewResponse, feedItem);
+                    } catch (Exception e) {
+                        System.err.println("Erro ao buscar álbum: " + e.getMessage());
+                        feedItem.setAlbum(null);
+                    }
+                }
             }
         } catch (Exception e) {
-            // Este bloco vai capturar a exceção da API externa!
-            System.err.println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
-            System.err.println("ERRO AO BUSCAR MÍDIA EXTERNA! TIPO: " + reviewResponse.mediaType() + ", ID: " + reviewResponse.mediaId());
-            System.err.println("Mensagem da Exceção: " + e.getMessage());
-
-            // Se você usa Feign, a linha abaixo é extremamente útil, pois mostra a resposta da API
-            if (e instanceof feign.FeignException) {
-                System.err.println("Corpo da resposta de erro da API: " + ((feign.FeignException) e).contentUTF8());
-            }
-
-            System.err.println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
-
-            // Por enquanto, re-lançamos para manter o comportamento de erro
-            throw e;
+            System.err.println("Erro genérico ao preencher mídia: " + e.getMessage());
         }
     }
+
 
     private void preencheAlbum(ReviewResponse reviewResponse, FeedResponse feedItem) {
         var request = new LoginRequest(
@@ -122,6 +120,7 @@ public class FeedService {
         MemberResponse memberResponse = new MemberResponse(
                 membro.getId(),
                 membro.getName(),
+                membro.getHandle(),
                 membro.getBirthDate(),
                 membro.getProfileImageUrl(),
                 membro.getGender(),

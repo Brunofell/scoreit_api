@@ -1,6 +1,7 @@
 package com.scoreit.scoreit.controller;
 
 import com.scoreit.scoreit.dto.member.MemberUpdate;
+import com.scoreit.scoreit.dto.member.MemberResponse;
 import com.scoreit.scoreit.dto.security.AuthenticationRequest;
 import com.scoreit.scoreit.dto.security.AuthenticationResponse;
 import com.scoreit.scoreit.entity.FavoriteListContent;
@@ -21,6 +22,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/member")
@@ -49,6 +51,34 @@ public class MemberController {
     @GetMapping("/get/{id}")
     public Optional<Member> getMemberById(@PathVariable Long id) {
         return service.getMemberById(id);
+    }
+
+    @GetMapping("/search")
+    public ResponseEntity<List<MemberResponse>> searchMembersByHandle(@RequestParam(name = "handle") String handle) {
+        try {
+            if (handle == null || handle.trim().isEmpty()) {
+                return ResponseEntity.badRequest().body(List.of());
+            }
+
+            List<Member> found = service.searchMembersByHandle(handle.trim());
+
+            List<MemberResponse> dto = found.stream()
+                    .map(m -> new MemberResponse(
+                            m.getId(),
+                            m.getName(),
+                            m.getHandle(),
+                            m.getBirthDate(),
+                            m.getProfileImageUrl(),
+                            m.getGender(),
+                            m.getBio()
+                    ))
+                    .collect(Collectors.toList());
+
+            return ResponseEntity.ok(dto);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(List.of());
+        }
     }
 
     @PostMapping("/post")

@@ -99,7 +99,7 @@ public class MemberService {
         return repository.findById(id);
     }
 
-    public List<Member> searchMembersByName(String name) {
-        return repository.findByNameContainingIgnoreCase(name);
+    public List<Member> searchMembersByHandle(String handle) {
+        return repository.findByHandleContainingIgnoreCase(handle);
     }
 }
