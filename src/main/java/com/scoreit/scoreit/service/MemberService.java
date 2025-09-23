@@ -37,11 +37,15 @@ public class MemberService {
     @Transactional
     public Member memberRegister(Member member) {
         String email = (member.getEmail() == null) ? null : member.getEmail().trim().toLowerCase();
+        String handle = (member.getHandle() == null) ? null : member.getHandle().trim().toLowerCase();
         if (email == null || email.isBlank()) {
             throw new IllegalArgumentException("E-mail inválido.");
         }
         if (repository.findByEmail(email) != null) {
             throw new IllegalArgumentException("Este e-mail já está sendo usado.");
+        }
+        if(repository.findByHandle(handle) != null){
+            throw new IllegalArgumentException("Esse @ já está sendo utilizado.");
         }
         member.setEmail(email);
         member.setPassword(encoder.encode(member.getPassword()));
