@@ -75,6 +75,7 @@ public class FeedService {
                 case "series" -> {
                     try {
                         int seriesId = Integer.parseInt(reviewResponse.mediaId());
+                        // Agora passando a language recebida do controller
                         feedItem.setSerie(seriesService.getSeriesById(seriesId, language));
                     } catch (Exception e) {
                         System.err.println("Erro ao buscar série: " + e.getMessage());
@@ -94,6 +95,7 @@ public class FeedService {
             System.err.println("Erro genérico ao preencher mídia: " + e.getMessage());
         }
     }
+
 
 
     private void preencheAlbum(ReviewResponse reviewResponse, FeedResponse feedItem) {

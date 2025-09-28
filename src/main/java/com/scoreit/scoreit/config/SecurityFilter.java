@@ -41,8 +41,7 @@ public class SecurityFilter extends OncePerRequestFilter {
             "/swagger-ui",
             "/swagger-resources",
             "/webjars",
-            "/hello",
-            "/feed"
+            "/hello"
     );
 
     @Override

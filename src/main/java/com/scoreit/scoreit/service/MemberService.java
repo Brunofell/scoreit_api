@@ -79,18 +79,37 @@ public class MemberService {
         return "E-mail confirmado com sucesso!";
     }
 
+    @Transactional
     public Member updateMember(MemberUpdate data) {
-        String encodedPassword = null;
-        if (data.password() != null) {
-            encodedPassword = encoder.encode(data.password());
-        }
+        // Busca o membro que será atualizado
         var member = repository.getReferenceById(data.id());
-        member.updateMember(data);
-        if (encodedPassword != null) {
-            member.setPassword(encodedPassword);
+
+        // Normaliza o handle
+        String newHandle = (data.handle() != null) ? data.handle().trim().toLowerCase() : null;
+
+        if (newHandle != null && !newHandle.isBlank()) {
+            // Checa se já existe outro membro com o mesmo handle
+            Member existing = repository.findByHandle(newHandle);
+            if (existing != null && !existing.getId().equals(member.getId())) {
+                throw new IllegalArgumentException("Esse @ já está sendo utilizado.");
+            }
+            member.setHandle(newHandle);
         }
+
+        // Atualiza outros campos
+        if (data.name() != null) member.setName(data.name());
+        if (data.bio() != null) member.setBio(data.bio());
+        if (data.birthDate() != null) member.setBirthDate(data.birthDate());
+        if (data.gender() != null) member.setGender(data.gender());
+
+        // Atualiza a senha se houver
+        if (data.password() != null) {
+            member.setPassword(encoder.encode(data.password()));
+        }
+
         return repository.save(member);
     }
+
 
     public ResponseEntity<String> deleteUser(Long id) {
         var member = repository.findById(id).orElseThrow(() -> new RuntimeException("User Not Found."));

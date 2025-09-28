@@ -7,6 +7,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Locale;
 
 @RestController
 @RequestMapping("/feed")
@@ -19,18 +20,27 @@ public class FeedController {
     }
 
     @GetMapping("/{id}")
-    // Garante que só usuários autenticados conseguem acessar
     public ResponseEntity<List<FeedResponse>> getFeedById(
             @PathVariable Long id,
-            @RequestParam(defaultValue = "pt-BR") String language,
+            @RequestParam(value = "language", required = false) String language,
+            @RequestHeader(value = "Accept-Language", required = false) String acceptLanguage,
             @AuthenticationPrincipal(expression = "id") Long authenticatedMemberId
     ) {
-        // Opcional: só permite acessar seu próprio feed ou dos que segue
-        if (!authenticatedMemberId.equals(id)) {
-            return ResponseEntity.status(403).build();
-        }
-
-        List<FeedResponse> feed = feedService.montaFeed(id, language);
+        // Prioridade: query param `language` > Accept-Language header > fallback "pt-BR"
+        String resolved = resolveLanguage(language, acceptLanguage);
+        List<FeedResponse> feed = feedService.montaFeed(id, resolved);
         return ResponseEntity.ok(feed);
+    }
+
+    private String resolveLanguage(String languageParam, String acceptLanguageHeader) {
+        if (languageParam != null && !languageParam.isBlank()) {
+            return languageParam;
+        }
+        if (acceptLanguageHeader != null && !acceptLanguageHeader.isBlank()) {
+            // pega a primeira parte do header (ex: "en-US,en;q=0.9" -> "en-US")
+            String first = acceptLanguageHeader.split(",")[0].trim();
+            return first;
+        }
+        return "pt-BR";
     }
 }
