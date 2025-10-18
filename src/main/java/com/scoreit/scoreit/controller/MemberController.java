@@ -48,7 +48,7 @@ public class MemberController {
         return service.getAllMembers();
     }
 
-    @GetMapping("/id/{id}")
+    @GetMapping("/get/{id}")
     public Optional<Member> getMemberById(@PathVariable Long id) {
         return service.getMemberById(id);
     }
