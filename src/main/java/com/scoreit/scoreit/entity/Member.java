@@ -2,6 +2,7 @@ package com.scoreit.scoreit.entity;
 
 import com.scoreit.scoreit.dto.member.Gender;
 import com.scoreit.scoreit.dto.member.MemberUpdate;
+import com.scoreit.scoreit.dto.member.Role;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -33,6 +34,9 @@ public class Member implements UserDetails {
     private int followers;
     private int following_num;
     private String handle;
+    @Enumerated(EnumType.STRING)
+    private Role role = Role.ROLE_USER;
+
 
 
     public Member(Long id, String name, String email, String password, LocalDate birthDate, Gender gender, LocalDateTime createdAt, Boolean enabled, String profileImageUrl, int followers, int following_num, String handle) {
@@ -142,8 +146,9 @@ public class Member implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of();
+        return List.of(() -> role.name());
     }
+
 
     @Override
     public String getUsername() {
@@ -220,5 +225,13 @@ public class Member implements UserDetails {
 
     public void setHandle(String handle) {
         this.handle = handle;
+    }
+
+    public Role getRole() {
+        return role;
+    }
+
+    public void setRole(Role role) {
+        this.role = role;
     }
 }

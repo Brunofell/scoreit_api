@@ -57,6 +57,9 @@ public class SecurityConfig {
                                 "/api/reset-email", "/api/reset-email/"
                         ).permitAll()
                         .requestMatchers("/spotify/api/**").permitAll()
+                        .requestMatchers("/admin/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.DELETE, "/member/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.GET, "/member/get").hasRole("ADMIN") // lista todos
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class)

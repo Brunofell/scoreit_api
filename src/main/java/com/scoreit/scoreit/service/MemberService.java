@@ -1,6 +1,7 @@
 package com.scoreit.scoreit.service;
 
 import com.scoreit.scoreit.dto.member.MemberUpdate;
+import com.scoreit.scoreit.dto.member.Role;
 import com.scoreit.scoreit.entity.Member;
 import com.scoreit.scoreit.entity.VerificationToken;
 import com.scoreit.scoreit.repository.MemberRepository;
@@ -124,5 +125,31 @@ public class MemberService {
 
     public List<Member> searchMembersByHandle(String handle) {
         return repository.findByHandleContainingIgnoreCase(handle);
+    }
+
+
+    /// ADMIN
+
+    // Desativar / reativar conta
+    public void toggleMemberStatus(Long id) {
+        Member member = repository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
+
+        member.setEnabled(!member.isEnabled());
+        repository.save(member);
+    }
+
+    // Promover / rebaixar usuário
+    public void toggleMemberRole(Long id) {
+        Member member = repository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
+
+        if (member.getRole() == Role.ROLE_ADMIN) {
+            member.setRole(Role.ROLE_USER);
+        } else {
+            member.setRole(Role.ROLE_ADMIN);
+        }
+
+        repository.save(member);
     }
 }
