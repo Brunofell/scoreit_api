@@ -11,7 +11,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -152,4 +155,19 @@ public class MemberService {
 
         repository.save(member);
     }
+
+
+    // Gráficos
+
+    public List<Member> getMembersByDate(LocalDate date) {
+        LocalDateTime startOfDay = date.atStartOfDay();
+        LocalDateTime endOfDay = date.atTime(LocalTime.MAX);
+        return repository.findMembersByCreationDate(startOfDay, endOfDay);
+    }
+
+    public List<Member> getMembersByDateRange(LocalDate start, LocalDate end) {
+        return repository.findMembersByCreationDate(
+                start.atStartOfDay(), end.atTime(LocalTime.MAX));
+    }
+
 }
