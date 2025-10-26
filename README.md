@@ -29,6 +29,28 @@ Para testar a API, utilize uma ferramenta de requisições HTTP como:
 
 ## ENDPOINTS DISPONÍVEIS
 
+## admin
+| Método | Endpoint                                                         | Autenticação | Descrição                                             |
+| ------ | ---------------------------------------------------------------- | ------------ | ----------------------------------------------------- |
+| PATCH  | `/admin/members/{id}/toggle`                                     | Sim (ADMIN)  | Ativa ou desativa um usuário                          |
+| PATCH  | `/admin/members/{id}/role`                                       | Sim (ADMIN)  | Alterna o papel (role) do usuário entre comum e admin |
+| GET    | `/admin/members`                                                 | Sim (ADMIN)  | Lista todos os usuários, com paginação e busca        |
+| GET    | `/admin/members/{id}`                                            | Sim (ADMIN)  | Retorna os dados de um usuário específico             |
+| PATCH  | `/admin/members/{id}/update`                                     | Sim (ADMIN)  | Atualiza nome, email ou status de um usuário          |
+| GET    | `/admin/reports`                                                 | Sim (ADMIN)  | Retorna todas as denúncias registradas                |
+| PATCH  | `/admin/reports/{id}/status?status={NEW_STATUS}`                 | Sim (ADMIN)  | Atualiza o status de uma denúncia                     |
+| DELETE | `/admin/reports/{id}`                                            | Sim (ADMIN)  | Remove uma denúncia do sistema                        |
+| GET    | `/admin/members/created-on?date=YYYY-MM-DD`                      | Sim (ADMIN)  | Lista usuários criados em uma data específica         |
+| GET    | `/admin/members/created-between?start=YYYY-MM-DD&end=YYYY-MM-DD` | Sim (ADMIN)  | Lista usuários criados em um intervalo de datas       |
+| GET    | `/admin/statistic/reviews-by-date`                               | Sim (ADMIN)  | Retorna a quantidade de reviews criadas por data      |
+| GET    | `/admin/statistic/popular-media`                                 | Sim (ADMIN)  | Retorna as mídias mais populares (com mais reviews)   |
+| GET    | `/admin/statistic/users-growth`                                  | Sim (ADMIN)  | Retorna o crescimento de usuários por mês             |
+
+## denúncias
+| Método | Endpoint                                                                       | Autenticação | Descrição                         |
+| ------ | ------------------------------------------------------------------------------ | ------------ | --------------------------------- |
+| POST   | `/reports?reporterId={ID_DO_AUTOR}&reportedId={ID_DENUNCIADO}&reason={motivo}` | Sim          | Cria uma nova denúncia de usuário |
+
 ### Usuários
 
 | Método | Endpoint                                                     | Autenticação | Descrição                                                          |

@@ -11,6 +11,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -154,6 +157,32 @@ public class MemberService {
         }
 
         repository.save(member);
+    }
+
+
+    // Listar todos os usuários (com paginação e filtro opcional)
+    public Page<Member> listAllMembers(int page, int size, String query) {
+        Pageable pageable = PageRequest.of(page, size);
+        return repository.searchMembers(query, pageable);
+    }
+
+    // Buscar usuário específico (por ID)
+    public Member getMemberByIdOrThrow(Long id) {
+        return repository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
+    }
+
+    // Atualizar informações do usuário (Admin)
+    @Transactional
+    public Member updateMemberAdmin(Long id, String name, String email, Boolean enabled) {
+        Member member = repository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
+
+        if (name != null && !name.isBlank()) member.setName(name);
+        if (email != null && !email.isBlank()) member.setEmail(email.trim().toLowerCase());
+        if (enabled != null) member.setEnabled(enabled);
+
+        return repository.save(member);
     }
 
 

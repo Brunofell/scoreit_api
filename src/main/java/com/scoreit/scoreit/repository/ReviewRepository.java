@@ -26,4 +26,18 @@ public interface ReviewRepository extends JpaRepository<Review, Long> {
     List<Review> findTopByMemberAndMediaType(@Param("memberId") Long memberId,
                                              @Param("mediaType") MediaType mediaType,
                                              Pageable pageable);
+
+    // Contagem de reviews por data (últimos X dias, por exemplo)
+    @Query("SELECT DATE(r.reviewDate) AS date, COUNT(r) AS total " +
+            "FROM Review r " +
+            "GROUP BY DATE(r.reviewDate) " +
+            "ORDER BY date ASC")
+    List<Object[]> countReviewsByDate();
+
+    // Mídias mais populares (pelas reviews)
+    @Query("SELECT r.mediaId, r.mediaType, COUNT(r) AS total " +
+            "FROM Review r " +
+            "GROUP BY r.mediaId, r.mediaType " +
+            "ORDER BY total DESC")
+    List<Object[]> findMostPopularMedia();
 }
