@@ -31,7 +31,7 @@ public class AchievementService {
         Badge badge = badgeRepository.findByCode(code);
         if (badge != null && !memberBadgeRepository.existsByMemberAndBadge(member, badge)) {
             memberBadgeRepository.save(new MemberBadge(member, badge));
-            System.out.println("🏆 Conquista desbloqueada: " + badge.getName() + " (" + code + ")");
+            System.out.println("Conquista desbloqueada: " + badge.getName() + " (" + code + ")");
         }
     }
 
