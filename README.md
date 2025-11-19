@@ -1932,10 +1932,10 @@ Special thanks to:
 
 <div align="center">
 
-![GitHub repo size](https://img.shields.io/github/repo-size/yourusername/scoreit?style=for-the-badge)
-![GitHub language count](https://img.shields.io/github/languages/count/yourusername/scoreit?style=for-the-badge)
-![GitHub top language](https://img.shields.io/github/languages/top/yourusername/scoreit?style=for-the-badge)
-![GitHub last commit](https://img.shields.io/github/last-commit/yourusername/scoreit?style=for-the-badge)
+![GitHub repo size](https://img.shields.io/github/repo-size/brunofell/scoreit_api?style=for-the-badge)
+![GitHub language count](https://img.shields.io/github/languages/count/brunofell/scoreit_api?style=for-the-badge)
+![GitHub top language](https://img.shields.io/github/languages/top/brunofell/scoreit_api?style=for-the-badge)
+![GitHub last commit](https://img.shields.io/github/last-commit/brunofell/scoreit_api?style=for-the-badge)
 
 </div>
 
