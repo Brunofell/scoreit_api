@@ -1893,28 +1893,6 @@ This project was developed as a final course project (TCC - Trabalho de Conclus�
 
 ---
 
-## 📧 Contact
-
-### Project Team
-
-<div align="center">
-
-| Name | Role | Contact |
-|------|------|---------|
-| **Bruno Feliciano** | Full-Stack Developer | [GitHub](https://github.com/brunofeliciano) • [LinkedIn](#) |
-| **Thiago Rosa** | Full-Stack Developer | [GitHub](https://github.com/thiagorosa) • [LinkedIn](#) |
-| **Leandro Faria** | Full-Stack Developer | [GitHub](https://github.com/leandrofaria) • [LinkedIn](#) |
-
-</div>
-
-### Get in Touch
-
-- 📧 Email: scoreit.team@example.com
-- 🐛 Report Issues: [GitHub Issues](https://github.com/yourusername/scoreit/issues)
-- 💬 Discussions: [GitHub Discussions](https://github.com/yourusername/scoreit/discussions)
-
----
-
 ## 🙏 Acknowledgments
 
 Special thanks to:
